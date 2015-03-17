@@ -8,7 +8,7 @@ public class Ray {
 	private Point3D point;
 
 	public Ray(Point3D direction, Point3D point) {
-		this.direction = direction;
+		this.direction = direction.normalize();
 		this.point = point;
 	}
 
@@ -17,7 +17,7 @@ public class Ray {
 	}
 
 	public void setDirection(Point3D direction) {
-		this.direction = direction;
+		this.direction = direction.normalize();
 	}
 
 	public Point3D getPoint() {

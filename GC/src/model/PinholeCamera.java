@@ -29,7 +29,7 @@ public class PinholeCamera implements Camera {
 		return direction;
 	}
 	public void setDirection(Point3D direction) {
-		this.direction = direction;
+		this.direction = direction.normalize();
 	}
 	public double getVertFOV() {
 		return vertFOV;

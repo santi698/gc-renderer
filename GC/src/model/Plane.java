@@ -6,14 +6,14 @@ public class Plane implements Shape {
 	private Point3D normal;
 	private Point3D point;
 	public Plane(Point3D normal, Point3D point) {
-		this.normal = normal;
+		this.normal = normal.normalize();
 		this.point = point;
 	}
 	public Point3D getNormal() {
 		return normal;
 	}
 	public void setNormal(Point3D normal) {
-		this.normal = normal;
+		this.normal = normal.normalize();
 	}
 	public Point3D getPoint() {
 		return point;
