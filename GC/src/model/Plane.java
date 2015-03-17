@@ -22,7 +22,6 @@ public class Plane implements Shape {
 		this.point = point;
 	}
 	public double intersect (Ray ray) {
-		//TODO revisar
 		return ray.getPoint().subtract(point).dotProduct(normal)/
 			(ray.getDirection().dotProduct(normal));
 	}
