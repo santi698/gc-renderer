@@ -2,22 +2,15 @@ package model;
 
 import java.awt.Color;
 
-import javafx.geometry.Point3D;
+import javax.vecmath.Point3d;
 
-public class AmbientLight implements Light {
-	private Color color;
-	
-	public AmbientLight(Color color) {
-		super();
-		this.color = color;
-	}
-
-	public Color getColor() {
-		return color;
+public class AmbientLight extends Light {
+	public AmbientLight(Color color, double intensity) {
+		super(color, intensity);
 	}
 
 	@Override
-	public double isVisible(Point3D point) {
+	public double isVisible(Point3d point, Scene scene) {
 		return 1;
 	}
 

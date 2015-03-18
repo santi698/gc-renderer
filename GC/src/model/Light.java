@@ -1,7 +1,23 @@
 package model;
 
-import javafx.geometry.Point3D;
+import java.awt.Color;
 
-public interface Light {
-	public double isVisible(Point3D point);
+import javax.vecmath.Point3d;
+
+public abstract class Light {
+	private Color color;
+	private double intensity;
+	
+	protected Light(Color color, double intensity) {
+		this.color = color;
+		this.intensity = intensity;
+	}
+	public abstract double isVisible(Point3d point, Scene scene);
+	
+	public Color getColor() {
+		return color;
+	}
+	public double getIntensity() {
+		return intensity;
+	};
 }

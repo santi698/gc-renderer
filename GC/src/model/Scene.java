@@ -1,12 +1,12 @@
 package model;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
-import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import javafx.geometry.Point3D;
+import util.Vectors;
 
 public class Scene {
 	private Light[] lights;
@@ -30,40 +30,40 @@ public class Scene {
 	public Image render() {
 		int[] rgbArray = new int[getCamera().getXRes()*getCamera().getYRes()];
 		Vector3d x = getCamera().getRight();
-		Vector3d y = new Vector3d(getCamera().getUp());
+		Vector3d y = Vectors.scale(getCamera().getUp(), -1);
 		y.scale(-1);
-		Point3d center = new Point3d(getCamera().getDirection());
-		center.scale(getCamera().getDistanceToCamera());
+		Vector3d center = Vectors.scale(getCamera().getDirection(), getCamera().getDistanceToCamera());
 		
 		double width = 2*getCamera().getDistanceToCamera()*Math.tan(getCamera().getHorizFOV());
 		double height = 2*getCamera().getDistanceToCamera()*Math.tan(getCamera().getHorizFOV());
-		Vector3d hwX = new Vector3d(x);
-		hwX.scale(width/2);
-		Vector3d hwY = new Vector3d(x);
-		hwY.scale(height/2);
-		Point3d location = new Point3d(center);
-		location.sub(hwX);
-		location.sub(hwY);
+		Vector3d hwX = Vectors.scale(x, width/2);
+		Vector3d hwY = Vectors.scale(x, height/2);
+		Vector3d position = Vectors.sub(Vectors.sub(center, hwX), hwY);
 		
 		double xStep = width/getCamera().getXRes();
 		double yStep = height/getCamera().getYRes();
 		
 		for (int i = 0; i < getCamera().getXRes(); i++) {
 			for (int j = 0; j < getCamera().getYRes(); j++) {
-				Vector3d disX = new Vector3d(x); disX.scale(i*xStep);
-				Vector3d disY = new Vector3d(y); disY.scale(j*yStep);
-				location.add(disX);
-				location.add(disY);
-				Vector3d direction = new Vector3d(location);
-				direction.sub(getCamera().getPosition());
-				direction.normalize(); 
+				Vector3d disX = Vectors.scale(x, i*xStep);
+				Vector3d disY = Vectors.scale(y, j*yStep);
+				position.add(disX);
+				position.add(disY);
+				Vector3d direction = Vectors.normalize(Vectors.sub(position, getCamera().getPosition()));
 				Ray ray = new Ray(direction, getCamera().getPosition());
+				Body closestBody = null;
+				double minDistance = Double.MAX_VALUE;
 				for (Body body : getObjects()) {
 					IntersectionContext ic = body.getShape().intersect(ray);
-					//Calcular color rgb y ponerlo en el array en la posicion i+j*width
-					rgbArray[i+j*getCamera().getXRes()] = body.getColor().getRGB(); 
-					
+					double distance = getCamera().getPosition().distance(ic.getIntersectionPoint());
+					if (distance < minDistance)
+						closestBody = body;
 				}
+				//Calcular color rgb y ponerlo en el array en la posicion i+j*width
+				if (closestBody != null)
+					rgbArray[i+j*getCamera().getXRes()] = closestBody.getColor().getRGB();
+				else
+					rgbArray[i+j*getCamera().getXRes()] = Color.BLACK.getRGB();
 			}
 		}
 		BufferedImage img = new BufferedImage(getCamera().getXRes(), getCamera().getYRes(), BufferedImage.TYPE_INT_RGB);

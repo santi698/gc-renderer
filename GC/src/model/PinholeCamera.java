@@ -2,6 +2,7 @@ package model;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+import util.Vectors;
 
 public class PinholeCamera implements Camera {
 	private Point3d position;
@@ -16,13 +17,10 @@ public class PinholeCamera implements Camera {
 	
 	public PinholeCamera(Point3d position, Vector3d direction, Vector3d up, double distanceToCamera,
 			double horizFOV, double vertFOV, int xres, int yres) {
-		direction.normalize();
-		up.normalize();
 		this.position = position;
-		this.direction = direction;
-		this.up = up;
-		this.right = new Vector3d();
-		this.right.cross(direction, up);
+		this.direction = Vectors.normalize(direction);
+		this.up = Vectors.normalize(up);
+		this.right = Vectors.cross(direction, up);
 		this.distanceToCamera = distanceToCamera;
 		this.horizFOV = horizFOV;
 		this.vertFOV = vertFOV;
@@ -57,10 +55,8 @@ public class PinholeCamera implements Camera {
 	}
 
 	public void setUp(Vector3d up) {
-		up.normalize();
-		this.up = up;
-		this.right = new Vector3d();
-		this.right.cross(direction, up);
+		this.up = Vectors.normalize(up);
+		this.right = Vectors.cross(direction, up);
 	}
 	
 	public Vector3d getRight() {

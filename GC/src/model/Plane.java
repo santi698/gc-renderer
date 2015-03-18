@@ -3,20 +3,20 @@ package model;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import util.Vectors;
+
 public class Plane implements Shape {
 	private Vector3d normal;
 	private Point3d point;
 	public Plane(Vector3d normal, Point3d point) {
-		normal.normalize();
-		this.normal = normal;
+		this.normal = Vectors.normalize(normal);
 		this.point = point;
 	}
 	public Vector3d getNormal() {
 		return normal;
 	}
 	public void setNormal(Vector3d normal) {
-		normal.normalize();
-		this.normal = normal;
+		this.normal = Vectors.normalize(normal);
 	}
 	public Point3d getPoint() {
 		return point;
