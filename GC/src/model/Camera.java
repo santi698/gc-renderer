@@ -1,12 +1,13 @@
 package model;
 
-import javafx.geometry.Point3D;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 
 public interface Camera {
-	public Point3D getPosition();
-	public Point3D getUp();
-	public Point3D getRight();
-	public Point3D getDirection();
+	public Point3d getPosition();
+	public Vector3d getUp();
+	public Vector3d getRight();
+	public Vector3d getDirection();
 	public double getHorizFOV();
 	public double getVertFOV();
 	public int getXRes();

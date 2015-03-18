@@ -1,31 +1,41 @@
 package model;
 
-import javafx.geometry.Point3D;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 
 public class Plane implements Shape {
-	private Point3D normal;
-	private Point3D point;
-	public Plane(Point3D normal, Point3D point) {
-		this.normal = normal.normalize();
+	private Vector3d normal;
+	private Point3d point;
+	public Plane(Vector3d normal, Point3d point) {
+		normal.normalize();
+		this.normal = normal;
 		this.point = point;
 	}
-	public Point3D getNormal() {
+	public Vector3d getNormal() {
 		return normal;
 	}
-	public void setNormal(Point3D normal) {
-		this.normal = normal.normalize();
+	public void setNormal(Vector3d normal) {
+		normal.normalize();
+		this.normal = normal;
 	}
-	public Point3D getPoint() {
+	public Point3d getPoint() {
 		return point;
 	}
-	public void setPoint(Point3D point) {
+	public void setPoint(Point3d point) {
 		this.point = point;
 	}
 	public IntersectionContext intersect (Ray ray) {
-		double t = ray.getPoint().subtract(point).dotProduct(normal)/
-			(ray.getDirection().dotProduct(normal));
+		Vector3d rayPoint = new Vector3d(ray.getPoint());
+		Vector3d rayDirection = new Vector3d(ray.getDirection());
+		Vector3d difference = new Vector3d(rayPoint);
+		difference.sub(point);
+		double t = difference.dot(normal)/
+			(rayDirection.dot(normal));
 		if (t > EPS) {
-			Point3D hitPoint = ray.getPoint().add(ray.getDirection().multiply(t));
+			Vector3d displacement = new Vector3d(rayDirection);
+			displacement.scale(t);
+			Point3d hitPoint = new Point3d(rayPoint);
+			hitPoint.add(displacement);
 			return new IntersectionContext(hitPoint, normal, true);
 		}
 		else return new IntersectionContext(null, null, false);

@@ -1,25 +1,28 @@
 package model;
 
-import javafx.geometry.Point3D;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 
 public class PinholeCamera implements Camera {
-	private Point3D position;
-	private Point3D direction;
-	private Point3D up;
-	private Point3D right;
+	private Point3d position;
+	private Vector3d direction;
+	private Vector3d up;
+	private Vector3d right;
 	private double distanceToCamera;
 	private double horizFOV;
 	private double vertFOV;
 	private int xRes;
 	private int yRes;
 	
-	public PinholeCamera(Point3D position, Point3D direction, Point3D up, double distanceToCamera,
+	public PinholeCamera(Point3d position, Vector3d direction, Vector3d up, double distanceToCamera,
 			double horizFOV, double vertFOV, int xres, int yres) {
-		super();
+		direction.normalize();
+		up.normalize();
 		this.position = position;
-		this.direction = direction.normalize();
-		this.up = up.normalize();
-		this.right = direction.crossProduct(up);
+		this.direction = direction;
+		this.up = up;
+		this.right = new Vector3d();
+		this.right.cross(direction, up);
 		this.distanceToCamera = distanceToCamera;
 		this.horizFOV = horizFOV;
 		this.vertFOV = vertFOV;
@@ -27,17 +30,18 @@ public class PinholeCamera implements Camera {
 		this.yRes = yres;
 	}
 	
-	public Point3D getPosition() {
+	public Point3d getPosition() {
 		return position;
 	}
-	public void setPosition(Point3D position) {
+	public void setPosition(Point3d position) {
 		this.position = position;
 	}
-	public Point3D getDirection() {
+	public Vector3d getDirection() {
 		return direction;
 	}
-	public void setDirection(Point3D direction) {
-		this.direction = direction.normalize();
+	public void setDirection(Vector3d direction) {
+		direction.normalize();
+		this.direction = direction;
 	}
 	public double getVertFOV() {
 		return vertFOV;
@@ -48,16 +52,18 @@ public class PinholeCamera implements Camera {
 	public double getDistanceToCamera() {
 		return distanceToCamera;
 	}
-	public Point3D getUp() {
+	public Vector3d getUp() {
 		return up;
 	}
 
-	public void setUp(Point3D up) {
-		this.up = up.normalize();
-		this.right = direction.crossProduct(up);
+	public void setUp(Vector3d up) {
+		up.normalize();
+		this.up = up;
+		this.right = new Vector3d();
+		this.right.cross(direction, up);
 	}
 	
-	public Point3D getRight() {
+	public Vector3d getRight() {
 		return right;
 	}
 	

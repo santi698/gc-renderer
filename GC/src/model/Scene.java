@@ -3,6 +3,9 @@ package model;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
+
 import javafx.geometry.Point3D;
 
 public class Scene {
@@ -26,23 +29,35 @@ public class Scene {
 	}
 	public Image render() {
 		int[] rgbArray = new int[getCamera().getXRes()*getCamera().getYRes()];
-		Point3D x = getCamera().getRight();
-		Point3D y = getCamera().getUp().multiply(-1);
-		Point3D center = getCamera().getDirection().multiply(getCamera().getDistanceToCamera());
+		Vector3d x = getCamera().getRight();
+		Vector3d y = new Vector3d(getCamera().getUp());
+		y.scale(-1);
+		Point3d center = new Point3d(getCamera().getDirection());
+		center.scale(getCamera().getDistanceToCamera());
 		
 		double width = 2*getCamera().getDistanceToCamera()*Math.tan(getCamera().getHorizFOV());
 		double height = 2*getCamera().getDistanceToCamera()*Math.tan(getCamera().getHorizFOV());
-		
-		Point3D topLeft = center.subtract(x.multiply(width/2)).subtract(y.multiply(height/2));
+		Vector3d hwX = new Vector3d(x);
+		hwX.scale(width/2);
+		Vector3d hwY = new Vector3d(x);
+		hwY.scale(height/2);
+		Point3d location = new Point3d(center);
+		location.sub(hwX);
+		location.sub(hwY);
 		
 		double xStep = width/getCamera().getXRes();
 		double yStep = height/getCamera().getYRes();
 		
 		for (int i = 0; i < getCamera().getXRes(); i++) {
 			for (int j = 0; j < getCamera().getYRes(); j++) {
-				
-				Point3D location = topLeft.add(x.multiply(i*xStep)).add(y.multiply(j*yStep));
-				Ray ray = new Ray(location.subtract(getCamera().getPosition()).normalize(), getCamera().getPosition());
+				Vector3d disX = new Vector3d(x); disX.scale(i*xStep);
+				Vector3d disY = new Vector3d(y); disY.scale(j*yStep);
+				location.add(disX);
+				location.add(disY);
+				Vector3d direction = new Vector3d(location);
+				direction.sub(getCamera().getPosition());
+				direction.normalize(); 
+				Ray ray = new Ray(direction, getCamera().getPosition());
 				for (Body body : getObjects()) {
 					IntersectionContext ic = body.getShape().intersect(ray);
 					//Calcular color rgb y ponerlo en el array en la posicion i+j*width
