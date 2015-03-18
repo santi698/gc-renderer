@@ -10,8 +10,8 @@ public class PinholeCamera implements Camera {
 	private double distanceToCamera;
 	private double horizFOV;
 	private double vertFOV;
-	private int xres;
-	private int yres;
+	private int xRes;
+	private int yRes;
 	
 	public PinholeCamera(Point3D position, Point3D direction, Point3D up, double distanceToCamera,
 			double horizFOV, double vertFOV, int xres, int yres) {
@@ -23,8 +23,8 @@ public class PinholeCamera implements Camera {
 		this.distanceToCamera = distanceToCamera;
 		this.horizFOV = horizFOV;
 		this.vertFOV = vertFOV;
-		this.xres = xres;
-		this.yres = yres;
+		this.xRes = xres;
+		this.yRes = yres;
 	}
 	
 	public Point3D getPosition() {
@@ -61,11 +61,11 @@ public class PinholeCamera implements Camera {
 		return right;
 	}
 	
-	public int getXres() {
-		return xres;
+	public int getXRes() {
+		return xRes;
 	}
 
-	public int getYres() {
-		return yres;
+	public int getYRes() {
+		return yRes;
 	}
 }
