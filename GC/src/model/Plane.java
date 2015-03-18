@@ -21,8 +21,13 @@ public class Plane implements Shape {
 	public void setPoint(Point3D point) {
 		this.point = point;
 	}
-	public double intersect (Ray ray) {
-		return ray.getPoint().subtract(point).dotProduct(normal)/
+	public IntersectionContext intersect (Ray ray) {
+		double t = ray.getPoint().subtract(point).dotProduct(normal)/
 			(ray.getDirection().dotProduct(normal));
+		if (t > EPS) {
+			Point3D hitPoint = ray.getPoint().add(ray.getDirection().multiply(t));
+			return new IntersectionContext(hitPoint, normal, true);
+		}
+		else return new IntersectionContext(null, null, false);
 	}
 }

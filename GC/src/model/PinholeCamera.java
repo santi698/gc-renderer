@@ -5,20 +5,28 @@ import javafx.geometry.Point3D;
 public class PinholeCamera implements Camera {
 	private Point3D position;
 	private Point3D direction;
+	private Point3D up;
+	private Point3D right;
+	private double distanceToCamera;
 	private double horizFOV;
 	private double vertFOV;
-	private double horizTilt;
-	private double vertTilt;
-	public PinholeCamera(Point3D position, Point3D direction, double horizFOV,
-			double vertFOV, double horizTilt, double vertTilt) {
+	private int xres;
+	private int yres;
+	
+	public PinholeCamera(Point3D position, Point3D direction, Point3D up, double distanceToCamera,
+			double horizFOV, double vertFOV, int xres, int yres) {
 		super();
 		this.position = position;
-		this.direction = direction;
+		this.direction = direction.normalize();
+		this.up = up.normalize();
+		this.right = direction.crossProduct(up);
+		this.distanceToCamera = distanceToCamera;
 		this.horizFOV = horizFOV;
 		this.vertFOV = vertFOV;
-		this.horizTilt = horizTilt;
-		this.vertTilt = vertTilt;
+		this.xres = xres;
+		this.yres = yres;
 	}
+	
 	public Point3D getPosition() {
 		return position;
 	}
@@ -34,27 +42,30 @@ public class PinholeCamera implements Camera {
 	public double getVertFOV() {
 		return vertFOV;
 	}
-	public void setVertFOV(double vertFOV) {
-		this.vertFOV = vertFOV;
-	}
-	public double getHorizTilt() {
-		return horizTilt;
-	}
-	public void setHorizTilt(double horizTilt) {
-		this.horizTilt = horizTilt;
-	}
-	public double getVertTilt() {
-		return vertTilt;
-	}
-	public void setVertTilt(double vertTilt) {
-		this.vertTilt = vertTilt;
-	}
 	public double getHorizFOV() {
 		return horizFOV;
 	}
-	@Override
-	public Ray[][] getRaysThroughScreen() {
-		//TODO Iterar por todos los puntos de la pantalla y tirar rectas desde el centro.
-		return null;
+	public double getDistanceToCamera() {
+		return distanceToCamera;
+	}
+	public Point3D getUp() {
+		return up;
+	}
+
+	public void setUp(Point3D up) {
+		this.up = up.normalize();
+		this.right = direction.crossProduct(up);
+	}
+	
+	public Point3D getRight() {
+		return right;
+	}
+	
+	public int getXres() {
+		return xres;
+	}
+
+	public int getYres() {
+		return yres;
 	}
 }
