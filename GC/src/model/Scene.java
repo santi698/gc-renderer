@@ -1,7 +1,6 @@
 package model;
 
 import java.awt.Color;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 import javax.vecmath.Vector3d;
@@ -27,7 +26,7 @@ public class Scene {
 	public Camera getCamera() {
 		return camera;
 	}
-	public Image render() {
+	public BufferedImage render() {
 		int[] rgbArray = new int[getCamera().getXRes()*getCamera().getYRes()];
 		Vector3d x = getCamera().getRight();
 		Vector3d y = Vectors.scale(getCamera().getUp(), -1);
@@ -39,6 +38,8 @@ public class Scene {
 		Vector3d hwX = Vectors.scale(x, width/2);
 		Vector3d hwY = Vectors.scale(x, height/2);
 		Vector3d position = Vectors.sub(Vectors.sub(center, hwX), hwY);
+		System.out.println("x=" + "(" + x.x + "," + x.y + "," + x.z + ")");
+		System.out.println("y=" + "(" + y.x + "," + y.y + "," + y.z + ")");
 		
 		double xStep = width/getCamera().getXRes();
 		double yStep = height/getCamera().getYRes();
@@ -55,9 +56,11 @@ public class Scene {
 				double minDistance = Double.MAX_VALUE;
 				for (Body body : getObjects()) {
 					IntersectionContext ic = body.getShape().intersect(ray);
-					double distance = getCamera().getPosition().distance(ic.getIntersectionPoint());
-					if (distance < minDistance)
-						closestBody = body;
+					if (ic.getHit()) {
+						double distance = getCamera().getPosition().distance(ic.getIntersectionPoint());
+						if (distance < minDistance)
+							closestBody = body;
+					}
 				}
 				//Calcular color rgb y ponerlo en el array en la posicion i+j*width
 				if (closestBody != null)

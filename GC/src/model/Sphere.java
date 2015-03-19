@@ -38,7 +38,7 @@ public class Sphere implements Shape {
 			double e = Math.sqrt(disc);
 			double denom = a*2;
 
-			t = (-b-e/denom);
+			t = (-b-e)/denom;
 			
 			if (t > EPS) {
 				Vector3d dt = Vectors.scale(ray.getDirection(), t);
@@ -51,7 +51,7 @@ public class Sphere implements Shape {
 				return new IntersectionContext(hitPoint, normal, true);
 			}
 			
-			t = (-b-e/denom);
+			t = (-b+e)/denom;
 			
 			if (t > EPS) {
 				Vector3d dt = Vectors.scale(ray.getDirection(), t);
