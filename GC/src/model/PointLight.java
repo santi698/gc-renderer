@@ -17,7 +17,7 @@ public class PointLight extends Light {
 	@Override
 	public double isVisible(Point3d point, Scene scene) {
 		Vector3d direction = Vectors.normalize(Vectors.sub(position, point));
-		Ray ray = new Ray(direction, point);
+		Ray ray = new Ray(direction, position);
 		for (Body body : scene.getObjects()) {
 			if (body.getShape().intersect(ray).getHit()) {
 				return 0;

@@ -25,7 +25,7 @@ public class Triangle implements Shape {
 		double det = P.dot(d1);
 		if (det > -EPS && det < EPS) return IntersectionContext.noHit();
 		double invDet = 1/det;
-		Vector3d T = Vectors.sub(ray.getPoint(), p1);
+		Vector3d T = Vectors.sub(ray.getOrigin(), p1);
 		double u = T.dot(P)*invDet;
 		if (u < 0 || u > 1) return IntersectionContext.noHit();
 		Vector3d Q = Vectors.cross(T,d1);
@@ -33,7 +33,7 @@ public class Triangle implements Shape {
 		if (v < 0 || v > 1) return IntersectionContext.noHit();
 		double t = d2.dot(Q)*invDet;
 		if (t > EPS) {
-			Point3d iPoint = new Point3d(Vectors.add(ray.getPoint(), Vectors.scale(ray.getDirection(), t)));
+			Point3d iPoint = new Point3d(Vectors.add(ray.getOrigin(), Vectors.scale(ray.getDirection(), t)));
 			new IntersectionContext(iPoint, normal, true);
 		}
 		return IntersectionContext.noHit();

@@ -13,10 +13,13 @@ import model.Scene;
 import model.Sphere;
 
 public class SampleScene extends Scene {
-	final static Plane p = new Plane(new Vector3d(0,1,0),new Point3d(0, 1, 0));
-	final static Sphere s = new Sphere(new Point3d(0,2,0), 0.1);
-	final static Body[] bodies = new Body[] {new Body(p, Color.red, 0, 0, 1), new Body(s, Color.green, 0, 0, 1)};
-	final static Camera camera = new PinholeCamera(new Point3d(0, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0,0,1), 1, 60, 60, 1024, 1024);
+	final static Plane p = new Plane(new Vector3d(1,1,1),new Point3d(0.2, 0.1, 1));
+	final static Sphere s = new Sphere(new Point3d(0.002,0.002,0), 0.01);
+	final static Plane p2 = new Plane(new Vector3d(3,0,-1),new Point3d(3, 1, 1));
+	final static Body[] bodies = 	new Body[] {new Body(p, Color.cyan, 0, 0, 1), 
+									new Body(s, Color.yellow, 0, 0, 1),
+									new Body(p2, Color.MAGENTA, 0,0,1)};
+	final static Camera camera = new PinholeCamera(new Point3d(2e-1, -1e-1, 1), new Vector3d(1, 1, 0.5), new Vector3d(0,0,1), 1, 60, 60, 1024, 1024);
 	public SampleScene() {
 		super(null,bodies,camera);
 	}

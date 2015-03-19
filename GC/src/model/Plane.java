@@ -25,16 +25,15 @@ public class Plane implements Shape {
 		this.point = point;
 	}
 	public IntersectionContext intersect (Ray ray) {
-		Vector3d rayPoint = new Vector3d(ray.getPoint());
+		Vector3d rayOrigin = new Vector3d(ray.getOrigin());
 		Vector3d rayDirection = new Vector3d(ray.getDirection());
-		Vector3d difference = new Vector3d(rayPoint);
-		difference.sub(point);
+		Vector3d difference = Vectors.sub(point, rayOrigin);
 		double t = difference.dot(normal)/
 			(rayDirection.dot(normal));
 		if (t > EPS) {
 			Vector3d displacement = new Vector3d(rayDirection);
 			displacement.scale(t);
-			Point3d hitPoint = new Point3d(rayPoint);
+			Point3d hitPoint = new Point3d(rayOrigin);
 			hitPoint.add(displacement);
 			return new IntersectionContext(hitPoint, normal, true);
 		}

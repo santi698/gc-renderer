@@ -3,7 +3,9 @@ package model;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
+import javax.vecmath.Color3f;
 import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
 
 import util.Vectors;
 
@@ -30,16 +32,13 @@ public class Scene {
 		int[] rgbArray = new int[getCamera().getXRes()*getCamera().getYRes()];
 		Vector3d x = getCamera().getRight();
 		Vector3d y = Vectors.scale(getCamera().getUp(), -1);
-		y.scale(-1);
 		Vector3d center = Vectors.scale(getCamera().getDirection(), getCamera().getDistanceToCamera());
 		
-		double width = 2*getCamera().getDistanceToCamera()*Math.tan(getCamera().getHorizFOV());
-		double height = 2*getCamera().getDistanceToCamera()*Math.tan(getCamera().getHorizFOV());
+		double width = 2*getCamera().getDistanceToCamera()*Math.tan((getCamera().getHorizFOV()/360)*2*Math.PI);
+		double height = 2*getCamera().getDistanceToCamera()*Math.tan((getCamera().getVertFOV()/360)*2*Math.PI);
 		Vector3d hwX = Vectors.scale(x, width/2);
-		Vector3d hwY = Vectors.scale(x, height/2);
+		Vector3d hwY = Vectors.scale(y, height/2);
 		Vector3d position = Vectors.sub(Vectors.sub(center, hwX), hwY);
-		System.out.println("x=" + "(" + x.x + "," + x.y + "," + x.z + ")");
-		System.out.println("y=" + "(" + y.x + "," + y.y + "," + y.z + ")");
 		
 		double xStep = width/getCamera().getXRes();
 		double yStep = height/getCamera().getYRes();
@@ -53,18 +52,28 @@ public class Scene {
 				Vector3d direction = Vectors.normalize(Vectors.sub(position, getCamera().getPosition()));
 				Ray ray = new Ray(direction, getCamera().getPosition());
 				Body closestBody = null;
+				IntersectionContext effectiveIC = null;
 				double minDistance = Double.MAX_VALUE;
 				for (Body body : getObjects()) {
 					IntersectionContext ic = body.getShape().intersect(ray);
 					if (ic.getHit()) {
 						double distance = getCamera().getPosition().distance(ic.getIntersectionPoint());
-						if (distance < minDistance)
+						if (distance < minDistance) {
+							minDistance = distance;
 							closestBody = body;
+							effectiveIC = ic;
+						}
 					}
 				}
 				//Calcular color rgb y ponerlo en el array en la posicion i+j*width
-				if (closestBody != null)
-					rgbArray[i+j*getCamera().getXRes()] = closestBody.getColor().getRGB();
+				if (closestBody != null) {
+					Color c = closestBody.getColor();
+					// FIXME Luz puntual hardcodeada
+					double factor = Math.abs(effectiveIC.getNormal().dot(Vectors.normalize(Vectors.sub(effectiveIC.getIntersectionPoint(),new Vector3d(1e-3,0,0)))));
+					Vector3f d = new Vector3f(c.getRed()*(float)factor/255, c.getGreen()*(float)factor/255,c.getBlue()*(float)factor/255);
+					d.clampMax(1);
+					rgbArray[i+j*getCamera().getXRes()] = new Color3f(d).get().getRGB();
+				}
 				else
 					rgbArray[i+j*getCamera().getXRes()] = Color.BLACK.getRGB();
 			}
