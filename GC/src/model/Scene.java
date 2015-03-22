@@ -1,7 +1,12 @@
 package model;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
+import java.nio.IntBuffer;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.PixelFormat;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
 
 import javax.vecmath.Color3f;
 import javax.vecmath.Vector3d;
@@ -28,7 +33,7 @@ public class Scene {
 	public Camera getCamera() {
 		return camera;
 	}
-	public BufferedImage render() {
+	public Image render() {
 		int[] rgbArray = new int[getCamera().getXRes()*getCamera().getYRes()];
 		Vector3d x = getCamera().getRight();
 		Vector3d y = Vectors.scale(getCamera().getUp(), -1);
@@ -78,8 +83,10 @@ public class Scene {
 					rgbArray[i+j*getCamera().getXRes()] = Color.BLACK.getRGB();
 			}
 		}
-		BufferedImage img = new BufferedImage(getCamera().getXRes(), getCamera().getYRes(), BufferedImage.TYPE_INT_RGB);
-		img.setRGB(0, 0, getCamera().getXRes(), getCamera().getYRes(), rgbArray, 0, 0);
+		WritableImage img = new WritableImage(getCamera().getXRes(), getCamera().getYRes());
+		PixelWriter writer = img.getPixelWriter();
+		PixelFormat<IntBuffer> pixelFormat = PixelFormat.getIntArgbInstance();
+		writer.setPixels(0, 0, (int)img.getWidth(), (int)img.getHeight(), pixelFormat, rgbArray, 0, 0);
 		return img;
 	}
 }
