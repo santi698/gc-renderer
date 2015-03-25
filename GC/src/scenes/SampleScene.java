@@ -15,10 +15,12 @@ import model.bodies.Plane;
 import model.bodies.Sphere;
 import model.light.Light;
 import model.light.PointLight;
+import model.light.SpotLight;
 
 public class SampleScene extends Scene {
 	//Lights
-	final static Light[] lights = new Light[] {new PointLight(new Point3d(5,1,1), Color.white, 0.5)};
+	final static Light[] lights = new Light[] {new PointLight(new Point3d(5,1,1), Color.white, 1.5),
+												new SpotLight(new Point3d(0, -1e-1, 1), Color.yellow, 1.1, new Vector3d(-5, 1, 0.5), 10)};
 	
 	//Bodies
 	final static Plane p = new Plane(new Vector3d(1,1,1),new Point3d(0.2, 0.1, 1));
