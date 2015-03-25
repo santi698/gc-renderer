@@ -1,36 +1,16 @@
 package model.bodies;
 
-import java.awt.Color;
-
 public class Body {
 	private Shape shape;
-	private Color color;
-	private double refrIndex;
-	private double reflIndex;
-	private double absorIndex;
-	public Body(Shape shape, Color color, double refrIndex, double reflIndex,
-			double absorIndex) {
-		super();
+	private Material material;
+	public Body(Shape shape, Material material) {
 		this.shape = shape;
-		this.color = color;
-		this.refrIndex = refrIndex;
-		this.reflIndex = reflIndex;
-		this.absorIndex = absorIndex;
+		this.material = material;
 	}
 	public Shape getShape() {
 		return shape;
 	}
-	public Color getColor() {
-		return color;
+	public Material getMaterial() {
+		return material;
 	}
-	public double getRefrIndex() {
-		return refrIndex;
-	}
-	public double getReflIndex() {
-		return reflIndex;
-	}
-	public double getAbsorIndex() {
-		return absorIndex;
-	}
-	
 }

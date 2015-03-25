@@ -33,7 +33,7 @@ public class Main extends Application {
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
-			BufferedImage i = new RayTracer().render(new SampleScene());
+			BufferedImage i = new RayTracer(new SampleScene()).render();
 			controller.setImage(SwingFXUtils.toFXImage(i,null));
 			try {
 				File file = new File("test.png");

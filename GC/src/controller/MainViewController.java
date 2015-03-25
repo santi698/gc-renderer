@@ -9,9 +9,7 @@ public class MainViewController {
 	private Main mainApp;
 	@FXML
 	private ImageView image;
-	public MainViewController() {
-		
-	}
+
 	@FXML
 	private void initialize() {
 		assert (image!= null);

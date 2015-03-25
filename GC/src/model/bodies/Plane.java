@@ -10,22 +10,12 @@ import util.Vectors;
 public class Plane implements Shape {
 	private Vector3d normal;
 	private Point3d point;
+	
 	public Plane(Vector3d normal, Point3d point) {
 		this.normal = Vectors.normalize(normal);
 		this.point = point;
 	}
-	public Vector3d getNormal() {
-		return normal;
-	}
-	public void setNormal(Vector3d normal) {
-		this.normal = Vectors.normalize(normal);
-	}
-	public Point3d getPoint() {
-		return point;
-	}
-	public void setPoint(Point3d point) {
-		this.point = point;
-	}
+	
 	public IntersectionContext intersect (Ray ray) {
 		Vector3d rayOrigin = new Vector3d(ray.getOrigin());
 		Vector3d rayDirection = new Vector3d(ray.getDirection());

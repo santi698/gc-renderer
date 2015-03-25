@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import javax.vecmath.Point3d;
 
+import model.IntersectionContext;
 import model.Scene;
 
 public abstract class Light {
@@ -19,7 +20,7 @@ public abstract class Light {
 	public Color getColor() {
 		return color;
 	}
-	public double getIntensity() {
+	public double getIntensity(IntersectionContext ic) {
 		return intensity;
 	};
 }

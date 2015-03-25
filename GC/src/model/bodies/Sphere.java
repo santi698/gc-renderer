@@ -10,23 +10,13 @@ import util.Vectors;
 public class Sphere implements Shape {
 	private Point3d center;
 	private double radius;
+	
 	public Sphere(Point3d center, double radius) {
 		super();
 		this.center = center;
 		this.radius = radius;
 	}
-	public Point3d getCenter() {
-		return center;
-	}
-	public void setCenter(Point3d center) {
-		this.center = center;
-	}
-	public double getRadius() {
-		return radius;
-	}
-	public void setRadius(double radius) {
-		this.radius = radius;
-	}
+	
 	public IntersectionContext intersect(Ray ray) {
 		double t;
 		Vector3d temp = Vectors.sub(ray.getOrigin(), center);
