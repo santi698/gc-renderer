@@ -1,17 +1,17 @@
 package model;
 
 import java.awt.Color;
-import java.nio.IntBuffer;
+import java.awt.image.BufferedImage;
 
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
-import javafx.scene.image.PixelFormat;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
 
 import javax.vecmath.Color3f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
+import model.bodies.Body;
+import model.light.Light;
 import util.Vectors;
 
 public class Scene {
@@ -39,8 +39,8 @@ public class Scene {
 		Vector3d y = Vectors.scale(getCamera().getUp(), -1);
 		Vector3d center = Vectors.scale(getCamera().getDirection(), getCamera().getDistanceToCamera());
 		
-		double width = 2*getCamera().getDistanceToCamera()*Math.tan((getCamera().getHorizFOV()/360)*2*Math.PI);
-		double height = 2*getCamera().getDistanceToCamera()*Math.tan((getCamera().getVertFOV()/360)*2*Math.PI);
+		double width = 2*getCamera().getDistanceToCamera()*Math.tan((getCamera().getHorizFOV()/2/360)*2*Math.PI);
+		double height = 2*getCamera().getDistanceToCamera()*Math.tan((getCamera().getVertFOV()/2/360)*2*Math.PI);
 		Vector3d hwX = Vectors.scale(x, width/2);
 		Vector3d hwY = Vectors.scale(y, height/2);
 		Vector3d position = Vectors.sub(Vectors.sub(center, hwX), hwY);
@@ -83,10 +83,8 @@ public class Scene {
 					rgbArray[i+j*getCamera().getXRes()] = Color.BLACK.getRGB();
 			}
 		}
-		WritableImage img = new WritableImage(getCamera().getXRes(), getCamera().getYRes());
-		PixelWriter writer = img.getPixelWriter();
-		PixelFormat<IntBuffer> pixelFormat = PixelFormat.getIntArgbInstance();
-		writer.setPixels(0, 0, (int)img.getWidth(), (int)img.getHeight(), pixelFormat, rgbArray, 0, 0);
-		return img;
+		BufferedImage image = new BufferedImage(getCamera().getXRes(), getCamera().getYRes(), BufferedImage.TYPE_INT_ARGB);
+		image.setRGB(0, 0, getCamera().getXRes(), getCamera().getYRes(), rgbArray, 0, 0);
+		return SwingFXUtils.toFXImage(image, null);
 	}
 }

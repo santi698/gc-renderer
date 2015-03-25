@@ -1,8 +1,10 @@
-package model;
+package model.bodies;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import model.IntersectionContext;
+import model.Ray;
 import util.Vectors;
 
 public class Sphere implements Shape {

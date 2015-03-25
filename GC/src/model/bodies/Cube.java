@@ -1,4 +1,7 @@
-package model;
+package model.bodies;
+
+import model.IntersectionContext;
+import model.Ray;
 
 public class Cube implements Shape {
 	//TODO decidir como representarlo

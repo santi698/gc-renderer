@@ -6,8 +6,8 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import model.IntersectionContext;
-import model.Plane;
 import model.Ray;
+import model.bodies.Plane;
 
 import org.junit.Before;
 import org.junit.Test;

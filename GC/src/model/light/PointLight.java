@@ -1,10 +1,13 @@
-package model;
+package model.light;
 
 import java.awt.Color;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import model.Ray;
+import model.Scene;
+import model.bodies.Body;
 import util.Vectors;
 
 public class PointLight extends Light {

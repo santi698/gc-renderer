@@ -1,4 +1,7 @@
-package model;
+package model.bodies;
+
+import model.IntersectionContext;
+import model.Ray;
 
 public interface Shape {
 	//Necesario para evitar self-occlusion.
