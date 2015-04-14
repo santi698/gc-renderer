@@ -27,7 +27,7 @@ public class Ray {
 		double minDistance = Double.MAX_VALUE;
 		for (Body body : bodies) {
 			
-			IntersectionContext ic = body.getShape().intersect(this);
+			IntersectionContext ic = body.intersect(this);
 			if (ic.getHit()) {
 				double distance = origin.distance(ic.getIntersectionPoint());
 				if (distance < minDistance) {
@@ -38,7 +38,6 @@ public class Ray {
 			}
 		}
 		if (closestBody != null) {
-			effectiveIC.setBody(closestBody);
 			return effectiveIC;
 		}
 		else

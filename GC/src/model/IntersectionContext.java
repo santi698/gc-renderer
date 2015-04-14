@@ -12,7 +12,7 @@ public class IntersectionContext {
 	private Body body;
 	private Vector3d normal;
 	private boolean hit;
-	private double t;
+//	private double t;
 	private static final IntersectionContext notHit = new IntersectionContext(null, null, false);
 	public IntersectionContext(Point3d intersectionPoint, Vector3d normal, boolean hit) {
 		super();
@@ -36,9 +36,20 @@ public class IntersectionContext {
 		return hit;
 	}
 	public Color3f shade(Light[] lights, Body[] bodies) {
+		Color3f color = new Color3f(body.getMaterial().getColor());
+		color.scale((float) Math.sqrt(color.x*color.x+color.y*color.y+color.z*color.z));
+		double intensity = 0;
+		for (Light light : lights) {
+			if (light.isVisible(intersectionPoint, bodies) == 1) {
+				intensity += light.getIntensity(this);
+			}
+		}
 		//TODO
-		if (body != null)
-			return body.getMaterial().getColor();
+		if (body != null) {
+			color.scale((float)intensity);
+			color.clamp(0, 1);
+			return color;
+		}
 		return new Color3f();
 	}
 }

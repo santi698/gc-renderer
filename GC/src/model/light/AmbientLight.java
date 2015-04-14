@@ -3,7 +3,7 @@ package model.light;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 
-import model.Scene;
+import model.bodies.Body;
 
 public class AmbientLight extends Light {
 	public AmbientLight(Color3f color, double intensity) {
@@ -11,7 +11,7 @@ public class AmbientLight extends Light {
 	}
 
 	@Override
-	public double isVisible(Point3d point, Scene scene) {
+	public double isVisible(Point3d point, Body[] bodies) {
 		return 1;
 	}
 

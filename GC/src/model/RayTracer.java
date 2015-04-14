@@ -39,6 +39,7 @@ public class RayTracer {
 	}
 
 	private Ray rayThroughPixel(int x, int y) {
+		//FIXME está mal!!!
 		Vector3d xDir = (Vectors.scale(this.x, (x - scene.getCamera().getXRes()/2)));
 		Vector3d yDir = (Vectors.scale(this.y, (y - scene.getCamera().getYRes()/2)));
 		Vector3d zDir = Vectors.scale(z, scene.getCamera().getDistanceToCamera());

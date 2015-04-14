@@ -6,7 +6,6 @@ import javax.vecmath.Vector3d;
 
 import model.IntersectionContext;
 import model.Ray;
-import model.Scene;
 import model.bodies.Body;
 import util.Vectors;
 
@@ -18,10 +17,10 @@ public class PointLight extends Light {
 		this.position = position;
 	}	
 	@Override
-	public double isVisible(Point3d point, Scene scene) {
+	public double isVisible(Point3d point, Body[] bodies) {
 		Vector3d direction = Vectors.normalize(Vectors.sub(position, point));
 		Ray ray = new Ray(direction, position);
-		for (Body body : scene.getObjects()) {
+		for (Body body : bodies) {
 			if (body.getShape().intersect(ray).getHit()) {
 				return 0;
 			}

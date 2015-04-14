@@ -20,12 +20,13 @@ public class SpotLight extends PointLight {
 	}
 	
 	@Override
-	public double isVisible(Point3d point, Scene scene) {
-		Vector3d direction = Vectors.normalize(Vectors.sub(getPosition(), point));
-		if (direction.angle(this.direction) > angle/2)
+	public double isVisible(Point3d point, Body[] bodies) {
+		Vector3d direction = Vectors.normalize(Vectors.sub(point, getPosition()));
+		double incidenceAngle = direction.angle(this.direction);
+		if (incidenceAngle > angle/2)
 			return 0;
 		Ray ray = new Ray(direction, getPosition());
-		for (Body body : scene.getObjects()) {
+		for (Body body : bodies) {
 			if (body.getShape().intersect(ray).getHit()) {
 				return 0;
 			}

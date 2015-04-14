@@ -1,5 +1,8 @@
 package model.bodies;
 
+import model.IntersectionContext;
+import model.Ray;
+
 public class Body {
 	private Shape shape;
 	private Material material;
@@ -12,5 +15,10 @@ public class Body {
 	}
 	public Material getMaterial() {
 		return material;
+	}
+	public IntersectionContext intersect(Ray ray) {
+		IntersectionContext ic = shape.intersect(ray);
+		ic.setBody(this);
+		return ic;
 	}
 }

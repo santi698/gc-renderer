@@ -4,7 +4,7 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 
 import model.IntersectionContext;
-import model.Scene;
+import model.bodies.Body;
 
 public abstract class Light {
 	private Color3f color;
@@ -14,7 +14,7 @@ public abstract class Light {
 		this.color = color;
 		this.intensity = intensity;
 	}
-	public abstract double isVisible(Point3d point, Scene scene);
+	public abstract double isVisible(Point3d point, Body[] bodies);
 	
 	public Color3f getColor() {
 		return color;
