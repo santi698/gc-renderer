@@ -24,14 +24,13 @@ public class RayTracer {
 	public void setUp() {
 		x = scene.getCamera().getRight();
 		y = Vectors.scale(scene.getCamera().getUp(), -1);
-		Vector3d center = Vectors.scale(scene.getCamera().getDirection(), scene.getCamera().getDistanceToCamera());
+		Vector3d center = Vectors.add(scene.getCamera().getPosition(), Vectors.scale(scene.getCamera().getDirection(), scene.getCamera().getDistanceToCamera()));
 		
 		double width = 2*scene.getCamera().getDistanceToCamera()*Math.tan((scene.getCamera().getHorizFOV()/2/360)*2*Math.PI);
 		double height = 2*scene.getCamera().getDistanceToCamera()*Math.tan((scene.getCamera().getVertFOV()/2/360)*2*Math.PI);
 		Vector3d hwX = Vectors.scale(x, width/2);
 		Vector3d hwY = Vectors.scale(y, height/2);
 		position = Vectors.sub(Vectors.sub(center, hwX), hwY);
-		
 		xStep = width/scene.getCamera().getXRes();
 		yStep = height/scene.getCamera().getYRes();
 	}
@@ -40,17 +39,18 @@ public class RayTracer {
 		int[] rgbArray = new int[scene.getCamera().getXRes()*scene.getCamera().getYRes()];
 		
 		setUp();
-		
+		Vector3d disY = Vectors.scale(y, yStep);
+		Vector3d disX = Vectors.scale(x, xStep);
 		for (int i = 0; i < scene.getCamera().getXRes(); i++) {
 			for (int j = 0; j < scene.getCamera().getYRes(); j++) {
-				Vector3d disX = Vectors.scale(x, i*xStep);
-				Vector3d disY = Vectors.scale(y, j*yStep);
-				position.add(disX);
-				position.add(disY);
 				Vector3d direction = Vectors.normalize(Vectors.sub(position, scene.getCamera().getPosition()));
+				if (i+j*scene.getCamera().getXRes() == 260000)
+					System.out.println("");
 				Ray ray = new Ray(direction, scene.getCamera().getPosition());
 				rgbArray[i+j*scene.getCamera().getXRes()] = traceRay(ray);
+				position.add(disY);
 			}
+			position.add(disX);
 		}
 		BufferedImage image = new BufferedImage(scene.getCamera().getXRes(), scene.getCamera().getYRes(), BufferedImage.TYPE_INT_ARGB);
 		image.setRGB(0, 0, scene.getCamera().getXRes(), scene.getCamera().getYRes(), rgbArray, 0, 0);
@@ -62,6 +62,7 @@ public class RayTracer {
 		IntersectionContext effectiveIC = null;
 		double minDistance = Double.MAX_VALUE;
 		for (Body body : scene.getObjects()) {
+			
 			IntersectionContext ic = body.getShape().intersect(ray);
 			if (ic.getHit()) {
 				double distance = scene.getCamera().getPosition().distance(ic.getIntersectionPoint());
@@ -86,7 +87,8 @@ public class RayTracer {
 			if (light.isVisible(ic.getIntersectionPoint(), scene)>0)
 				factor *= light.getIntensity(ic);
 		}
-		return factor;
+//		return factor;
+		return 1;
 	}
 	
 	private Color3f calculateColor(IntersectionContext ic, Color3f bodyColor) {
@@ -94,7 +96,7 @@ public class RayTracer {
 		double factor = calculateLightFactor(ic);
 		Color3f d = new Color3f(bodyColor);
 		d.scale((float)factor);
-		d.clampMax(1);
+		
 		return d;
 	}
 }

@@ -1,6 +1,5 @@
 package model.light;
-import java.awt.Color;
-
+import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -11,7 +10,7 @@ import model.bodies.Body;
 public class DirectionalLight extends Light {
 	private Vector3d direction;
 	
-	public DirectionalLight(Vector3d direction, Color color, double intensity) {
+	public DirectionalLight(Vector3d direction, Color3f color, double intensity) {
 		super(color, intensity);
 		this.direction = direction;
 	}

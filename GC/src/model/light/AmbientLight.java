@@ -1,13 +1,12 @@
 package model.light;
 
-import java.awt.Color;
-
+import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 
 import model.Scene;
 
 public class AmbientLight extends Light {
-	public AmbientLight(Color color, double intensity) {
+	public AmbientLight(Color3f color, double intensity) {
 		super(color, intensity);
 	}
 

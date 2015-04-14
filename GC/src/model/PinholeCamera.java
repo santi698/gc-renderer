@@ -15,17 +15,20 @@ public class PinholeCamera implements Camera {
 	private int xRes;
 	private int yRes;
 	
-	public PinholeCamera(Point3d position, Vector3d direction, Vector3d up, double distanceToCamera,
+	public PinholeCamera(Point3d position, Point3d lookAt, Vector3d up, double distanceToCamera,
 			double horizFOV, double vertFOV, int xres, int yres) {
 		this.position = position;
-		this.direction = Vectors.normalize(direction);
+		this.direction = Vectors.normalize(Vectors.sub(lookAt, position));
 		this.up = Vectors.normalize(up);
 		this.right = Vectors.cross(direction, up);
+		this.up = Vectors.normalize(Vectors.cross(right, direction));
 		this.distanceToCamera = distanceToCamera;
 		this.horizFOV = horizFOV;
 		this.vertFOV = vertFOV;
 		this.xRes = xres;
 		this.yRes = yres;
+		assert(this.up.dot(this.right) == 0);
+		assert(this.direction.dot(this.right) == 0);
 	}
 	
 	public Point3d getPosition() {

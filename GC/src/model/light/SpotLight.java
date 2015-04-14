@@ -1,23 +1,22 @@
 package model.light;
 
-import java.awt.Color;
-
+import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import util.Vectors;
 import model.Ray;
 import model.Scene;
 import model.bodies.Body;
+import util.Vectors;
 
 public class SpotLight extends PointLight {
 	private double angle;
 	private Vector3d direction;
 	
-	public SpotLight(Point3d position, Color color, double intensity, Vector3d direction, double angle) {
+	public SpotLight(Point3d position, Color3f color, double intensity, Point3d pointAt, double angle) {
 		super(position, color, intensity);
 		this.angle = angle;
-		this.direction = direction;
+		this.direction = Vectors.normalize(Vectors.sub(pointAt, position));
 	}
 	
 	@Override

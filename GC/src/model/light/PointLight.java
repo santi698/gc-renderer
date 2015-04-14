@@ -1,7 +1,6 @@
 package model.light;
 
-import java.awt.Color;
-
+import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -14,7 +13,7 @@ import util.Vectors;
 public class PointLight extends Light {
 	private Point3d position;
 	
-	public PointLight(Point3d position, Color color, double intensity) {
+	public PointLight(Point3d position, Color3f color, double intensity) {
 		super(color, intensity);
 		this.position = position;
 	}	
