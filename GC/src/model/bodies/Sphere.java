@@ -36,10 +36,10 @@ public class Sphere implements Shape {
 				Vector3d dt = Vectors.scale(ray.getDirection(), t);
 				temp.add(dt);
 				temp.scale(1/radius);
-				temp.normalize();
-				Vector3d normal = Vectors.normalize(Vectors.sub(ray.getOrigin(), center));
+				temp.normalize();			
 				Vector3d pPlusDt = Vectors.add(ray.getOrigin(), dt);
 				Point3d hitPoint = new Point3d(pPlusDt);
+				Vector3d normal = Vectors.normalize(Vectors.sub(hitPoint, center));
 				return new IntersectionContext(hitPoint, normal, true);
 			}
 			

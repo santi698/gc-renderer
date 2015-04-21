@@ -29,7 +29,7 @@ public class PointLight extends Light {
 	}
 	@Override
 	public double getIntensity(IntersectionContext ic) {
-		return super.getIntensity(ic)*Math.abs(ic.getNormal().dot(Vectors.normalize(Vectors.sub(ic.getIntersectionPoint(), position))));
+		return 100/(position.distance(ic.getIntersectionPoint())*position.distance(ic.getIntersectionPoint()))*super.getIntensity(ic)*Math.abs(ic.getNormal().dot(Vectors.normalize(Vectors.sub(ic.getIntersectionPoint(), position))));
 	}
 	
 	protected Point3d getPosition() {
