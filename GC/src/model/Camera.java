@@ -8,8 +8,6 @@ public interface Camera {
 	public Vector3d getUp();
 	public Vector3d getRight();
 	public Vector3d getDirection();
-	public double getHorizFOV();
-	public double getVertFOV();
 	public int getXRes();
 	public int getYRes();
 	public double getDistanceToCamera();

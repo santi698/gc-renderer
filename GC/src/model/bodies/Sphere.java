@@ -37,7 +37,7 @@ public class Sphere implements Shape {
 				temp.add(dt);
 				temp.scale(1/radius);
 				temp.normalize();
-				Vector3d normal = new Vector3d(temp);
+				Vector3d normal = Vectors.normalize(Vectors.sub(ray.getOrigin(), center));
 				Vector3d pPlusDt = Vectors.add(ray.getOrigin(), dt);
 				Point3d hitPoint = new Point3d(pPlusDt);
 				return new IntersectionContext(hitPoint, normal, true);

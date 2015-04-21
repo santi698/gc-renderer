@@ -5,7 +5,6 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import model.Ray;
-import model.Scene;
 import model.bodies.Body;
 import util.Vectors;
 

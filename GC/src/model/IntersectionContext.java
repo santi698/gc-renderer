@@ -36,20 +36,19 @@ public class IntersectionContext {
 		return hit;
 	}
 	public Color3f shade(Light[] lights, Body[] bodies) {
+		if (body == null)
+			return new Color3f();
 		Color3f color = new Color3f(body.getMaterial().getColor());
-		color.scale((float) Math.sqrt(color.x*color.x+color.y*color.y+color.z*color.z));
+		color.scale((float) (1f/Math.sqrt(color.x*color.x+color.y*color.y+color.z*color.z)));
 		double intensity = 0;
 		for (Light light : lights) {
 			if (light.isVisible(intersectionPoint, bodies) == 1) {
 				intensity += light.getIntensity(this);
 			}
 		}
-		//TODO
-		if (body != null) {
+		if (intensity != 0)
 			color.scale((float)intensity);
-			color.clamp(0, 1);
-			return color;
-		}
-		return new Color3f();
+		color.clamp(0, 1);
+		return color;
 	}
 }
