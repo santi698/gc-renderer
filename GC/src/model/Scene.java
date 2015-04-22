@@ -1,6 +1,5 @@
 package model;
 
-import model.bodies.Body;
 import model.light.Light;
 
 public class Scene {

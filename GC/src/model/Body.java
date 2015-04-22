@@ -1,7 +1,6 @@
-package model.bodies;
+package model;
 
-import model.IntersectionContext;
-import model.Ray;
+import model.shapes.Shape;
 
 public class Body {
 	private Shape shape;

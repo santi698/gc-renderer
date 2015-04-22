@@ -3,7 +3,6 @@ package model;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import model.bodies.Body;
 import util.Vectors;
 
 public class Ray {

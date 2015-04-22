@@ -1,4 +1,4 @@
-package model.bodies;
+package model.shapes;
 
 import model.IntersectionContext;
 import model.Ray;

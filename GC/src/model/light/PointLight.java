@@ -4,9 +4,8 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import model.IntersectionContext;
+import model.Body;
 import model.Ray;
-import model.bodies.Body;
 import util.Vectors;
 
 public class PointLight extends Light {
@@ -28,11 +27,16 @@ public class PointLight extends Light {
 		return 1;
 	}
 	@Override
-	public double getIntensity(IntersectionContext ic) {
-		return 100/(position.distance(ic.getIntersectionPoint())*position.distance(ic.getIntersectionPoint()))*super.getIntensity(ic)*Math.abs(ic.getNormal().dot(Vectors.normalize(Vectors.sub(ic.getIntersectionPoint(), position))));
+	public double getIntensity(Point3d p) {
+		double distance = position.distance(p);
+		return 100/(distance*distance)*super.getIntensity(p);
 	}
 	
 	protected Point3d getPosition() {
 		return position;
+	}
+	@Override
+	public Vector3d getDirectionAt(Point3d point) {
+		return Vectors.normalize(Vectors.sub(point, position));
 	}
 }

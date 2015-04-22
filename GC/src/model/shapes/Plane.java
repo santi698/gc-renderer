@@ -1,4 +1,4 @@
-package model.bodies;
+package model.shapes;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -27,8 +27,8 @@ public class Plane implements Shape {
 			displacement.scale(t);
 			Point3d hitPoint = new Point3d(rayOrigin);
 			hitPoint.add(displacement);
-			return new IntersectionContext(hitPoint, normal, true);
+			return new IntersectionContext(hitPoint, normal, ray, true);
 		}
-		else return new IntersectionContext(null, null, false);
+		else return IntersectionContext.noHit();
 	}
 }

@@ -1,4 +1,4 @@
-package model.bodies;
+package model.shapes;
 
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -25,7 +25,7 @@ public class Sphere implements Shape {
 		double c = temp.dot(temp) - radius * radius;
 		double disc = b * b - 4 * a * c;
 		if (disc < 0)
-			return new IntersectionContext(null, null, false);
+			return IntersectionContext.noHit();
 		else {
 			double e = Math.sqrt(disc);
 			double denom = a*2;
@@ -40,7 +40,7 @@ public class Sphere implements Shape {
 				Vector3d pPlusDt = Vectors.add(ray.getOrigin(), dt);
 				Point3d hitPoint = new Point3d(pPlusDt);
 				Vector3d normal = Vectors.normalize(Vectors.sub(hitPoint, center));
-				return new IntersectionContext(hitPoint, normal, true);
+				return new IntersectionContext(hitPoint, normal, ray, true);
 			}
 			
 			t = (-b+e)/denom;
@@ -50,12 +50,12 @@ public class Sphere implements Shape {
 				temp.add(dt);
 				temp.scale(1/radius);
 				temp.normalize();
-				Vector3d normal = new Vector3d(temp);
 				Vector3d pPlusDt = Vectors.add(ray.getOrigin(), dt);
 				Point3d hitPoint = new Point3d(pPlusDt);
-				return new IntersectionContext(hitPoint, normal, true);
+				Vector3d normal = Vectors.normalize(Vectors.sub(hitPoint, center));
+				return new IntersectionContext(hitPoint, normal, ray, true);
 			}
 		}
-		return new IntersectionContext(null, null, false);
+		return IntersectionContext.noHit();
 	}
 }

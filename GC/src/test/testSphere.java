@@ -7,7 +7,7 @@ import javax.vecmath.Vector3d;
 
 import model.IntersectionContext;
 import model.Ray;
-import model.bodies.Sphere;
+import model.shapes.Sphere;
 
 import org.junit.Before;
 import org.junit.Test;

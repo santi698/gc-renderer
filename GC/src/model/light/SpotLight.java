@@ -4,8 +4,8 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import model.Body;
 import model.Ray;
-import model.bodies.Body;
 import util.Vectors;
 
 public class SpotLight extends PointLight {

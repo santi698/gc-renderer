@@ -3,8 +3,8 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import model.Body;
 import model.Ray;
-import model.bodies.Body;
 
 public class DirectionalLight extends Light {
 	private Vector3d direction;
@@ -22,5 +22,9 @@ public class DirectionalLight extends Light {
 				return 0;
 		}
 		return 1;
+	}
+	@Override
+	public Vector3d getDirectionAt(Point3d point) {
+		return direction;
 	}
 }
