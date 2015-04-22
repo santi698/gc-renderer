@@ -9,7 +9,7 @@ import model.Shader;
 import model.light.Light;
 
 public class Phong implements Shader {
-	private double alpha, ka = 0.2, ks=0.5, kd=1, is, id;
+	private double alpha, ka = 0.2, ks=0.5, kd=0.5, is, id;
 	public Phong(double alpha) {
 		this.alpha = alpha;
 	}
@@ -25,10 +25,11 @@ public class Phong implements Shader {
 				r.scale(2*l.dot(n));
 				r.sub(l);
 				Color3f lightColor = new Color3f(light.getColor());
-				lightColor.x = (float)(-kd * l.dot(n) * lightColor.x*id + ks*Math.pow(-v.dot(r), alpha)*lightColor.x*is);
-				lightColor.y = (float)(-kd * l.dot(n) * lightColor.y*id + ks*Math.pow(-v.dot(r), alpha)*lightColor.y*is);
-				lightColor.z = (float)(-kd * l.dot(n) * lightColor.z*id + ks*Math.pow(-v.dot(r), alpha)*lightColor.z*is);
+				lightColor.x = (float)(Math.abs(kd * l.dot(n) * lightColor.x*id) + ks*Math.pow(-v.dot(r), alpha)*lightColor.x*is);
+				lightColor.y = (float)(Math.abs(kd * l.dot(n) * lightColor.y*id) + ks*Math.pow(-v.dot(r), alpha)*lightColor.y*is);
+				lightColor.z = (float)(Math.abs(kd * l.dot(n) * lightColor.z*id) + ks*Math.pow(-v.dot(r), alpha)*lightColor.z*is);
 				totalLightColor.add(lightColor);
+
 			}
 		}
 		color.x *= totalLightColor.x + ka;
