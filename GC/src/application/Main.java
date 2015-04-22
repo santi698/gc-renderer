@@ -38,7 +38,6 @@ public class Main extends Application {
 			try {
 				File file = new File("test.png");
 				ImageIO.write(i, "png", file);
-				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

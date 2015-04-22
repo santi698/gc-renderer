@@ -19,5 +19,7 @@ public class MainViewController {
 	}
 	public void setImage(Image img) {
 		image.setImage(img);
+		mainApp.getPrimaryStage().setHeight(img.getHeight()+25);
+		mainApp.getPrimaryStage().setWidth(img.getWidth());
 	}
 }
