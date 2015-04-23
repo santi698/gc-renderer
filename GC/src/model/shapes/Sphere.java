@@ -40,7 +40,7 @@ public class Sphere implements Shape {
 				Vector3d pPlusDt = Vectors.add(ray.getOrigin(), dt);
 				Point3d hitPoint = new Point3d(pPlusDt);
 				Vector3d normal = Vectors.normalize(Vectors.sub(hitPoint, center));
-				return new IntersectionContext(hitPoint, normal, ray, true);
+				return new IntersectionContext(t, normal, ray, true);
 			}
 			
 			t = (-b+e)/denom;
@@ -53,7 +53,7 @@ public class Sphere implements Shape {
 				Vector3d pPlusDt = Vectors.add(ray.getOrigin(), dt);
 				Point3d hitPoint = new Point3d(pPlusDt);
 				Vector3d normal = Vectors.normalize(Vectors.sub(hitPoint, center));
-				return new IntersectionContext(hitPoint, normal, ray, true);
+				return new IntersectionContext(t, normal, ray, true);
 			}
 		}
 		return IntersectionContext.noHit();

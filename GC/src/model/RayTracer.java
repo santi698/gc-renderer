@@ -37,6 +37,7 @@ public class RayTracer {
 			for (int j = 0; j < scene.getCamera().getYRes(); j++) {
 				Ray ray = rayThroughPixel(i, j);
 				Supplier<Color3f> s = ()-> ray.trace(scene.getObjects()).shade(scene.getLights(), scene.getObjects());
+//				CompletableFuture<Color3f> tracing = CompletableFuture.supplyAsync(s); 
 				setColor(i, j, bi).accept(s.get());
 //				futures.add(tracing);
 //				futures.add(tracing.thenAccept(setColor(i, j, bi)));

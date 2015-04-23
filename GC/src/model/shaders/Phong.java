@@ -18,7 +18,7 @@ public class Phong implements Shader {
 		Color3f color = new Color3f(baseColor);
 		Color3f totalLightColor = new Color3f();
 		for (Light light : lights) {
-			if (light.isVisible(p, bodies) == 1) {
+			if (light.isVisible(p, bodies) > 0) {
 				Vector3d l = light.getDirectionAt(p);
 				id = is = light.getIntensity(p)/2;
 				Vector3d r = new Vector3d(n);

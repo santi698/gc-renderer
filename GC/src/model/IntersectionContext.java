@@ -4,29 +4,31 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import util.Vectors;
 import model.light.Light;
-import model.shapes.Sphere;
 
 public class IntersectionContext {
-	private Point3d intersectionPoint;
-	private Ray ray;
+	private static final IntersectionContext notHit = new IntersectionContext(Double.MAX_VALUE, null, null, false);
+	public static IntersectionContext noHit() {
+		return notHit;
+	}
 	private Body body;
-	private Vector3d normal;
 	private boolean hit;
-//	private double t;
-	private static final IntersectionContext notHit = new IntersectionContext(null, null, null, false);
-	public IntersectionContext(Point3d intersectionPoint, Vector3d normal, Ray ray, boolean hit) {
+	private Point3d intersectionPoint;
+	private Vector3d normal;
+	private Ray ray;
+	private double t;
+	public IntersectionContext(double t, Vector3d normal, Ray ray, boolean hit) {
 		super();
-		this.intersectionPoint = intersectionPoint;
+		if (hit)
+			this.intersectionPoint = new Point3d(Vectors.add(ray.getOrigin(), Vectors.scale(ray.getDirection(),t)));
 		this.normal = normal;
 		this.hit = hit;
 		this.ray = ray;
+		this.t = t;
 	}
-	public void setBody(Body body) {
-		this.body = body;
-	}
-	public static IntersectionContext noHit() {
-		return notHit;
+	public boolean getHit() {
+		return hit;
 	}
 	public Point3d getIntersectionPoint() {
 		return intersectionPoint;
@@ -37,15 +39,16 @@ public class IntersectionContext {
 	public Ray getRay() {
 		return ray;
 	}
-	public boolean getHit() {
-		return hit;
+	public double getT() {
+		return t;
+	}
+	public void setBody(Body body) {
+		this.body = body;
 	}
 	public Color3f shade(Light[] lights, Body[] bodies) {
-		if (body == null)
+		if (body == null | !this.hit)
 			return new Color3f();
 		Color3f color = new Color3f(body.getMaterial().getColor());
-		if (body.getShape() instanceof Sphere)
-			body.getShape();
 		return body.getMaterial().getShader().shade(intersectionPoint, normal, ray.getDirection(), lights, bodies, color);
 	}
 }

@@ -27,7 +27,7 @@ public class Plane implements Shape {
 			displacement.scale(t);
 			Point3d hitPoint = new Point3d(rayOrigin);
 			hitPoint.add(displacement);
-			return new IntersectionContext(hitPoint, normal, ray, true);
+			return new IntersectionContext(t, normal, ray, true);
 		}
 		else return IntersectionContext.noHit();
 	}

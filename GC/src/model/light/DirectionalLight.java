@@ -3,6 +3,7 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import util.Vectors;
 import model.Body;
 import model.Ray;
 
@@ -15,7 +16,7 @@ public class DirectionalLight extends Light {
 	}
 	@Override
 	public double isVisible(Point3d point, Body[] bodies) {
-		Ray ray = new Ray(direction, point);
+		Ray ray = new Ray(Vectors.scale(direction, -1), point);
 		for (Body body : bodies) {
 			//Si no la intercepta ningun objeto, es visible
 			if (body.getShape().intersect(ray).getHit())
