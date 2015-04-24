@@ -20,12 +20,11 @@ public class Lambert implements Shader {
 		for (Light light: lights) {
 			double visibility = light.isVisible(p, bodies);
 			if (visibility > 0) {
-				intensity = (float) (Math.abs(kd*light.getDirectionAt(p).dot(n))*visibility*light.getIntensity(p));
+				intensity = (float) ((kd*light.getDirectionFromTo(p).dot(n))*visibility*light.getIntensity(p));
 				Color3f lightColor = new Color3f(light.getColor());
 				lightColor.scale(intensity);
 				totalLightColor.add(lightColor);
 			}
-
 		}
 		color.x *= totalLightColor.x + ka;
 		color.y *= totalLightColor.y + ka;

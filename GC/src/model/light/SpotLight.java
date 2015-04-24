@@ -24,12 +24,6 @@ public class SpotLight extends PointLight {
 		double incidenceAngle = direction.angle(this.direction);
 		if (incidenceAngle > angle/2)
 			return 0;
-		Ray ray = new Ray(direction, getPosition());
-		for (Body body : bodies) {
-			if (body.getShape().intersect(ray).getHit()) {
-				return 0;
-			}
-		}
-		return 1;
+		return super.isVisible(point, bodies);
 	}
 }

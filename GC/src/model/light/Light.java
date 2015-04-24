@@ -17,7 +17,7 @@ public abstract class Light {
 	
 	public abstract double isVisible(Point3d point, Body[] bodies);
 	
-	public abstract Vector3d getDirectionAt(Point3d point);
+	public abstract Vector3d getDirectionFromTo(Point3d point);
 	
 	public Color3f getColor() {
 		return color;

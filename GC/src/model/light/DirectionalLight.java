@@ -12,7 +12,7 @@ public class DirectionalLight extends Light {
 	
 	public DirectionalLight(Vector3d direction, Color3f color, double intensity) {
 		super(color, intensity);
-		this.direction = direction;
+		this.direction = Vectors.normalize(direction);
 	}
 	@Override
 	public double isVisible(Point3d point, Body[] bodies) {
@@ -25,7 +25,7 @@ public class DirectionalLight extends Light {
 		return 1;
 	}
 	@Override
-	public Vector3d getDirectionAt(Point3d point) {
-		return direction;
+	public Vector3d getDirectionFromTo(Point3d point) {
+		return Vectors.scale(direction, -1);
 	}
 }

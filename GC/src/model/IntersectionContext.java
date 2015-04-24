@@ -4,11 +4,12 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import util.Vectors;
 import model.light.Light;
+import util.Vectors;
 
 public class IntersectionContext {
 	private static final IntersectionContext notHit = new IntersectionContext(Double.MAX_VALUE, null, null, false);
+	private static final Color3f bgColor = new Color3f(173/255f, 216/255f, 230/255f);
 	public static IntersectionContext noHit() {
 		return notHit;
 	}
@@ -47,8 +48,8 @@ public class IntersectionContext {
 	}
 	public Color3f shade(Light[] lights, Body[] bodies) {
 		if (body == null | !this.hit)
-			return new Color3f();
+			return bgColor;
 		Color3f color = new Color3f(body.getMaterial().getColor());
-		return body.getMaterial().getShader().shade(intersectionPoint, normal, ray.getDirection(), lights, bodies, color);
+		return body.getMaterial().getShader().shade(intersectionPoint, normal, Vectors.scale(ray.getDirection(),-1), lights, bodies, color);
 	}
 }
