@@ -28,29 +28,23 @@ public class Sphere implements Shape {
 			return IntersectionContext.noHit();
 		else {
 			double e = Math.sqrt(disc);
-			double denom = a*2;
+			double invDenom = 1/(a*2);
 
-			t = (-b-e)/denom;
+			t = (-b-e)*invDenom;
 			
 			if (t > EPS) {
-				Vector3d dt = Vectors.scale(ray.getDirection(), t);
-				temp.add(dt);
-				temp.scale(1/radius);
-				temp.normalize();			
-				Vector3d pPlusDt = Vectors.add(ray.getOrigin(), dt);
+				Vector3d dt = Vectors.scale(ray.getDirection(), t);		
+				Vector3d pPlusDt = Vectors.add(dt, ray.getOrigin());
 				Point3d hitPoint = new Point3d(pPlusDt);
 				Vector3d normal = Vectors.normalize(Vectors.sub(hitPoint, center));
 				return new IntersectionContext(t, normal, ray, true);
 			}
 			
-			t = (-b+e)/denom;
+			t = (-b+e)*invDenom;
 			
 			if (t > EPS) {
 				Vector3d dt = Vectors.scale(ray.getDirection(), t);
-				temp.add(dt);
-				temp.scale(1/radius);
-				temp.normalize();
-				Vector3d pPlusDt = Vectors.add(ray.getOrigin(), dt);
+				Vector3d pPlusDt = Vectors.add(dt, ray.getOrigin());
 				Point3d hitPoint = new Point3d(pPlusDt);
 				Vector3d normal = Vectors.normalize(Vectors.sub(hitPoint, center));
 				return new IntersectionContext(t, normal, ray, true);

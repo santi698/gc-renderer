@@ -11,4 +11,5 @@ public interface Camera {
 	public int getXRes();
 	public int getYRes();
 	public double getDistanceToCamera();
+	public double getPixelSize();
 }

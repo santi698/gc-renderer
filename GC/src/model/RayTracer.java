@@ -20,7 +20,8 @@ public class RayTracer {
 	private Scene scene;
 	private boolean AAEnabled = true;
 	private Sampler sampler;
-	private double pixelSize = 0.001;
+	private double pixelSize;
+	private long startTime;
 	
 	public RayTracer(Scene scene) {
 		this.scene = scene;
@@ -37,45 +38,36 @@ public class RayTracer {
 			sampler.generateSamples();
 			sampler.genShuffledIndices();
 		}
+		this.pixelSize = scene.getCamera().getPixelSize();
 		w = scale(scene.getCamera().getDirection(), -1);
 		u = normalize(cross(scene.getCamera().getUp(), w));
 		v = cross(w, u);
 	}
 	
 	public BufferedImage render() {
-//		List<CompletableFuture<?>> futures = new LinkedList<CompletableFuture<?>>();
+		List<CompletableFuture<?>> futures = new LinkedList<CompletableFuture<?>>();
 		BufferedImage bi = new BufferedImage(scene.getCamera().getXRes(), scene.getCamera().getYRes(), BufferedImage.TYPE_INT_RGB);
 		setUp();
+		startTime = System.currentTimeMillis();
 		for (int i = 0; i < scene.getCamera().getXRes(); i++) {
 			for (int j = 0; j < scene.getCamera().getYRes(); j++) {
-				Color3f resultColor = new Color3f();
-				if (AAEnabled) {
-					for (int k = 0; k < AASamples; k++) {
-						Point2d sample = sampler.sampleUnitSquare();
-						Ray ray = rayThroughPixel(i, j, sample);
-						Supplier<Color3f> s = ()-> ray.trace(scene.getObjects()).shade(scene.getLights(), scene.getObjects());
-						resultColor.add(s.get());
-		//				CompletableFuture<Color3f> tracing = CompletableFuture.supplyAsync(s); 
-		//				futures.add(tracing);
-		//				futures.add(tracing.thenAccept(setColor(i, j, bi)));
-					}
-					resultColor.scale(1f/AASamples);
-				} else {
-					Ray ray = rayThroughPixel(i, j);
-					Supplier<Color3f> s = ()-> ray.trace(scene.getObjects()).shade(scene.getLights(), scene.getObjects());
-					resultColor = s.get();
+				CompletableFuture<Color3f> tracing = CompletableFuture.supplyAsync(packetTracer(i, j));
+				futures.add(tracing.thenAccept(colorSetter(i, j, bi)));
+				try {
+					tracing.get(); //FIXME sin bloquear la concurrencia se producen glitches.
+				} catch (Exception e) {
+					;	
 				}
-				setColor(i, j, bi).accept(resultColor);
-
 			}
 		}
-//		for (CompletableFuture<?> future : futures) {
-//			try {
-//				future.get();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			};
-//		}
+		for (CompletableFuture<?> future : futures) {
+			try {
+				future.get();
+			} catch (Exception e) {
+				e.printStackTrace();
+			};
+		}
+		System.out.println("Renderizado a: " + 1/((System.currentTimeMillis()-startTime)/1000f) + " FPS.");
 		return bi;
 	}
 	private Ray rayThroughPixel(int i, int j) {
@@ -87,9 +79,27 @@ public class RayTracer {
 		Vector3d direction = normalize(sub(add(scale(u, x), scale(v, y)), scale(w, scene.getCamera().getDistanceToCamera())));
 		return new Ray(direction, scene.getCamera().getPosition());
 	}
-	private Consumer<Color3f> setColor(int i, int j, BufferedImage bi) {
+	private Consumer<Color3f> colorSetter(int i, int j, BufferedImage bi) {
 		return (color) -> {
-			bi.setRGB(i, j, color.get().getRGB());	
+			bi.setRGB(i, j, color.get().getRGB());
+		};
+	}
+	private Supplier<Color3f> packetTracer(int i, int j) {
+		return () -> {
+			Color3f resultColor = new Color3f();
+			if (AAEnabled) {
+				for (int k = 0; k < AASamples; k++) {
+					Point2d sample = sampler.sampleUnitSquare();
+					Ray ray = rayThroughPixel(i, j, sample);
+					Color3f color = ray.trace(scene.getObjects()).shade(scene.getLights(), scene.getObjects());
+					resultColor.add(color);
+				}
+				resultColor.scale(1f/AASamples);
+			} else {
+				Ray ray = rayThroughPixel(i, j);
+				resultColor = ray.trace(scene.getObjects()).shade(scene.getLights(), scene.getObjects());
+			}
+			return resultColor;
 		};
 	}
 }

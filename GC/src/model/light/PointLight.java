@@ -11,6 +11,7 @@ import model.shapes.Shape;
 import util.Vectors;
 
 public class PointLight extends Light {
+	private static final int LDECAY = 100;
 	private Point3d position;
 	
 	public PointLight(Point3d position, Color3f color, double intensity) {
@@ -36,7 +37,7 @@ public class PointLight extends Light {
 	@Override
 	public double getIntensity(Point3d p) {
 		double distance = position.distance(p);
-		return 100/(distance*distance)*super.getIntensity(p);
+		return LDECAY/(distance*distance)*super.getIntensity(p);
 	}
 	
 	protected Point3d getPosition() {

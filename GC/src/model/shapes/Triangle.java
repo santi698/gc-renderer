@@ -29,13 +29,15 @@ public class Triangle implements Shape {
 		double invDet = 1/det;
 		Vector3d T = Vectors.sub(ray.getOrigin(), p1);
 		double u = T.dot(P)*invDet;
-		if (u < 0 || u > 1) return IntersectionContext.noHit();
+		if (u < 0 || u > 1) 
+			return IntersectionContext.noHit();
 		Vector3d Q = Vectors.cross(T,d1);
 		double v = ray.getDirection().dot(Q)*invDet;
-		if (v < 0 || v > 1) return IntersectionContext.noHit();
+		if (v < 0 || v > 1) 
+			return IntersectionContext.noHit();
 		double t = d2.dot(Q)*invDet;
 		if (t > EPS) {
-			new IntersectionContext(t, normal, ray, true);
+			return new IntersectionContext(t, normal, ray, true);
 		}
 		return IntersectionContext.noHit();
 	}

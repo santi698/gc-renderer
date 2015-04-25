@@ -11,8 +11,8 @@ import model.light.Light;
 public class Lambert implements Shader {
 	double ka =0.2, kd=1;
 	@Override
-	public Color3f shade(Point3d p, Vector3d n, Vector3d v, Light[] lights,
-			Body[] bodies, Color3f baseColor) {
+	public Color3f shade(Point3d p, Vector3d n, Vector3d v, Light[] lights,	Body[] bodies, Color3f baseColor) {
+		
 		Color3f color = new Color3f(baseColor);
 		Color3f totalLightColor = new Color3f();
 
@@ -20,7 +20,7 @@ public class Lambert implements Shader {
 		for (Light light: lights) {
 			double visibility = light.isVisible(p, bodies);
 			if (visibility > 0) {
-				intensity = (float) ((kd*light.getDirectionFromTo(p).dot(n))*visibility*light.getIntensity(p));
+				intensity = (float) ((kd * light.getDirectionFromTo(p).dot(n)) * visibility * light.getIntensity(p));
 				Color3f lightColor = new Color3f(light.getColor());
 				lightColor.scale(intensity);
 				totalLightColor.add(lightColor);

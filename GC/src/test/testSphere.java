@@ -34,8 +34,8 @@ public class testSphere {
 		s1 = new Sphere(new Point3d(0,0,0), 1);
 		s2 = new Sphere(new Point3d(0,0,0), 10);
 		r1 = new Ray(new Vector3d(0,1,0), new Point3d(1,-1,0));
-		r2 = new Ray(new Vector3d(0,5,0), new Point3d(0,5,0));
-		r3 = new Ray(new Vector3d(0,10,0), new Point3d(0,0,0));
+		r2 = new Ray(new Vector3d(0,1,0), new Point3d(0,5,0));
+		r3 = new Ray(new Vector3d(0,1,0), new Point3d(0,0,0));
 		ic11 = s1.intersect(r1);
 		ic12 = s1.intersect(r2);
 		ic13 = s1.intersect(r3);

@@ -10,12 +10,12 @@ public class Vectors {
 		return v;
 	}
 	public static Vector3d add(Vector3d v1, Point3d v2) {
-		Vector3d v = new Vector3d(v1);
-		v.add(v2);
+		Vector3d v = new Vector3d(v2);
+		v.add(v1);
 		return v;
 	}
-	public static Vector3d add(Point3d v1, Vector3d v2) {
-		return add(v2,v1);
+	public static Point3d add(Point3d v1, Vector3d v2) {
+		return new Point3d(add(v2,v1));
 	}
 	public static Vector3d scale(Vector3d v1, double scale) {
 		Vector3d v = new Vector3d(v1);
