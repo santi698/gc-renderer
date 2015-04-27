@@ -1,5 +1,6 @@
 package model;
 
+import model.cameras.Camera;
 import model.light.Light;
 
 public class Scene {

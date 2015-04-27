@@ -22,6 +22,9 @@ public class Plane implements Shape {
 		Vector3d difference = Vectors.sub(point, rayOrigin);
 		double t = difference.dot(normal)/
 			(rayDirection.dot(normal));
+		if (normal.dot(rayDirection) < 0) {
+			normal.negate();
+		}
 		if (t > EPS) {
 			Vector3d displacement = new Vector3d(rayDirection);
 			displacement.scale(t);

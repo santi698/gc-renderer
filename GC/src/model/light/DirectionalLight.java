@@ -16,7 +16,7 @@ public class DirectionalLight extends Light {
 	}
 	@Override
 	public double isVisible(Point3d point, Body[] bodies) {
-		Ray ray = new Ray(Vectors.scale(direction, -1), point);
+		Ray ray = new Ray(Vectors.scale(direction, -1), point, 1);
 		for (Body body : bodies) {
 			//Si no la intercepta ningun objeto, es visible
 			if (body.getShape().intersect(ray).getHit())

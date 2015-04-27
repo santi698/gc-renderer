@@ -16,8 +16,8 @@ public class Triangle implements Shape {
 	public Triangle(Point3d p1, Point3d p2, Point3d p3) {
 		super();
 		this.p1 = p1;
-		this.d1 = Vectors.sub(p1, p2);
-		this.d2 = Vectors.sub(p1, p3);
+		this.d1 = Vectors.sub(p2, p1);
+		this.d2 = Vectors.sub(p3, p1);	
 		this.normal = Vectors.normalize(Vectors.cross(d1, d2));
 	}
 
@@ -33,7 +33,7 @@ public class Triangle implements Shape {
 			return IntersectionContext.noHit();
 		Vector3d Q = Vectors.cross(T,d1);
 		double v = ray.getDirection().dot(Q)*invDet;
-		if (v < 0 || v > 1) 
+		if (v < 0 || v > 1 || u + v > 1) 
 			return IntersectionContext.noHit();
 		double t = d2.dot(Q)*invDet;
 		if (t > EPS) {

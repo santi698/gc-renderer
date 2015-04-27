@@ -1,5 +1,6 @@
 package model;
 
+import model.materials.Material;
 import model.shapes.Shape;
 
 public class Body {

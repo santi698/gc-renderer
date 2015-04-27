@@ -1,4 +1,4 @@
-package model;
+package model.samplers;
 
 import javax.vecmath.Point2d;
 

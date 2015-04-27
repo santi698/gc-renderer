@@ -5,7 +5,6 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import model.Body;
-import model.Shader;
 import model.light.Light;
 
 public class Lambert implements Shader {

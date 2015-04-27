@@ -5,7 +5,6 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import model.Body;
-import model.Shader;
 import model.light.Light;
 
 public class Phong implements Shader {
@@ -28,12 +27,16 @@ public class Phong implements Shader {
 				Vector3d r = new Vector3d(n);
 				r.scale(2*l.dot(n));
 				r.sub(l);
-				
 				Color3f lightColor = new Color3f(light.getColor());
-				
-				lightColor.x = (float)((kd * l.dot(n) * lightColor.x * id) + ks * Math.pow(v.dot(r), alpha) * lightColor.x * is);
-				lightColor.y = (float)((kd * l.dot(n) * lightColor.y * id) + ks * Math.pow(v.dot(r), alpha) * lightColor.y * is);
-				lightColor.z = (float)((kd * l.dot(n) * lightColor.z * id) + ks * Math.pow(v.dot(r), alpha) * lightColor.z * is);
+				if (v.dot(r) > 0) {
+					lightColor.x = (float)((kd * l.dot(n) * lightColor.x * id) + ks * Math.pow(Math.abs(v.dot(r)), alpha) * lightColor.x * is);
+					lightColor.y = (float)((kd * l.dot(n) * lightColor.y * id) + ks * Math.pow(Math.abs(v.dot(r)), alpha) * lightColor.y * is);
+					lightColor.z = (float)((kd * l.dot(n) * lightColor.z * id) + ks * Math.pow(Math.abs(v.dot(r)), alpha) * lightColor.z * is);
+				} else {
+					lightColor.x = (float)(kd * l.dot(n) * lightColor.x * id);
+					lightColor.y = (float)(kd * l.dot(n) * lightColor.y * id);
+					lightColor.z = (float)(kd * l.dot(n) * lightColor.z * id);
+				}
 				
 				totalLightColor.add(lightColor);
 			}

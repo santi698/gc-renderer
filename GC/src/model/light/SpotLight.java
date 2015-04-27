@@ -5,7 +5,6 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import model.Body;
-import model.Ray;
 import util.Vectors;
 
 public class SpotLight extends PointLight {

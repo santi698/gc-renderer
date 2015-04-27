@@ -1,9 +1,10 @@
-package model;
+package model.shaders;
 
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import model.Body;
 import model.light.Light;
 
 public interface Shader {
