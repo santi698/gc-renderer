@@ -29,9 +29,9 @@ public class testPlane {
 	public void setUp() throws Exception {
 		p1 = new Plane(new Vector3d(1,0,0), new Point3d(0,-1,-1));
 		p2 = new Plane(new Vector3d(0,1,0), new Point3d(-2,0,-2));
-		r1 = new Ray(new Vector3d(0,1,1), new Point3d(0,-1,0),1);
-		r2 = new Ray(new Vector3d(1,0,0), new Point3d(-1,10,-1),1);
-		r3 = new Ray(new Vector3d(1,0,1), new Point3d(-1,1,-2),1);
+		r1 = new Ray(new Vector3d(0,1,1), new Point3d(0,-1,0));
+		r2 = new Ray(new Vector3d(1,0,0), new Point3d(-1,10,-1));
+		r3 = new Ray(new Vector3d(1,0,1), new Point3d(-1,1,-2));
 		ic11 = p1.intersect(r1);
 		ic12 = p1.intersect(r2);
 		ic13 = p1.intersect(r3);

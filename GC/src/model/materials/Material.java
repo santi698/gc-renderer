@@ -1,46 +1,49 @@
 package model.materials;
 
 import javax.vecmath.Color3f;
+import javax.vecmath.Vector3d;
 
-import model.shaders.Shader;
-import model.shapes.Shape;
+import util.Vectors;
+import model.Body;
+import model.IntersectionContext;
+import model.Ray;
+import model.light.Light;
 
-public class Material {
-	private double reflectionCoefficient;
-	private double transmissionCoefficient;
-	private double refractionIndex;
-	private double absorptionCoefficient;
+public abstract class Material {
+	public static final int REFRACTIONDEPTH = 10;
+	public static final int REFLECTIONDEPTH = 4;
 	private Color3f color;
-	private Shader shader;
 	
-	public Material(double reflectionCoefficient, double transmissionCoefficient,
-			double refractionIndex, double absorptionCoefficient, Color3f color, Shader shader) {
+	public Material(Color3f color) {
 		super();
-		assert(reflectionCoefficient + transmissionCoefficient + absorptionCoefficient - 1 < Shape.EPS);
-		assert(reflectionCoefficient>0 && transmissionCoefficient>0 && absorptionCoefficient >0 && refractionIndex >= 1);
-		this.reflectionCoefficient = reflectionCoefficient;
-		this.transmissionCoefficient = transmissionCoefficient;
-		this.refractionIndex = refractionIndex;
-		this.absorptionCoefficient = absorptionCoefficient;
 		this.color = color;
-		this.shader = shader;
 	}
-	public double getReflectionCoefficient() {
-		return reflectionCoefficient;
-	}
-	public double getTransmissionCoefficient() {
-		return transmissionCoefficient;
-	}
-	public double getRefractionIndex() {
-		return refractionIndex;
-	}
-	public double getAbsorptionCoefficient() {
-		return absorptionCoefficient;
-	}
-	public Shader getShader() {
-		return shader;
-	}
+	public abstract Color3f shade(IntersectionContext ic, Light[] lights, Body[] bodies, int refractionDepth, int reflectionDepth);
+	
 	public Color3f getColor() {
 		return color;
+	}
+	public static Ray reflect(IntersectionContext ic) {
+		Vector3d d = new Vector3d(ic.getRay().getDirection());
+		double m = ic.getNormal().dot(d);
+		d.scale(2);
+		d.sub(Vectors.scale(ic.getNormal(),2*m));
+		return new Ray(d, ic.getIntersectionPoint());
+	}
+	
+	public static Ray refract(IntersectionContext ic, double refractionIndex) {
+		
+		Vector3d t = new Vector3d(ic.getRay().getDirection());
+		
+		double no = refractionIndex;
+		double costi = t.dot(ic.getNormal());
+		if (costi < 0) //Si el rayo sale del objeto
+			no = 1/no;
+		double costt = Math.sqrt(1- 1/((1/no)*(1/no)) * (1-costi*costi));
+		if (costt == Double.NaN)
+			throw new RuntimeException();
+		t.scale(1/no);
+		t.sub(Vectors.scale(ic.getNormal(), costt-1/no*costi));
+		return new Ray(t, ic.getIntersectionPoint());
 	}
 }

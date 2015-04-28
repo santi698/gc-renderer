@@ -21,17 +21,11 @@ public class PointLight extends Light {
 	@Override
 	public double isVisible(Point3d point, Body[] bodies) {
 		Vector3d direction = Vectors.normalize(Vectors.sub(position, point));
-		Ray ray = new Ray(direction, point, 1);
+		Ray ray = new Ray(direction, point);
 		double maxT = position.distance(point);
-		for (Body body : bodies) {
-			IntersectionContext ic = body.getShape().intersect(ray);
-			if (ic.getHit()) {
-				double t = ic.getT();
-				if (maxT - t > Shape.EPS) {
-					return 0;
-				}
-			}
-		}
+		IntersectionContext ic = ray.trace(bodies);
+		if (ic.getHit() && maxT - ic.getT() > Shape.EPS)
+			return 0;
 		return 1;
 	}
 	@Override

@@ -2,13 +2,27 @@ package model.materials;
 
 import javax.vecmath.Color3f;
 
-import model.shaders.Phong;
+import model.Body;
+import model.IntersectionContext;
+import model.light.Light;
 
 public class Mirror extends Material {
 	public Mirror() {
-		super(0.9, 0, 0, 0.1, new Color3f(), new Phong(100));
+		super(null);
 	}
 	public Mirror(Color3f color) {
-		super(0.9, 0, 0, 0.1, color, new Phong(100));
+		super(color);
+	}
+	public Mirror(Color3f color, double opacity) {
+		super(color);
+	}
+	@Override
+	public Color3f shade(IntersectionContext ic, Light[] lights, Body[] bodies, int refractionDepth, int reflectionDepth) {
+		Color3f rfColor;
+		if (reflectionDepth < REFLECTIONDEPTH)
+			rfColor = reflect(ic).trace(bodies).shade(lights, bodies, refractionDepth, reflectionDepth+1);
+		else
+			rfColor = new Color3f();
+		return rfColor;
 	}
 }

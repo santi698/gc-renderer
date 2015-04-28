@@ -26,8 +26,6 @@ public class RayTracer {
 	private Sampler sampler;
 	private double pixelSize;
 	private long startTime;
-	private int reflectionDepth = 4;
-	private int refractionDepth = 10;
 	
 	public RayTracer(Scene scene) {
 		this.scene = scene;
@@ -87,7 +85,7 @@ public class RayTracer {
 		lensPoint.add(Vectors.scale(v, lensSample.y));
 		double ps = scene.getCamera().getFocalDistance()/scene.getCamera().getFocalLength();
 		Vector3d direction = normalize(sub(add(scale(u, x*ps-lensSample.x), scale(v, y*ps-lensSample.y)), scale(w, scene.getCamera().getFocalDistance())));
-		return new Ray(direction, lensPoint, 1);
+		return new Ray(direction, lensPoint);
 	}
 	private Consumer<Color3f> colorSetter(int i, int j, BufferedImage bi) {
 		return (color) -> {
@@ -103,13 +101,13 @@ public class RayTracer {
 				for (int k = 0; k < AASamples; k++) {
 					Point2d sample = sampler.sampleUnitSquare();
 					Ray ray = rayThroughPixel(i, j, sample, lensSamples[k]);
-					Color3f color = ray.trace(scene.getObjects()).shade(scene.getLights(), scene.getObjects(), reflectionDepth, refractionDepth);
+					Color3f color = ray.trace(scene.getObjects()).shade(scene.getLights(), scene.getObjects(), 0, 0);
 					resultColor.add(color);
 				}
 			} else {
 				for (Point2d lensSample : lensSamples) {
 					Ray ray = rayThroughPixel(i, j, lensSample);
-					Color3f color = ray.trace(scene.getObjects()).shade(scene.getLights(), scene.getObjects(), reflectionDepth, refractionDepth);
+					Color3f color = ray.trace(scene.getObjects()).shade(scene.getLights(), scene.getObjects(), 0, 0);
 					resultColor.add(color);
 				}
 			}

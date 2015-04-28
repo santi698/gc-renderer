@@ -8,21 +8,16 @@ import util.Vectors;
 public class Ray {
 	private Vector3d direction;
 	private Point3d origin;
-	private double originRefractionIndex;
 
-	public Ray(Vector3d direction, Point3d origin, double originRefractionIndex) {
+	public Ray(Vector3d direction, Point3d origin) {
 		this.direction = Vectors.normalize(direction);
 		this.origin = new Point3d(origin);
-		this.originRefractionIndex = originRefractionIndex;
 	}
 	public Vector3d getDirection() {
 		return direction;
 	}
 	public Point3d getOrigin() {
 		return origin;
-	}
-	public double getOriginRefractionIndex() {
-		return originRefractionIndex;
 	}
 	public IntersectionContext trace(Body[] bodies) {
 		Body closestBody = null;
