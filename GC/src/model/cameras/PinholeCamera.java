@@ -6,7 +6,7 @@ import javax.vecmath.Vector3d;
 
 public class PinholeCamera extends Camera {	
 	public PinholeCamera(Point3d position, Point3d lookAt, Vector3d up, double zoomFactor, int xres, int yres, double FOV) {
-		super(position, lookAt, up, zoomFactor, xres, yres, FOV);
+		super(position, lookAt, up, zoomFactor, xres, yres);
 	}
 	@Override
 	public Point2d[] sampleLens() {

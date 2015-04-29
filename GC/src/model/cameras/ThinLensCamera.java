@@ -10,12 +10,13 @@ import model.samplers.Sampler;
 public class ThinLensCamera extends Camera {
 	private double lensRadius;
 	private double focalDistance;
-	private int numSamples = 16;
+	private int numSamples;
 	private Sampler sampler;
-	public ThinLensCamera(Point3d position, Point3d lookAt, Vector3d up, double focalLength, int xres, int yres, double FOV, double fStop, Point3d focusAt) {
-		super(position, lookAt, up, focalLength, xres, yres, FOV);
+	public ThinLensCamera(Point3d position, Point3d lookAt, Vector3d up, double focalLength, int xres, int yres, double fStop, Point3d focusAt, int samples) {
+		super(position, lookAt, up, focalLength, xres, yres);
 		this.focalDistance = position.distance(focusAt);
 		this.lensRadius = getFocalLength()/(2*fStop);
+		this.numSamples = samples;
 		this.sampler = new Multijittered(numSamples);
 		sampler.generateSamples();
 		sampler.genShuffledIndices();

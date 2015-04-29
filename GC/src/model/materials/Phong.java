@@ -23,7 +23,9 @@ public class Phong extends Material {
 		this.ks = ks;
 		this.kd = kd;
 	}
-	
+	public void setKs(double ks) {
+		this.ks = ks;
+	}
 	@Override
 	public Color3f shade(IntersectionContext ic, Light[] lights, Body[] bodies, int refractionDepth, int reflectionDepth) {
 		Point3d p = ic.getIntersectionPoint();
@@ -31,7 +33,8 @@ public class Phong extends Material {
 		Vector3d n = ic.getNormal();
 
 		Color3f color = new Color3f(getColor());
-		Color3f totalLightColor = new Color3f();
+		Color3f totalDiffuseColor = new Color3f();
+		Color3f totalSpecularColor = new Color3f();
 		
 		for (Light light : lights) {
 			if (light.isVisible(p, bodies) > 0) {
@@ -41,16 +44,21 @@ public class Phong extends Material {
 				Vector3d r = new Vector3d(n);
 				r.scale(2*l.dot(n));
 				r.sub(l);
-				Color3f lightColor = new Color3f(light.getColor());
-				lightColor.x = (float)((kd * lambert.apply(l, n, v) * lightColor.x * id) + ks * phong.apply(l, n, v) * lightColor.x * is);
-				lightColor.y = (float)((kd * lambert.apply(l, n, v) * lightColor.y * id) + ks * phong.apply(l, n, v) * lightColor.y * is);
-				lightColor.z = (float)((kd * lambert.apply(l, n, v) * lightColor.z * id) + ks * phong.apply(l, n, v) * lightColor.z * is);				
-				totalLightColor.add(lightColor);
+				Color3f diffuseColor = new Color3f(light.getColor());
+				diffuseColor.x = (float)((kd * lambert.apply(l, n, v) * diffuseColor.x * id));
+				diffuseColor.y = (float)((kd * lambert.apply(l, n, v) * diffuseColor.y * id));
+				diffuseColor.z = (float)((kd * lambert.apply(l, n, v) * diffuseColor.z * id));
+				Color3f specularColor = new Color3f(light.getColor());
+				specularColor.x = (float) (ks * phong.apply(l, n, v) * specularColor.x * is);
+				specularColor.y = (float) (ks * phong.apply(l, n, v) * specularColor.y * is);
+				specularColor.z = (float) (ks * phong.apply(l, n, v) * specularColor.z * is);
+				totalDiffuseColor.add(diffuseColor);
+				totalSpecularColor.add(specularColor);
 			}
 		}
-		color.x *= totalLightColor.x + ka;
-		color.y *= totalLightColor.y + ka;
-		color.z *= totalLightColor.z + ka;
+		color.x = (float)(color.x * totalDiffuseColor.x + color.x * ka + totalSpecularColor.x);
+		color.y = (float)(color.y * totalDiffuseColor.y + color.y * ka + totalSpecularColor.y);
+		color.z = (float)(color.z * totalDiffuseColor.z + color.z * ka + totalSpecularColor.z);
 		color.clamp(0, 1);
 		
 		return color;

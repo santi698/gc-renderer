@@ -18,8 +18,7 @@ import model.samplers.Sampler;
 import static util.Vectors.*;
 
 public class RayTracer {
-	
-	private int AASamples = 16;
+	public static final float invGamma = 1f/2.2f;
 	private Vector3d u, v, w;
 	private Scene scene;
 	private boolean AAEnabled = true;
@@ -33,12 +32,9 @@ public class RayTracer {
 	public void setAA(boolean b) {
 		AAEnabled = b;
 	}
-	public void setSamples(int samples) {
-		this.AASamples = samples;
-	}
 	public void setUp() {
 		if (AAEnabled) {
-			this.sampler = new Multijittered(AASamples);
+			this.sampler = new Multijittered(scene.getAASamples());
 			sampler.generateSamples();
 			sampler.genShuffledIndices();
 		}
@@ -60,7 +56,7 @@ public class RayTracer {
 				try {
 					tracing.get();
 				} catch (Exception e) {
-					;
+					e.printStackTrace();
 				}
 			}
 		}
@@ -71,7 +67,8 @@ public class RayTracer {
 				e.printStackTrace();
 			};
 		}
-		System.out.println("Renderizado a: " + 1/((System.currentTimeMillis()-startTime)/1000f) + " FPS.");
+		double renderTime = ((System.currentTimeMillis()-startTime)/1000f);
+		System.out.println("Renderizado en " + renderTime + " segundos ("+ 1/renderTime + ") FPS.");
 		return bi;
 	}
 	private Ray rayThroughPixel(int i, int j, Point2d lensSample) {
@@ -89,6 +86,9 @@ public class RayTracer {
 	}
 	private Consumer<Color3f> colorSetter(int i, int j, BufferedImage bi) {
 		return (color) -> {
+			color.x = (float)Math.pow(color.x, invGamma);
+			color.y = (float)Math.pow(color.y, invGamma);
+			color.z = (float)Math.pow(color.z, invGamma);
 			bi.setRGB(i, j, color.get().getRGB());
 		};
 	}
@@ -97,10 +97,13 @@ public class RayTracer {
 			Color3f resultColor = new Color3f();
 			Point2d[] lensSamples = scene.getCamera().sampleLens();
 			if (AAEnabled) {
-				assert(AASamples == lensSamples.length);
-				for (int k = 0; k < AASamples; k++) {
+				for (int k = 0; k < scene.getAASamples(); k++) {
 					Point2d sample = sampler.sampleUnitSquare();
-					Ray ray = rayThroughPixel(i, j, sample, lensSamples[k]);
+					Ray ray;
+					if (lensSamples.length == 1)
+						ray = rayThroughPixel(i, j, sample, lensSamples[0]);
+					else
+						ray = rayThroughPixel(i, j, sample, lensSamples[k]);
 					Color3f color = ray.trace(scene.getObjects()).shade(scene.getLights(), scene.getObjects(), 0, 0);
 					resultColor.add(color);
 				}
@@ -111,7 +114,10 @@ public class RayTracer {
 					resultColor.add(color);
 				}
 			}
-			resultColor.scale(1f/lensSamples.length);
+			if (AAEnabled)
+				resultColor.scale(1f/scene.getAASamples());
+			else
+				resultColor.scale(1f/lensSamples.length);
 			return resultColor;
 		};
 	}

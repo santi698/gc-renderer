@@ -9,7 +9,8 @@ import util.Vectors;
 
 public class IntersectionContext {
 	private static final IntersectionContext notHit = new IntersectionContext(Double.MAX_VALUE, null, null, false);
-	private static final Color3f bgColor = new Color3f(173f/255f, 216f/255f, 230f/255f);
+	private static final Color3f BGCOLOR = new Color3f(173f/255f, 216f/255f, 230f/255f);
+//	private static final Color3f bgColor = new Color3f(1f, 1f, 1f);
 	public static IntersectionContext noHit() {
 		return notHit;
 	}
@@ -51,7 +52,7 @@ public class IntersectionContext {
 	}
 	public Color3f shade(Light[] lights, Body[] bodies, int refractionDepth, int reflectionDepth) {
 		if (body == null || !this.hit) {
-			return bgColor;
+			return new Color3f(BGCOLOR);
 		}
 		return body.getMaterial().shade(this, lights, bodies, refractionDepth, reflectionDepth);
 	}

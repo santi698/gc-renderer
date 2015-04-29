@@ -14,8 +14,9 @@ public abstract class Camera {
 	private int xRes, yRes;
 	private double pixelSize;
 	private double focalLength;
-	private double zoom = 0.1;
-	public Camera(Point3d position, Point3d lookAt, Vector3d up, double focalLength, int xres, int yres, double FOV) {
+	private double zoom = 0.2;
+	public Camera(Point3d position, Point3d lookAt, Vector3d up, double focalLength, int xres, int yres) {
+		double FOV = (0.035/focalLength)*Math.toRadians(49.13);
 		this.position = position;
 		this.direction = Vectors.normalize(Vectors.sub(lookAt, position));
 		this.up = Vectors.normalize(up);
@@ -30,10 +31,10 @@ public abstract class Camera {
 			this.pixelSize = 2*focalLength*Math.sin(FOV/2)/xres;
 	}
 	public Camera(Point3d position, Point3d lookAt, int xRes, int yRes) {
-		this(position, lookAt, new Vector3d(0,-1,0), 0.035,  xRes, yRes, Math.toRadians(49.13));
+		this(position, lookAt, new Vector3d(0,-1,0), 0.035,  xRes, yRes);
 	}
 	public Camera(Point3d lookAt, int xRes, int yRes) {
-		this(new Point3d(), lookAt, new Vector3d(0,-1,0), 0.035,  xRes, yRes, Math.toRadians(49.13));
+		this(new Point3d(), lookAt, new Vector3d(0,-1,0), 0.035,  xRes, yRes);
 	}
 	public Point3d getPosition(){
 		return position;

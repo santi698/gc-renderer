@@ -22,8 +22,8 @@ public class Sphere implements Shape {
 		Vector3d temp = Vectors.sub(ray.getOrigin(), center);
 		double a = ray.getDirection().dot(ray.getDirection());
 		double b = ray.getDirection().dot(Vectors.scale(temp,2));
-		double c = temp.dot(temp) - radius * radius;
-		double disc = b * b - 4 * a * c;
+		double c = temp.dot(temp) - (radius * radius);
+		double disc = (b * b) - (4 * a * c);
 		if (disc < 0)
 			return IntersectionContext.noHit();
 		else {
@@ -36,11 +36,8 @@ public class Sphere implements Shape {
 				Vector3d dt = Vectors.scale(ray.getDirection(), t);
 				temp.add(dt);
 				temp.scale(1/radius);
-				temp.normalize();			
-				Vector3d pPlusDt = Vectors.add(dt, ray.getOrigin());
-				Point3d hitPoint = new Point3d(pPlusDt);
-				Vector3d normal = Vectors.normalize(Vectors.sub(hitPoint, center));
-				return new IntersectionContext(t, normal, ray, true);
+				temp.normalize();
+				return new IntersectionContext(t, temp, ray, true);
 			}
 			
 			t = (-b+e)/denom;
@@ -50,10 +47,7 @@ public class Sphere implements Shape {
 				temp.add(dt);
 				temp.scale(1/radius);
 				temp.normalize();
-				Vector3d pPlusDt = Vectors.add(dt, ray.getOrigin());
-				Point3d hitPoint = new Point3d(pPlusDt);
-				Vector3d normal = Vectors.normalize(Vectors.sub(hitPoint, center));
-				return new IntersectionContext(t, normal, ray, true);
+				return new IntersectionContext(t, temp, ray, true);
 			}
 		}
 		return IntersectionContext.noHit();

@@ -33,17 +33,32 @@ public abstract class Material {
 	
 	public static Ray refract(IntersectionContext ic, double refractionIndex) {
 		
-		Vector3d t = new Vector3d(ic.getRay().getDirection());
-		
+		Vector3d t = Vectors.scale(ic.getRay().getDirection(), -1);
+		Vector3d normal = new Vector3d(ic.getNormal());
 		double no = refractionIndex;
 		double costi = t.dot(ic.getNormal());
-		if (costi < 0) //Si el rayo sale del objeto
+		if (costi < 0) { //Si el rayo sale del objeto
+			costi = -costi;
 			no = 1/no;
-		double costt = Math.sqrt(1- 1/((1/no)*(1/no)) * (1-costi*costi));
-		if (costt == Double.NaN)
-			throw new RuntimeException();
-		t.scale(1/no);
-		t.sub(Vectors.scale(ic.getNormal(), costt-1/no*costi));
+//			normal.scale(-1);
+		}
+		double costt = Math.sqrt(1-(1-costi*costi)/(no*no));
+		if (Double.isNaN(costt)) {
+			return reflect(ic);
+		}
+		t.scale(-1/no);
+		t.sub(Vectors.scale(normal, costt-costi/no));
+//		if (t.length() != 1)
+//			throw new RuntimeException();
+		t.normalize();
 		return new Ray(t, ic.getIntersectionPoint());
+	}
+	public static boolean tir(IntersectionContext ic, double refractionIndex) {
+		double costi = -ic.getRay().getDirection().dot(ic.getNormal());
+		double no = refractionIndex;
+		if (costi < 0) { //Si el rayo sale del objeto
+			no = 1/no;
+		}
+		return 1-(1-costi*costi)/(no*no) < 0;
 	}
 }
