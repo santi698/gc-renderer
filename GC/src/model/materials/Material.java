@@ -4,28 +4,26 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import org.omg.CosNaming.IstringHelper;
-
-import util.Vectors;
 import model.Body;
 import model.IntersectionContext;
 import model.Ray;
-import model.cameras.ThinLensCamera;
 import model.light.Light;
+import model.texture.Texture;
+import util.Vectors;
 
 public abstract class Material {
 	public static final int REFRACTIONDEPTH = 10;
 	public static final int REFLECTIONDEPTH = 4;
-	private Color3f color;
+	private Texture texture;
 	
-	public Material(Color3f color) {
+	public Material(Texture texture) {
 		super();
-		this.color = color;
+		this.texture = texture;
 	}
 	public abstract Color3f shade(IntersectionContext ic, Light[] lights, Body[] bodies, int refractionDepth, int reflectionDepth);
 	
-	public Color3f getColor() {
-		return color;
+	public Color3f getColor(double u, double v) {
+		return texture.get(u, v);
 	}
 	public boolean isThin() {
 		return false;
@@ -76,5 +74,8 @@ public abstract class Material {
 			no = 1/no;
 		}
 		return 1-(1-costi*costi)/(no*no) < 0;
+	}
+	public Texture getTexture() {
+		return texture;
 	}
 }

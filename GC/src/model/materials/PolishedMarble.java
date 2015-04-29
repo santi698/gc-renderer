@@ -5,10 +5,11 @@ import javax.vecmath.Color3f;
 import model.Body;
 import model.IntersectionContext;
 import model.light.Light;
+import model.texture.Texture;
 
 public class PolishedMarble extends Phong {
-	public PolishedMarble(Color3f bodyColor) {
-		super(bodyColor, 300, 0.5, 1);
+	public PolishedMarble(Texture bodyTexture) {
+		super(bodyTexture, 300, 0.5, 1);
 	}
 	@Override
 	public Color3f shade(IntersectionContext ic, Light[] lights, Body[] bodies,

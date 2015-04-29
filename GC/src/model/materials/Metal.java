@@ -1,9 +1,9 @@
 package model.materials;
 
-import javax.vecmath.Color3f;
+import model.texture.Texture;
 
 public class Metal extends Phong {
-	public Metal(Color3f color, double roughness) {
-		super(color, roughness, 0.5, 1);
+	public Metal(Texture texture, double roughness) {
+		super(texture, roughness, 0.5, 1);
 	}
 }

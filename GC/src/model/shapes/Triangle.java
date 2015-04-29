@@ -39,7 +39,7 @@ public class Triangle implements Shape {
 		if (t > EPS) {
 			if (normal.dot(ray.getDirection()) > 0)
 				normal.negate();
-			return new IntersectionContext(t, normal, ray, true);
+			return new IntersectionContext(t, normal, ray, true, u, v);
 		}
 		return IntersectionContext.noHit();
 	}

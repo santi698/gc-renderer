@@ -9,12 +9,13 @@ import model.Body;
 import model.IntersectionContext;
 import model.brdfs.PerfectDiffuse;
 import model.light.Light;
+import model.texture.Texture;
 
 public class Lambert extends Material {
 	private double ka =0.2, kd=1;
 	private PerfectDiffuse lambert;
-	public Lambert(Color3f bodyColor) {
-		super(bodyColor);
+	public Lambert(Texture texture) {
+		super(texture);
 		this.lambert = new PerfectDiffuse();
 	}
 	@Override
@@ -23,7 +24,7 @@ public class Lambert extends Material {
 		Vector3d v = Vectors.scale(ic.getRay().getDirection(), -1);
 		Vector3d n = ic.getNormal();
 
-		Color3f color = new Color3f(getColor());
+		Color3f color = new Color3f(getColor(ic.getU(), ic.getV()));
 		Color3f totalLightColor = new Color3f();
 
 		float intensity = 0;

@@ -6,19 +6,20 @@ import model.Body;
 import model.IntersectionContext;
 import model.Ray;
 import model.light.Light;
+import model.texture.Texture;
 
 public class Transparent extends Material {
 	private double refractionIndex;
 	private double kR;
-	private Color3f cFIn = super.getColor();
+	private Texture cFIn = super.getTexture();
 	private Color3f cFOut = new Color3f(1,1,1);
-	public Transparent(Color3f color, double refractionIndex) {
-		super(color);
+	public Transparent(Texture texture, double refractionIndex) {
+		super(texture);
 		this.refractionIndex = refractionIndex;
 		this.kR = 0.2;
 	}
-	public Transparent(Color3f color, double refractionIndex, double kR) {
-		this(color, refractionIndex);
+	public Transparent(Texture texture, double refractionIndex, double kR) {
+		this(texture, refractionIndex);
 		this.kR = kR;
 	}
 	public double calculateReflectionCoefficient(Ray refracted, Ray reflected, IntersectionContext ic) {
@@ -35,17 +36,17 @@ public class Transparent extends Material {
 		double r0 = (n1*costi-n2*costt)/(n1*costi+n2*costt);
 		return r0*r0;
 	}
-	public Color3f filterColor(Color3f targetColor, double distance, boolean in) {
+	public Color3f filterColor(Color3f targetColor, IntersectionContext ic, boolean in) {
 		targetColor = new Color3f(targetColor);
 		Color3f filterColor;
 		if (in) {
-			filterColor = cFIn;
+			filterColor = cFIn.get(ic.getU(), ic.getV());
 		} else {
 			filterColor = cFOut;
 		}
-		targetColor.x = (float)Math.pow(filterColor.x, distance)*targetColor.x;
-		targetColor.y = (float)Math.pow(filterColor.y, distance)*targetColor.y;
-		targetColor.z = (float)Math.pow(filterColor.z, distance)*targetColor.z;
+		targetColor.x = (float)Math.pow(filterColor.x, ic.getT())*targetColor.x;
+		targetColor.y = (float)Math.pow(filterColor.y, ic.getT())*targetColor.y;
+		targetColor.z = (float)Math.pow(filterColor.z, ic.getT())*targetColor.z;
 		return targetColor;
 	}
 	@Override
@@ -60,7 +61,7 @@ public class Transparent extends Material {
 			if (reflectionDepth < REFLECTIONDEPTH) {
 				IntersectionContext reflectedIc = reflected.trace(bodies);
 				Color3f reflectedColor = reflectedIc.shade(lights, bodies, refractionDepth, reflectionDepth+1);
-				return filterColor(reflectedColor, reflectedIc.getT(), in);
+				return filterColor(reflectedColor, reflectedIc, in);
 			}
 			else
 				return new Color3f(1,0,1);
@@ -68,14 +69,14 @@ public class Transparent extends Material {
 		if (refractionDepth < REFRACTIONDEPTH) {
 			IntersectionContext refractedIc = refracted.trace(bodies);
 			rrColor = refractedIc.shade(lights, bodies, refractionDepth+1, reflectionDepth);
-			rrColor = filterColor(rrColor, refractedIc.getT(), !in);
+			rrColor = filterColor(rrColor, refractedIc, !in);
 		}
 		else
 			rrColor = new Color3f(1,0,1);
 		if (reflectionDepth < REFLECTIONDEPTH) {
 			IntersectionContext reflectedIc = reflected.trace(bodies);
 			rfColor = reflectedIc.shade(lights, bodies, refractionDepth, reflectionDepth+1);
-			rfColor = filterColor(rfColor, reflectedIc.getT(), in);
+			rfColor = filterColor(rfColor, reflectedIc, in);
 		}
 		else
 			rfColor = new Color3f(1,0,1);

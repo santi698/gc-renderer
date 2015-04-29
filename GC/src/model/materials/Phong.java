@@ -10,13 +10,14 @@ import model.IntersectionContext;
 import model.brdfs.PerfectDiffuse;
 import model.brdfs.PerfectSpecular;
 import model.light.Light;
+import model.texture.Texture;
 
 public class Phong extends Material {
 	private double ka, ks, kd, is, id;
 	private PerfectDiffuse lambert;
 	private PerfectSpecular phong;
-	public Phong(Color3f bodyColor, double alpha, double ks, double kd) {
-		super(bodyColor);
+	public Phong(Texture bodyTexture, double alpha, double ks, double kd) {
+		super(bodyTexture);
 		this.lambert = new PerfectDiffuse();
 		this.phong = new PerfectSpecular(alpha);
 		this.ka = 0.2;
@@ -32,7 +33,7 @@ public class Phong extends Material {
 		Vector3d v = Vectors.scale(ic.getRay().getDirection(), -1);
 		Vector3d n = ic.getNormal();
 
-		Color3f color = new Color3f(getColor());
+		Color3f color = new Color3f(getColor(ic.getU(), ic.getV()));
 		Color3f totalDiffuseColor = new Color3f();
 		Color3f totalSpecularColor = new Color3f();
 		

@@ -8,7 +8,7 @@ import model.light.Light;
 import util.Vectors;
 
 public class IntersectionContext {
-	private static final IntersectionContext notHit = new IntersectionContext(Double.MAX_VALUE, null, null, false);
+	private static final IntersectionContext notHit = new IntersectionContext(Double.MAX_VALUE, null, null, false, 0, 0);
 	private static final Color3f BGCOLOR = new Color3f(173f/255f, 216f/255f, 230f/255f);
 //	private static final Color3f bgColor = new Color3f(1f, 1f, 1f);
 	public static IntersectionContext noHit() {
@@ -19,8 +19,8 @@ public class IntersectionContext {
 	private Point3d intersectionPoint;
 	private Vector3d normal;
 	private Ray ray;
-	private double t;
-	public IntersectionContext(double t, Vector3d normal, Ray ray, boolean hit) {
+	private double t, u, v;
+	public IntersectionContext(double t, Vector3d normal, Ray ray, boolean hit, double u, double v) {
 		super();
 		if (hit)
 			this.intersectionPoint = new Point3d(Vectors.add(ray.getOrigin(), Vectors.scale(ray.getDirection(),t)));
@@ -28,6 +28,8 @@ public class IntersectionContext {
 		this.hit = hit;
 		this.ray = ray;
 		this.t = t;
+		this.u = u;
+		this.v = v;
 	}
 	public boolean getHit() {
 		return hit;
@@ -43,6 +45,12 @@ public class IntersectionContext {
 	}	
 	public double getT() {
 		return t;
+	}
+	public double getU() {
+		return u;
+	}
+	public double getV() {
+		return v;
 	}
 	public Body getBody() {
 		return body;

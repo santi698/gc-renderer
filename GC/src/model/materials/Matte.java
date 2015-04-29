@@ -1,9 +1,9 @@
 package model.materials;
 
-import javax.vecmath.Color3f;
+import model.texture.Texture;
 
 public class Matte extends Lambert {
-	public Matte(Color3f color) {
-		super(color);
+	public Matte(Texture texture) {
+		super(texture);
 	}
 }

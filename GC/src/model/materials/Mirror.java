@@ -5,16 +5,17 @@ import javax.vecmath.Color3f;
 import model.Body;
 import model.IntersectionContext;
 import model.light.Light;
+import model.texture.Texture;
 
 public class Mirror extends Material {
 	public Mirror() {
 		super(null);
 	}
-	public Mirror(Color3f color) {
-		super(color);
+	public Mirror(Texture texture) {
+		super(texture);
 	}
-	public Mirror(Color3f color, double opacity) {
-		super(color);
+	public Mirror(Texture texture, double opacity) {
+		super(texture);
 	}
 	@Override
 	public Color3f shade(IntersectionContext ic, Light[] lights, Body[] bodies, int refractionDepth, int reflectionDepth) {
