@@ -29,8 +29,8 @@ import model.shapes.Triangle;
 
 @SuppressWarnings("unused")
 public class SampleScene extends Scene {
-	final static int AASamples = 16;
-	final static Point3d spherePos = new Point3d(0, 0.25, 0.5);
+	final static int AASamples = 128;
+	final static Point3d spherePos = new Point3d(0, 0.05, 0.5);
 	//Lights
 	final static Light[] lights = new Light[] {
 						new PointLight(new Point3d(0, 25, 2), new Color3f(1,0.8f,0.8f), 1),
@@ -40,24 +40,24 @@ public class SampleScene extends Scene {
 						};
 	
 	//Bodies
-	final static Sphere s2 = new Sphere(new Point3d(0, 1, 1.5), 1); 
-	final static Sphere s = new Sphere(spherePos, 0.25);
+	final static Sphere s2 = new Sphere(new Point3d(0.2, 0.05, 0.8), 0.05); 
+	final static Sphere s = new Sphere(spherePos, 0.05);
 	final static Plane p = new Plane(new Vector3d(0,1,0),new Point3d(0, 0, 0)); //Plano horizontal (piso)
-	final static Triangle t = new Triangle(new Point3d(0,0.2,1.5), new Point3d(-0.2,0,1.5), new Point3d(0.2,0,1.5)); //Triángulo en el piso
+	final static Triangle t = new Triangle(new Point3d(0.05,0.15,0.75), new Point3d(-0.15,0,0.5), new Point3d(0.15,0,0.8)); //Triángulo en el piso
 
 	final static Body[] bodies = new Body[] {
-//											new Body(s2, new Matte(new Color3f(0,1,1))), 
+											new Body(s2, new PolishedMarble(new Color3f(0.2f,0.9f,0.9f))), 
 //											new Body(s, new Metal(new Color3f(0.99f,0.99f,0.05f), 200)),
 //											new Body(s, new PolishedMarble(new Color3f(0.95f,0.95f,0.95f))),
-											new Body(s, new Glass(new Color3f(1f, 1f, 1f))),
+											new Body(s, new Glass(new Color3f(0.9f, 0.1f, 0.1f))),
 //											new Body(s, new Mirror(new Color3f(0.95f, 0.05f, 0.05f), 0.1)),
 											new Body(p, new Metal(new Color3f(0.25f,0.40f,0.25f), 0.5)),
 //											new Body(p, new Mirror(new Color3f(0.25f, 0.40f, 0.25f), 0.15)),
-//											new Body(t, new Matte(new Color3f(0.95f,0.01f,0.01f)))
+											new Body(t, new PolishedMarble(new Color3f(0.95f,0.01f,0.01f)))
 	};
 
 	//Camera
-	final static Camera camera = new ThinLensCamera(new Point3d(0, 0.4, -0.1), spherePos, new Vector3d(0,-1,0), 0.05, 720, 480, 7.1, spherePos, AASamples);
+	final static Camera camera = new ThinLensCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,-1,0), 0.035, 1280, 768, 5.6, spherePos, AASamples);
 //	final static Camera camera = new PinholeCamera(new Point3d(0, 0.75, -0.1), spherePos, new Vector3d(0,-1,0), 0.035, 720, 480, Math.toRadians(49.13));
 	
 	public SampleScene() {

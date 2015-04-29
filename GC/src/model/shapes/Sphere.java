@@ -13,15 +13,17 @@ public class Sphere implements Shape {
 	
 	public Sphere(Point3d center, double radius) {
 		super();
-		this.center = center;
+		this.center = new Point3d(center);
 		this.radius = radius;
 	}
 	
 	public IntersectionContext intersect(Ray ray) {
+		Vector3d rayDirection = new Vector3d(ray.getDirection());
+		Point3d rayOrigin = new Point3d(ray.getOrigin());
 		double t;
-		Vector3d temp = Vectors.sub(ray.getOrigin(), center);
-		double a = ray.getDirection().dot(ray.getDirection());
-		double b = ray.getDirection().dot(Vectors.scale(temp,2));
+		Vector3d temp = Vectors.sub(rayOrigin, new Point3d(center));
+		double a = rayDirection.dot(rayDirection);
+		double b = rayDirection.dot(Vectors.scale(temp,2));
 		double c = temp.dot(temp) - (radius * radius);
 		double disc = (b * b) - (4 * a * c);
 		if (disc < 0)
@@ -33,7 +35,7 @@ public class Sphere implements Shape {
 			t = (-b-e)/denom;
 			
 			if (t > EPS) {
-				Vector3d dt = Vectors.scale(ray.getDirection(), t);
+				Vector3d dt = Vectors.scale(rayDirection, t);
 				temp.add(dt);
 				temp.scale(1/radius);
 				temp.normalize();
@@ -43,7 +45,7 @@ public class Sphere implements Shape {
 			t = (-b+e)/denom;
 			
 			if (t > EPS) {
-				Vector3d dt = Vectors.scale(ray.getDirection(), t);
+				Vector3d dt = Vectors.scale(rayDirection, t);
 				temp.add(dt);
 				temp.scale(1/radius);
 				temp.normalize();

@@ -1,12 +1,16 @@
 package model.materials;
 
 import javax.vecmath.Color3f;
+import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+
+import org.omg.CosNaming.IstringHelper;
 
 import util.Vectors;
 import model.Body;
 import model.IntersectionContext;
 import model.Ray;
+import model.cameras.ThinLensCamera;
 import model.light.Light;
 
 public abstract class Material {
@@ -22,6 +26,12 @@ public abstract class Material {
 	
 	public Color3f getColor() {
 		return color;
+	}
+	public boolean isThin() {
+		return false;
+	}
+	public double getThickness() {
+		return 0;
 	}
 	public static Ray reflect(IntersectionContext ic) {
 		Vector3d d = new Vector3d(ic.getRay().getDirection());
@@ -40,7 +50,7 @@ public abstract class Material {
 		if (costi < 0) { //Si el rayo sale del objeto
 			costi = -costi;
 			no = 1/no;
-//			normal.scale(-1);
+			normal.scale(-1);
 		}
 		double costt = Math.sqrt(1-(1-costi*costi)/(no*no));
 		if (Double.isNaN(costt)) {
@@ -51,6 +61,12 @@ public abstract class Material {
 //		if (t.length() != 1)
 //			throw new RuntimeException();
 		t.normalize();
+		if (ic.getBody().getMaterial().isThin()) {
+			Point3d p = new Point3d(ic.getIntersectionPoint());
+			t.scale(ic.getBody().getMaterial().getThickness());
+			p.add(t);
+			return new Ray(ic.getRay().getDirection(), p);
+		}
 		return new Ray(t, ic.getIntersectionPoint());
 	}
 	public static boolean tir(IntersectionContext ic, double refractionIndex) {

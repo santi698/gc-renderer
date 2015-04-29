@@ -13,7 +13,7 @@ public class Plane implements Shape {
 	
 	public Plane(Vector3d normal, Point3d point) {
 		this.normal = Vectors.normalize(normal);
-		this.point = point;
+		this.point = new Point3d(point);
 	}
 	
 	public IntersectionContext intersect (Ray ray) {

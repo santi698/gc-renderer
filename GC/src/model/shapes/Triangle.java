@@ -15,7 +15,7 @@ public class Triangle implements Shape {
 	
 	public Triangle(Point3d p1, Point3d p2, Point3d p3) {
 		super();
-		this.p1 = p1;
+		this.p1 = new Point3d(p1);
 		this.d1 = Vectors.sub(p2, p1);
 		this.d2 = Vectors.sub(p3, p1);	
 		this.normal = Vectors.normalize(Vectors.cross(d1, d2));
