@@ -42,6 +42,7 @@ public class Main extends Application {
 		RayTracer rayTracer = new RayTracer(new SampleScene(), aaSamples, rayDepth, cl.hasOption("time"));
 		String filename = cl.getOptionValue("o");
 		if (!cl.hasOption("gui")) {
+			rayTracer.getProgressProperty().addListener((obj, o, n)->printProgress(n.doubleValue()));
 			File file = new File("renders/"+ filename);
 			BufferedImage i = rayTracer.render();
 			ImageIO.write(i, "png", file);
@@ -148,5 +149,9 @@ public class Main extends Application {
 	     // automatically generate the help statement
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("raytracer", options, true);
+	}
+	private static void printProgress(double progress) {
+		if (System.currentTimeMillis() % 500 == 0)
+		System.out.printf("%2.1f%%\r", progress*100);
 	}
 }

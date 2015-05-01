@@ -64,10 +64,10 @@ public class SampleScene extends Scene {
 											new SimpleBody(p, new Metal(new CheckerBoardTexture(0.5), 0.5)),
 //											new Body(p, new Matte(new ImageTexture("textures/1024/Wood 2.png"))),
 //											new Body(p, new Mirror(new Color3f(0.25f, 0.40f, 0.25f), 0.15)),
-											new SimpleBody(t, new PolishedMarble(new PlainTexture(new Color3f(0.95f,0.01f,0.01f)))),
-											new SimpleBody(t, new PolishedMarble(new CheckerBoardTexture(0.1))),
+											new SimpleBody(t, new PolishedMarble(new PlainTexture(new Color3f(0.85f,0.01f,0.01f)))),
+//											new SimpleBody(t, new PolishedMarble(new CheckerBoardTexture(0.1))),
 //											new Body(t2, new Glass(new PlainTexture(new Color3f(0.95f,0.01f,0.01f)), 0.02))
-											new SimpleBody(c, new PolishedMarble(new PlainTexture(new Color3f(0.2f, 0.1f, 0.1f))))
+//											new SimpleBody(c, new PolishedMarble(new PlainTexture(new Color3f(0.2f, 0.1f, 0.1f))))
 
 	};
 
