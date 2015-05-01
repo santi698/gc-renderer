@@ -31,6 +31,7 @@ import controller.MainViewController;
 public class Main extends Application {
 	private static CommandLine cl;
 	private static Options options;
+	public static int AASamples;
 	BorderPane rootLayout;
 	private Stage primaryStage;
 	@Override
@@ -82,8 +83,11 @@ public class Main extends Application {
 	
 	public static void main(String[] args) {
 		cl = setUpCliParser(args);
-		if (cl.hasOption("help"))
+		if (cl.hasOption("help")) {
 			printHelp();
+			System.exit(0);
+		}
+		AASamples = Integer.parseInt(cl.getOptionValue("aa"));
 		launch(args);
 		return;
 	}

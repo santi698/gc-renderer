@@ -21,6 +21,7 @@ import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import application.Main;
 import model.materials.Material;
 import model.samplers.Multijittered;
 import model.samplers.Sampler;
@@ -55,7 +56,7 @@ public class RayTracer {
 	}
 	public void setUp() {
 		if (AAEnabled) {
-			this.sampler = new Multijittered(scene.getAASamples());
+			this.sampler = new Multijittered(Main.AASamples);
 			sampler.generateSamples();
 			sampler.genShuffledIndices();
 		}
@@ -123,7 +124,7 @@ public class RayTracer {
 			Color3f resultColor = new Color3f();
 			Point2d[] lensSamples = scene.getCamera().sampleLens();
 			if (AAEnabled) {
-				for (int k = 0; k < scene.getAASamples(); k++) {
+				for (int k = 0; k < Main.AASamples; k++) {
 					Point2d sample = sampler.sampleUnitSquare();
 					Ray ray;
 					if (lensSamples.length == 1)
@@ -141,7 +142,7 @@ public class RayTracer {
 				}
 			}
 			if (AAEnabled)
-				resultColor.scale(1f/scene.getAASamples());
+				resultColor.scale(1f/Main.AASamples);
 			else
 				resultColor.scale(1f/lensSamples.length);
 			return resultColor;

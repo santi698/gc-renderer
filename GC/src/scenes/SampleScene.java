@@ -4,6 +4,7 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import application.Main;
 import static util.Vectors.*;
 import model.SimpleBody;
 import model.Scene;
@@ -34,7 +35,7 @@ import model.texture.PlainTexture;
 
 @SuppressWarnings("unused")
 public class SampleScene extends Scene {
-	final static int AASamples = 16;
+	final static int AASamples = Main.AASamples;
 	final static Point3d spherePos = new Point3d(0, 0.05, 0.5);
 	//Lights
 	final static Light[] lights = new Light[] {
