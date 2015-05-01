@@ -12,8 +12,8 @@ import model.texture.Texture;
 import util.Vectors;
 
 public abstract class Material {
-	public static final int REFRACTIONDEPTH = 10;
-	public static final int REFLECTIONDEPTH = 4;
+	public static int REFRACTIONDEPTH = 10;
+	public static int REFLECTIONDEPTH = 4;
 	private Texture texture;
 	
 	public Material(Texture texture) {

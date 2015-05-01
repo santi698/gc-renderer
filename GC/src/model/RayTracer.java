@@ -21,6 +21,7 @@ import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import model.materials.Material;
 import model.samplers.Multijittered;
 import model.samplers.Sampler;
 import util.Vectors;
@@ -30,6 +31,7 @@ public class RayTracer {
 	private Vector3d u, v, w;
 	private Scene scene;
 	private boolean AAEnabled = true;
+	private boolean showTime;
 	private Sampler sampler;
 	private double pixelSize;
 	private long startTime;
@@ -39,8 +41,14 @@ public class RayTracer {
 		return progress;
 	}
 	
-	public RayTracer(Scene scene) {
+	public RayTracer(Scene scene, int AASamples, int rayDepth, boolean showTime) {
+		if (rayDepth >= 0) {
+			Material.REFLECTIONDEPTH = rayDepth;
+			Material.REFRACTIONDEPTH = rayDepth;
+		}
+		//TODO Traer el control de las muestras de AA hasta acá.
 		this.scene = scene;
+		this.showTime = showTime;
 	}
 	public void setAA(boolean b) {
 		AAEnabled = b;
@@ -80,8 +88,10 @@ public class RayTracer {
 				e.printStackTrace();
 			};
 		}
-		double renderTime = ((System.currentTimeMillis()-startTime)/1000f);
-		System.out.println("Renderizado en " + renderTime + " segundos ("+ 1/renderTime + ") FPS.");
+		if (showTime) {
+			double renderTime = ((System.currentTimeMillis()-startTime)/1000f);
+			System.out.println("Renderizado en " + renderTime + " segundos ("+ 1/renderTime + ") FPS.");
+		}
 		return bi;
 	}
 	private Ray rayThroughPixel(int i, int j, Point2d lensSample) {
