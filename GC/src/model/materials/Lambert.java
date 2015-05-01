@@ -25,22 +25,23 @@ public class Lambert extends Material {
 		Vector3d n = ic.getNormal();
 
 		Color3f color = new Color3f(getColor(ic.getU(), ic.getV()));
-		Color3f totalLightColor = new Color3f();
+		Color3f totalDiffuseColor = new Color3f();
 
-		float intensity = 0;
 		for (Light light: lights) {
 			double visibility = light.isVisible(p, bodies);
 			if (visibility > 0) {
-				intensity = (float) ((kd * lambert.apply(light.getDirectionFromTo(p), n, v)) * visibility * light.getIntensity(p));
+				Color3f diffuseColor = lambert.apply(light.getDirectionFromTo(p), n, v);
+				diffuseColor.scale((float)(kd * visibility * light.getIntensity(p)));
 				Color3f lightColor = new Color3f(light.getColor());
-				lightColor.scale(intensity);
-				totalLightColor.add(lightColor);
+				diffuseColor.x *= lightColor.x;
+				diffuseColor.y *= lightColor.y;
+				diffuseColor.z *= lightColor.z;
+				totalDiffuseColor.add(totalDiffuseColor);
 			}
 		}
-		color.x = (float)(color.x * totalLightColor.x + color.x * ka);
-		color.y = (float)(color.y * totalLightColor.y + color.y * ka);
-		color.z = (float)(color.z * totalLightColor.z + color.z * ka);
-		color.clamp(0, 1);
+		color.x = (float)(color.x * totalDiffuseColor.x + color.x * ka);
+		color.y = (float)(color.y * totalDiffuseColor.y + color.y * ka);
+		color.z = (float)(color.z * totalDiffuseColor.z + color.z * ka);
 		return color;
 	}
 }

@@ -14,7 +14,7 @@ public abstract class Camera {
 	private int xRes, yRes;
 	private double pixelSize;
 	private double focalLength;
-	private double zoom = 0.4;
+	private double zoom = 1;
 	public Camera(Point3d position, Point3d lookAt, Vector3d up, double focalLength, int xres, int yres) {
 		double FOV = (0.035/focalLength)*Math.toRadians(49.13);
 		this.position = position;

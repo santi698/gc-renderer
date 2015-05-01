@@ -8,12 +8,12 @@ import model.IntersectionContext;
 import model.Ray;
 import util.Vectors;
 
-public class Sphere implements Shape {
+public class Sphere extends Shape {
 	private Point3d center;
 	private double radius;
 	
 	public Sphere(Point3d center, double radius) {
-		super();
+		super(new Vector3d(center), new Vector3d(), radius);
 		this.center = new Point3d(center);
 		this.radius = radius;
 	}
@@ -60,13 +60,14 @@ public class Sphere implements Shape {
 		return IntersectionContext.noHit();
 	}
 	private Point2d getUVCoordinates(Point3d localHitPoint) {
+		Point3d texturePoint = localToTexture(localHitPoint);
 		Point2d uv = new Point2d();
-		double theta = Math.acos(localHitPoint.y);
-		double phi = Math.atan2(localHitPoint.x, localHitPoint.z);
+		double theta = Math.acos(texturePoint.y);
+		double phi = Math.atan2(texturePoint.x, texturePoint.z);
 		if (phi < 0)
 			phi += 2*Math.PI;
 		uv.x = phi / (2*Math.PI);
-		uv.y = 1f	 - theta/Math.PI;
+		uv.y = 1f - theta/Math.PI;
 		return uv;
 	}
 }

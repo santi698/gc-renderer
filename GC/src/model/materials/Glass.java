@@ -3,7 +3,7 @@ package model.materials;
 import model.texture.Texture;
 
 public class Glass extends Transparent {
-	private double thickness = 0;
+	private double thickness = -1;
 	public Glass(Texture texture) {
 		super(texture, 1.52);
 	}
@@ -13,7 +13,7 @@ public class Glass extends Transparent {
 	}
 	@Override
 	public boolean isThin() {
-		return thickness != 0;
+		return thickness >= 0;
 	}
 	@Override
 	public double getThickness() {

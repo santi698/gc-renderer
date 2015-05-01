@@ -5,47 +5,36 @@ import javax.vecmath.Vector3d;
 
 public class Transformations {
 	public static Matrix4d translateMatrix(Vector3d translation) {
-		Matrix4d tMatrix = new Matrix4d(
-										1,	0,	0,	0,
-										0,	1,	0,	0,
-										0,	0,	1,	0,
-										translation.x, translation.y, translation.z, 1);
+		Matrix4d tMatrix = new Matrix4d();
+		tMatrix.setIdentity();
+		tMatrix.setTranslation(translation);
 		return tMatrix;
 	}
-	public static Matrix4d scaleMatrix(Vector3d scale) {
-		Matrix4d tMatrix = new Matrix4d(
-										scale.x,0,		0,		0,
-										0,		scale.y,0,		0,
-										0,		0,		scale.z,0,
-										0, 		0, 		0, 		1);
+	public static Matrix4d scaleMatrix(double scale) {
+		Matrix4d tMatrix = new Matrix4d();
+		tMatrix.setIdentity();
+		tMatrix.setScale(scale);
 		return tMatrix;
 	}
 	public static Matrix4d rotateXMatrix(double a) {
-		Matrix4d tMatrix = new Matrix4d(
-										1,		0,			0,			0,
-										0,		Math.cos(a),-Math.sin(a),0,
-										0,		Math.sin(a),Math.cos(a),0,
-										0, 		0, 			0,			1);
+		Matrix4d tMatrix = new Matrix4d();
+		tMatrix.setIdentity();
+		tMatrix.rotX(a);
 		return tMatrix;
 	}
 	public static Matrix4d rotateYMatrix(double a) {
-		Matrix4d tMatrix = new Matrix4d(
-										Math.cos(a),0,			Math.sin(a),0,
-										0,			1,			0,			0,
-										-Math.sin(a),0,			Math.cos(a),0,
-										0, 			0, 			0,			1);
+		Matrix4d tMatrix = new Matrix4d();
+		tMatrix.setIdentity();
+		tMatrix.rotY(a);
 		return tMatrix;
 	}
 	public static Matrix4d rotateZMatrix(double a) {
-		Matrix4d tMatrix = new Matrix4d(
-										Math.cos(a),-Math.sin(a),	0,		0,
-										Math.sin(a),Math.cos(a),	0,		0,
-										0,			0,				1,		0,
-										0, 			0, 				0,		1);
+		Matrix4d tMatrix = new Matrix4d();
+		tMatrix.rotZ(a);
 		return tMatrix;
 	}
 	public static Matrix4d rotateMatrix(Vector3d rotationVector) {
-		Matrix4d matrix;
+		Matrix4d matrix = new Matrix4d();
 		matrix = rotateXMatrix(rotationVector.x);
 		matrix.mul(rotateYMatrix(rotationVector.y));
 		matrix.mul(rotateZMatrix(rotationVector.z));

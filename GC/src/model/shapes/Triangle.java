@@ -7,14 +7,14 @@ import model.IntersectionContext;
 import model.Ray;
 import util.Vectors;
 
-public class Triangle implements Shape {
+public class Triangle extends Shape {
 	private Point3d p1;
 	private Vector3d d1;
 	private Vector3d d2;
 	private Vector3d normal;
 	
 	public Triangle(Point3d p1, Point3d p2, Point3d p3) {
-		super();
+		super(new Vector3d(), new Vector3d(), 1);
 		this.p1 = new Point3d(p1);
 		this.d1 = Vectors.sub(p2, p1);
 		this.d2 = Vectors.sub(p3, p1);	

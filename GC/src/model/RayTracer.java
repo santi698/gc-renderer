@@ -1,5 +1,11 @@
 package model;
 
+import static util.Vectors.add;
+import static util.Vectors.cross;
+import static util.Vectors.normalize;
+import static util.Vectors.scale;
+import static util.Vectors.sub;
+
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
@@ -7,15 +13,17 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+
 import javax.vecmath.Color3f;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import util.Vectors;
 import model.samplers.Multijittered;
 import model.samplers.Sampler;
-import static util.Vectors.*;
+import util.Vectors;
 
 public class RayTracer {
 	public static final float invGamma = 1f/2.2f;
@@ -25,6 +33,11 @@ public class RayTracer {
 	private Sampler sampler;
 	private double pixelSize;
 	private long startTime;
+	private DoubleProperty progress = new SimpleDoubleProperty();
+	
+	public DoubleProperty getProgressProperty() {
+		return progress;
+	}
 	
 	public RayTracer(Scene scene) {
 		this.scene = scene;
@@ -86,10 +99,13 @@ public class RayTracer {
 	}
 	private Consumer<Color3f> colorSetter(int i, int j, BufferedImage bi) {
 		return (color) -> {
+			color.clamp(0, 1); //FIXME Guardar todo en una matriz y/o aplicar alguna compresión de rango no (o menos) destructiva.
 			color.x = (float)Math.pow(color.x, invGamma);
 			color.y = (float)Math.pow(color.y, invGamma);
 			color.z = (float)Math.pow(color.z, invGamma);
 			bi.setRGB(i, j, color.get().getRGB());
+			int pixelsSet = ((i>0)?(i-1)*bi.getHeight():0) + j;
+			progress.set(((double)pixelsSet/(bi.getWidth()*bi.getHeight())));
 		};
 	}
 	private Supplier<Color3f> packetTracer(int i, int j) {

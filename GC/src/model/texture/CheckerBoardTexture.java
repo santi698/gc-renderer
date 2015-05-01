@@ -14,6 +14,6 @@ public class CheckerBoardTexture extends FunctionTexture {
 		);
 	}
 	public CheckerBoardTexture(double checkerSize) {
-		this(new Color3f(0,0,0), new Color3f(1,1,1), checkerSize);
+		this(new Color3f(0.01f,0.01f,0.01f), new Color3f(0.99f,0.99f,0.99f), checkerSize);
 	}
 }

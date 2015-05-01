@@ -24,7 +24,11 @@ public class ImageTexture implements Texture {
 	public Color3f get(double u, double v) {
 		int x = (int)(u*image.getWidth());
 		int y = (int)(v*image.getHeight());
-		return new Color3f(new Color(image.getRGB(x, y)));
+		Color3f color = new Color3f(new Color(image.getRGB(x, y)));
+		color.x = (float) Math.pow(color.x, 2.2);
+		color.y = (float) Math.pow(color.y, 2.2);
+		color.z = (float) Math.pow(color.z, 2.2);
+		return color;
 	}
 
 }

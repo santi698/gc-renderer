@@ -8,19 +8,14 @@ import model.Ray;
 import model.light.Light;
 import model.texture.Texture;
 
-public class Transparent extends Material {
+public class Transparent extends Phong {
 	private double refractionIndex;
-	private double kR;
+	private float kR;
 	private Texture cFIn = super.getTexture();
 	private Color3f cFOut = new Color3f(1,1,1);
 	public Transparent(Texture texture, double refractionIndex) {
-		super(texture);
+		super(texture, 400, 0, 1, 0);
 		this.refractionIndex = refractionIndex;
-		this.kR = 0.2;
-	}
-	public Transparent(Texture texture, double refractionIndex, double kR) {
-		this(texture, refractionIndex);
-		this.kR = kR;
 	}
 	public double calculateReflectionCoefficient(Ray refracted, Ray reflected, IntersectionContext ic) {
 		double n1,n2;
@@ -53,6 +48,7 @@ public class Transparent extends Material {
 	public Color3f shade(IntersectionContext ic, Light[] lights, Body[] bodies, int refractionDepth, int reflectionDepth) {
 		Color3f rrColor;
 		Color3f rfColor;
+		Color3f phongColor = super.shade(ic, lights, bodies, refractionDepth, reflectionDepth);
 		Ray refracted = refract(ic, refractionIndex);
 		Ray reflected = reflect(ic);
 		double costi = -ic.getRay().getDirection().dot(ic.getNormal());
@@ -61,7 +57,9 @@ public class Transparent extends Material {
 			if (reflectionDepth < REFLECTIONDEPTH) {
 				IntersectionContext reflectedIc = reflected.trace(bodies);
 				Color3f reflectedColor = reflectedIc.shade(lights, bodies, refractionDepth, reflectionDepth+1);
-				return filterColor(reflectedColor, reflectedIc, in);
+				Color3f result = filterColor(reflectedColor, reflectedIc, in);
+				result.add(phongColor);
+				return result;
 			}
 			else
 				return new Color3f(1,0,1);
@@ -80,10 +78,12 @@ public class Transparent extends Material {
 		}
 		else
 			rfColor = new Color3f(1,0,1);
-		kR = calculateReflectionCoefficient(refracted, reflected, ic);
-		rrColor.scale((float)(1-kR));
-		rfColor.scale((float)kR);
+		kR = (float)calculateReflectionCoefficient(refracted, reflected, ic);
+		rrColor.scale(1f-kR);
+		rfColor.scale(kR);
+		phongColor.scale(kR);
 		rrColor.add(rfColor);
+		rrColor.add(phongColor);
 		return rrColor;
 	}
 }

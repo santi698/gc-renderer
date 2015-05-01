@@ -6,48 +6,43 @@ import javax.vecmath.Vector3d;
 
 import model.IntersectionContext;
 import model.Ray;
-import util.Transformations;
 import util.Vectors;
 
-public class Plane implements Shape {
+public class Plane extends Shape {
 	private Vector3d normal;
-	private Point3d point;
-	private int tileHeight = 1;
-	private int tileWidth = 1;
-	
 	public Plane(Vector3d normal, Point3d point) {
+		super(new Vector3d(point), getRotation(normal, new Vector3d(0,1,0)), 1);
 		this.normal = Vectors.normalize(normal);
-		this.point = new Point3d(point);
 	}
-	
+	public Plane(Vector3d normal, Point3d point, double scale) {
+		super(new Vector3d(point), Vectors.scale(Vectors.normalize(normal), normal.angle(new Vector3d(0,1,0))), scale);
+		this.normal = Vectors.normalize(normal);
+	}
 	public IntersectionContext intersect (Ray ray) {
-		Vector3d rayOrigin = new Vector3d(ray.getOrigin());
-		Vector3d rayDirection = new Vector3d(ray.getDirection());
-		Vector3d difference = Vectors.sub(point, rayOrigin);
-		double t = difference.dot(normal)/
-			(rayDirection.dot(normal));
-		if (normal.dot(rayDirection) < 0) {
-			normal.negate();
+		Point3d rayOrigin = toLocal(ray.getOrigin());
+		Vector3d rayDirection = toLocal(ray.getDirection());
+		double differenceY = -rayOrigin.y;
+		double normalY = 1;
+		double t = differenceY/rayDirection.y;
+		if (normalY*rayDirection.y < 0) {
+//			normal.negate();
 		}
 		if (t > EPS) {
 			Vector3d displacement = new Vector3d(rayDirection);
 			displacement.scale(t);
 			Point3d hitPoint = new Point3d(rayOrigin);
 			hitPoint.add(displacement);
-			Point3d localHitPoint = new Point3d(hitPoint); //FIXME falta calcular los verdaderos valores
-			localHitPoint.sub(point);
-			Vector3d rotation = Vectors.scale(normal, normal.angle(new Vector3d(0,1,0)));
-			Transformations.rotateMatrix(rotation).transform(localHitPoint);
-			Point2d uv = getUVCoordinates(localHitPoint);
+			Point2d uv = getUVCoordinates(hitPoint);
 			return new IntersectionContext(t, normal, ray, true, uv.x, uv.y);
 		}
 		else return IntersectionContext.noHit();
 	}
 
 	private Point2d getUVCoordinates(Point3d localHitPoint) {
+		Point3d texturePoint = localToTexture(localHitPoint);
 		Point2d uv = new Point2d();
-		uv.x = (((localHitPoint.x % (tileWidth)) / tileWidth)+1)/2d;
-		uv.y = (((localHitPoint.z % (tileHeight)) / tileHeight)+1)/2d;
+		uv.x = texturePoint.x;
+		uv.y = texturePoint.z;
 		return uv;
 	}
 }
