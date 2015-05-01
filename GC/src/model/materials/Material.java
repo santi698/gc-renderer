@@ -59,9 +59,9 @@ public abstract class Material {
 //		if (t.length() != 1)
 //			throw new RuntimeException();
 		t.normalize();
-		if (ic.getBody().getMaterial().isThin()) {
+		if (ic.getMaterial().isThin()) {
 			Point3d p = new Point3d(ic.getIntersectionPoint());
-			t.scale(ic.getBody().getMaterial().getThickness());
+			t.scale(ic.getMaterial().getThickness());
 			p.add(t);
 			return new Ray(ic.getRay().getDirection(), p);
 		}

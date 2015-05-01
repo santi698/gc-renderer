@@ -5,7 +5,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import static util.Vectors.*;
-import model.Body;
+import model.SimpleBody;
 import model.Scene;
 import model.cameras.Camera;
 import model.cameras.PinholeCamera;
@@ -52,22 +52,22 @@ public class SampleScene extends Scene {
 	final static Triangle t2 = new Triangle(new Point3d(0,0.15,0.4), new Point3d(0.1,0,0.4), new Point3d(-0.1,0,0.4)); //Triángulo en el piso
 	final static Cylinder c = new Cylinder(new Point3d(-0.05,0,0.55), new Vector3d(0, 1, 0), 0.02, 0.04); 
 
-	final static Body[] bodies = new Body[] {
-											new Body(s2, new PolishedMarble(new CheckerBoardTexture(0.1))),
+	final static SimpleBody[] bodies = new SimpleBody[] {
+											new SimpleBody(s2, new PolishedMarble(new CheckerBoardTexture(0.1))),
 //											new Body(s2, new Matte(new ImageTexture("textures/seamlesspaper2.jpg"))),
 //											new Body(s, new Metal(new Color3f(0.99f,0.99f,0.05f), 200)),
 //											new Body(s, new PolishedMarble(new Color3f(0.95f,0.95f,0.95f))),
-											new Body(s, new Glass(new PlainTexture(new Color3f(0.9f, 0.1f, 0.1f)))),
+											new SimpleBody(s, new Glass(new PlainTexture(new Color3f(0.9f, 0.1f, 0.1f)))),
 //											new Body(s, new Glass(new CheckerBoardTexture())),
 //											new Body(s, new Mirror(new Color3f(0.95f, 0.05f, 0.05f), 0.1)),
 //											new Body(p, new Metal(new PlainTexture(new Color3f(0.25f, 0.40f, 0.25f)), 0.5)),
-											new Body(p, new Metal(new CheckerBoardTexture(0.5), 0.5)),
+											new SimpleBody(p, new Metal(new CheckerBoardTexture(0.5), 0.5)),
 //											new Body(p, new Matte(new ImageTexture("textures/1024/Wood 2.png"))),
 //											new Body(p, new Mirror(new Color3f(0.25f, 0.40f, 0.25f), 0.15)),
-											new Body(t, new PolishedMarble(new PlainTexture(new Color3f(0.95f,0.01f,0.01f)))),
-											new Body(t, new PolishedMarble(new CheckerBoardTexture(0.1))),
+											new SimpleBody(t, new PolishedMarble(new PlainTexture(new Color3f(0.95f,0.01f,0.01f)))),
+											new SimpleBody(t, new PolishedMarble(new CheckerBoardTexture(0.1))),
 //											new Body(t2, new Glass(new PlainTexture(new Color3f(0.95f,0.01f,0.01f)), 0.02))
-											new Body(c, new PolishedMarble(new PlainTexture(new Color3f(0.2f, 0.1f, 0.1f))))
+											new SimpleBody(c, new PolishedMarble(new PlainTexture(new Color3f(0.2f, 0.1f, 0.1f))))
 
 	};
 

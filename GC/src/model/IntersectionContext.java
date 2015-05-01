@@ -5,6 +5,7 @@ import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 import model.light.Light;
+import model.materials.Material;
 import util.Vectors;
 
 public class IntersectionContext {
@@ -14,7 +15,7 @@ public class IntersectionContext {
 	public static IntersectionContext noHit() {
 		return notHit;
 	}
-	private Body body;
+	private Material material;
 	private boolean hit;
 	private Point3d intersectionPoint;
 	private Vector3d normal;
@@ -52,16 +53,16 @@ public class IntersectionContext {
 	public double getV() {
 		return v;
 	}
-	public Body getBody() {
-		return body;
+	public Material getMaterial() {
+		return material;
 	}
-	public void setBody(Body body) {
-		this.body = body;
+	public void setMaterial(Material material) {
+		this.material = material;
 	}
 	public Color3f shade(Light[] lights, Body[] bodies, int refractionDepth, int reflectionDepth) {
-		if (body == null || !this.hit) {
+		if (material == null || !this.hit) {
 			return new Color3f(BGCOLOR);
 		}
-		return body.getMaterial().shade(this, lights, bodies, refractionDepth, reflectionDepth);
+		return material.shade(this, lights, bodies, refractionDepth, reflectionDepth);
 	}
 }

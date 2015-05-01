@@ -19,7 +19,7 @@ public class DirectionalLight extends Light {
 		Ray ray = new Ray(Vectors.scale(direction, -1), point);
 		for (Body body : bodies) {
 			//Si no la intercepta ningun objeto, es visible
-			if (body.getShape().intersect(ray).getHit())
+			if (body.intersect(ray).getHit())
 				return 0;
 		}
 		return 1;
