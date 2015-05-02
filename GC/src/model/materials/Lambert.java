@@ -36,7 +36,7 @@ public class Lambert extends Material {
 				diffuseColor.x *= lightColor.x;
 				diffuseColor.y *= lightColor.y;
 				diffuseColor.z *= lightColor.z;
-				totalDiffuseColor.add(totalDiffuseColor);
+				totalDiffuseColor.add(diffuseColor);
 			}
 		}
 		color.x = (float)(color.x * totalDiffuseColor.x + color.x * ka);

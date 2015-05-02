@@ -156,6 +156,6 @@ public class Main extends Application {
 	}
 	private static void printProgress(double progress) {
 		if (System.currentTimeMillis() % 500 == 0)
-		System.out.printf("%2.1f%%\r", progress*100);
+			System.out.printf("%2.1f%%\r", progress*100);
 	}
 }

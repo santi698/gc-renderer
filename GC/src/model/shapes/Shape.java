@@ -28,9 +28,9 @@ public abstract class Shape extends WorldObject {
 			getScaling().transform(texturePoint);
 		if (rotateTexture)
 			getRotation().transform(texturePoint);
-		texturePoint.x = texturePoint.x % 1;
-		texturePoint.y = texturePoint.y % 1;
-		texturePoint.z = texturePoint.z % 1;
+		texturePoint.x = texturePoint.x;
+		texturePoint.y = texturePoint.y;
+		texturePoint.z = texturePoint.z;
 		return texturePoint;
 	}
 }
