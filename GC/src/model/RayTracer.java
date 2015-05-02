@@ -1,11 +1,5 @@
 package model;
 
-import static util.Vectors.add;
-import static util.Vectors.cross;
-import static util.Vectors.normalize;
-import static util.Vectors.scale;
-import static util.Vectors.sub;
-
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,23 +12,18 @@ import javafx.beans.property.SimpleDoubleProperty;
 
 import javax.vecmath.Color3f;
 import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
 
-import application.Main;
 import model.materials.Material;
 import model.samplers.Multijittered;
 import model.samplers.Sampler;
-import util.Vectors;
+import application.Main;
 
 public class RayTracer {
 	public static final float invGamma = 1f/2.2f;
-	private Vector3d u, v, w;
 	private Scene scene;
 	private boolean AAEnabled = true;
 	private boolean showTime;
 	private Sampler sampler;
-	private double pixelSize;
 	private long startTime;
 	private DoubleProperty progress = new SimpleDoubleProperty();
 	
@@ -60,10 +49,6 @@ public class RayTracer {
 			sampler.generateSamples();
 			sampler.genShuffledIndices();
 		}
-		this.pixelSize = scene.getCamera().getPixelSize();
-		w = scale(scene.getCamera().getDirection(), -1);
-		u = normalize(cross(scene.getCamera().getUp(), w));
-		v = cross(w, u);
 	}
 	
 	public BufferedImage render() {
@@ -95,19 +80,6 @@ public class RayTracer {
 		}
 		return bi;
 	}
-	private Ray rayThroughPixel(int i, int j, Point2d lensSample) {
-		return rayThroughPixel(i, j, new Point2d(0,0), lensSample);
-	}
-	private Ray rayThroughPixel(int i, int j, Point2d sample, Point2d lensSample) {
-		double x = pixelSize*(i - 0.5*scene.getCamera().getXRes() + sample.x);
-		double y = pixelSize*(j - 0.5*scene.getCamera().getYRes() + sample.y);
-		Point3d lensPoint = new Point3d(scene.getCamera().getPosition());
-		lensPoint.add(Vectors.scale(u, lensSample.x));
-		lensPoint.add(Vectors.scale(v, lensSample.y));
-		double ps = scene.getCamera().getFocalDistance()/scene.getCamera().getFocalLength();
-		Vector3d direction = normalize(sub(add(scale(u, x*ps-lensSample.x), scale(v, y*ps-lensSample.y)), scale(w, scene.getCamera().getFocalDistance())));
-		return new Ray(direction, lensPoint);
-	}
 	private Consumer<Color3f> colorSetter(int i, int j, BufferedImage bi) {
 		return (color) -> {
 			color.clamp(0, 1); //FIXME Guardar todo en una matriz y/o aplicar alguna compresión de rango no (o menos) destructiva.
@@ -128,15 +100,16 @@ public class RayTracer {
 					Point2d sample = sampler.sampleUnitSquare();
 					Ray ray;
 					if (lensSamples.length == 1)
-						ray = rayThroughPixel(i, j, sample, lensSamples[0]);
-					else
-						ray = rayThroughPixel(i, j, sample, lensSamples[k]);
+						ray = scene.getCamera().rayThroughPixel(i + sample.x, j + sample.y, lensSamples[0]);
+					else {
+						ray = scene.getCamera().rayThroughPixel(i + sample.x, j + sample.y, lensSamples[k]);
+					}
 					Color3f color = ray.trace(scene.getObjects()).shade(scene.getLights(), scene.getObjects(), 0, 0);
 					resultColor.add(color);
 				}
 			} else {
 				for (Point2d lensSample : lensSamples) {
-					Ray ray = rayThroughPixel(i, j, lensSample);
+					Ray ray = scene.getCamera().rayThroughPixel(i, j, lensSample);
 					Color3f color = ray.trace(scene.getObjects()).shade(scene.getLights(), scene.getObjects(), 0, 0);
 					resultColor.add(color);
 				}

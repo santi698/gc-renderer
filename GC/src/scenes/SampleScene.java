@@ -73,9 +73,9 @@ public class SampleScene extends Scene {
 	};
 
 	//Camera
-	final static Camera camera = new ThinLensCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,-1,0), 0.018, 640, 480, 5.6, spherePos, AASamples);
-//	final static Camera camera = new ThinLensCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,-1,0), 0.018, 1366, 768, 5.6, spherePos, AASamples);
-//	final static Camera camera = new PinholeCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,-1,0), 0.018, 640, 480);
+	final static Camera camera = new ThinLensCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,1,0), 0.018, 640, 480, 5.6, spherePos, AASamples);
+//	final static Camera camera = new ThinLensCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,1,0), 0.018, 1366, 768, 5.6, spherePos, AASamples);
+//	final static Camera camera = new PinholeCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,1,0), 0.018, 640, 480);
 	
 	public SampleScene() {
 		super(lights,bodies,camera, AASamples);
