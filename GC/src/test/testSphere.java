@@ -7,14 +7,14 @@ import javax.vecmath.Vector3d;
 
 import model.IntersectionContext;
 import model.Ray;
-import model.shapes.Sphere;
+import model.shapes.sphere.SolidSphere;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class testSphere {
-	private Sphere s1;
-	private Sphere s2;
+	private SolidSphere s1;
+	private SolidSphere s2;
 	private Ray r1;
 	private Ray r2;
 	private Ray r3;
@@ -31,8 +31,8 @@ public class testSphere {
 	 * */
 	@Before
 	public void setUp() throws Exception {
-		s1 = new Sphere(new Point3d(0,0,0), 1);
-		s2 = new Sphere(new Point3d(0,0,0), 10);
+		s1 = new SolidSphere(new Point3d(0,0,0), 1);
+		s2 = new SolidSphere(new Point3d(0,0,0), 10);
 		r1 = new Ray(new Vector3d(0,1,0), new Point3d(1,-1,0));
 		r2 = new Ray(new Vector3d(0,1,0), new Point3d(0,5,0));
 		r3 = new Ray(new Vector3d(0,1,0), new Point3d(0,0,0));

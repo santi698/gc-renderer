@@ -78,4 +78,8 @@ public abstract class Material {
 	public Texture getTexture() {
 		return texture;
 	}
+	@Override
+	public String toString() {
+		return "Material " + getClass().getName();
+	}
 }

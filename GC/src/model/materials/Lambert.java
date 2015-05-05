@@ -31,6 +31,10 @@ public class Lambert extends Material {
 			double visibility = light.isVisible(p, bodies);
 			if (visibility > 0) {
 				Color3f diffuseColor = lambert.apply(light.getDirectionFromTo(p), n, v);
+				if (diffuseColor.x < 0) {
+					diffuseColor.absolute();
+					System.out.println(ic);
+				}
 				diffuseColor.scale((float)(kd * visibility * light.getIntensity(p)));
 				Color3f lightColor = new Color3f(light.getColor());
 				diffuseColor.x *= lightColor.x;

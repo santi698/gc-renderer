@@ -37,7 +37,7 @@ public class Triangle extends Shape {
 			return IntersectionContext.noHit();
 		double t = d2.dot(Q)*invDet;
 		if (t > EPS) {
-			if (normal.dot(ray.getDirection()) > 0)
+			if (normal.dot(ray.getDirection()) > EPS)
 				normal.negate();
 			return new IntersectionContext(t, normal, ray, true, u, v);
 		}

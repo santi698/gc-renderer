@@ -53,35 +53,35 @@ public class WorldObject {
 	}
 	
 	public Vector3d toLocal(Vector3d globalVector) {
-		Vector3d localVector = new Vector3d(globalVector.x, globalVector.y, globalVector.z);
+		Vector3d localVector = new Vector3d(globalVector);
 		toLocal.transform(localVector);
 		return localVector;
 	}
 	public Point3d toLocal(Point3d globalPoint) {
-		Point3d localPoint = new Point3d(globalPoint.x, globalPoint.y, globalPoint.z);
+		Point3d localPoint = new Point3d(globalPoint);
 		toLocal.transform(localPoint);
 		return localPoint;
 	}
 	
 	public Vector3d toGlobal(Vector3d localVector) {
-		Vector3d globalVector = new Vector3d(localVector.x, localVector.y, localVector.z);
+		Vector3d globalVector = new Vector3d(localVector);
 		toGlobal.transform(globalVector);
 		return globalVector;
 	}
 	public Point3d toGlobal(Point3d localPoint) {
-		Point3d globalPoint = new Point3d(localPoint.x, localPoint.y, localPoint.z);
+		Point3d globalPoint = new Point3d(localPoint);
 		toGlobal.transform(globalPoint);
 		return globalPoint;
 	}
 	
 	public Vector3d normalToGlobal(Vector3d normal) {
-		Vector3d globalNormal = new Vector3d(normal.x, normal.y, normal.z);
+		Vector3d globalNormal = new Vector3d(normal);
 		toGlobalT.transform(globalNormal);
 		globalNormal.normalize();
 		return globalNormal;
 	}
 	public Vector3d rotateVector(Vector3d vector) {
-		Vector3d result = new Vector3d(vector.x, vector.y, vector.z);
+		Vector3d result = new Vector3d(vector);
 		invRotation.transform(vector);
 		return result;
 	}
@@ -102,9 +102,9 @@ public class WorldObject {
 		updateMatrices();
 	}
 	public Matrix4d getScaling() {
-		return scaling;
+		return invScaling;
 	}
 	public Matrix4d getRotation() {
-		return rotation;
+		return invRotation;
 	}
 }

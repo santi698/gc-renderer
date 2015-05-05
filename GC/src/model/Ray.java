@@ -40,4 +40,8 @@ public class Ray {
 		else
 			return IntersectionContext.noHit();
 	}
+	@Override
+	public String toString() {
+		return "Ray\nOrigin: " + origin.toString() + " Direction: " + direction.toString();
+	}
 }

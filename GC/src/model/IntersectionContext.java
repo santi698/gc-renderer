@@ -65,4 +65,8 @@ public class IntersectionContext {
 		}
 		return material.shade(this, lights, bodies, refractionDepth, reflectionDepth);
 	}
+	@Override
+	public String toString() {
+		return "Intersection at: " + intersectionPoint.toString() + "\nMaterial: " + material.toString() + "\n" + ray.toString() + "\nNormal: " + normal.toString();
+	}
 }

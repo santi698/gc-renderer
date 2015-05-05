@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.vecmath.Color3f;
@@ -13,6 +14,20 @@ public class ImageTexture implements Texture {
 	private static final double GAMMA = 2.2;
 	private BufferedImage image = new BufferedImage(512, 512, BufferedImage.TYPE_INT_RGB);
 	private double scale = 1;
+	public ImageTexture(URL url) {
+		try {
+			image = ImageIO.read(url);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public ImageTexture(File file) {
+		try {
+			image = ImageIO.read(file);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	public ImageTexture(String imagePath) {
 		File file = new File(imagePath);
 		try {
@@ -25,18 +40,22 @@ public class ImageTexture implements Texture {
 		this(imagePath);
 		this.scale = 1d/scale;
 	}
+	public ImageTexture(URL url, double scale) {
+		this(url);
+		this.scale = 1d/scale;
+	}
 	@Override
 	public Color3f get(double u, double v) {
-		double unorm = u%scale;
-		double vnorm = v%scale;
+		double unorm = (u*scale)%1;
+		double vnorm = ((1-v)*scale)%1;
 		if (unorm < 0)
-			unorm = scale + unorm;
+			unorm = 1 + unorm;
 		if (vnorm < 0)
-			vnorm = scale + vnorm;
-		int x = (int)(unorm*image.getWidth()/(scale+1));
-		int y = (int)(vnorm*image.getHeight()/(scale+1));
+			vnorm = 1 + vnorm;
+		int x = (int)(unorm*image.getWidth());
+		int y = (int)((1-vnorm)*image.getHeight());
 		if (x >= image.getWidth() || y >= image.getHeight() || x < 0 || y < 0) {
-			System.out.println(unorm + " " + vnorm + " " + x + " " + y);
+			System.out.println("ERROR: " + unorm + " " + vnorm + " " + x + " " + y);
 			return new Color3f();
 		}
 		Color3f color = new Color3f(new Color(image.getRGB(x, y)));

@@ -10,9 +10,11 @@ import model.Ray;
 
 public class Cylinder extends Shape {
 	private double heightFactor;
+	private double radius;
 	public Cylinder(Point3d center, Vector3d axis, double radius, double height) {
 		super(new Vector3d(center), getRotation(axis, new Vector3d(0,1,0)), radius);
 		this.heightFactor = radius/height;
+		this.radius = radius;
 	}
 	@Override
 	public IntersectionContext intersect(Ray ray) {
@@ -49,11 +51,13 @@ public class Cylinder extends Shape {
 	private Point2d getUVCoordinates(Point3d localHitPoint) {
 		Point3d texturePoint = localToTexture(localHitPoint);
 		Point2d uv = new Point2d();
-		double phi = Math.atan2(texturePoint.x, texturePoint.z);
+		double phi = Math.atan2(localHitPoint.x, localHitPoint.z);
 		if (phi < 0)
 			phi += 2*Math.PI;
-		uv.x = phi / (2*Math.PI);
-		uv.y = texturePoint.y;
+		uv.x = (phi / (2*Math.PI));
+		if (getNotScaleTexture())
+			uv.x *= radius;
+		uv.y = texturePoint.y*heightFactor;
 		return uv;
 	}
 }

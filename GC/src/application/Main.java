@@ -36,6 +36,8 @@ public class Main extends Application {
 	private Stage primaryStage;
 	@Override
 	public void start(Stage primaryStage) throws IOException {
+		File dir = new File("renders");
+		dir.mkdir();
 		int rayDepth = -1;
 		if (cl.hasOption("d"))
 			rayDepth = Integer.parseInt(cl.getOptionValue("d"));
@@ -47,12 +49,13 @@ public class Main extends Application {
 			File file = new File("renders/"+ filename);
 			BufferedImage i = rayTracer.render();
 			ImageIO.write(i, "png", file);
+			System.out.println("Imagen escrita a: " + file.getAbsolutePath());
 			System.exit(0);
 		}
 		this.primaryStage = primaryStage;
 		try {
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(getClass().getResource("../controller/MainView.fxml"));
+			loader.setLocation(MainViewController.class.getResource("MainView.fxml"));
 			rootLayout = (BorderPane) loader.load();
 			Scene scene = new Scene(rootLayout);
 			MainViewController controller = loader.getController();

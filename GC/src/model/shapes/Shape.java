@@ -16,17 +16,23 @@ public abstract class Shape extends WorldObject {
 	}
 	public abstract IntersectionContext intersect(Ray ray);
 	
-	public void setScaleTexture(boolean value) {
-		scaleTexture = value;
+	public void setNotScaleTexture() {
+		scaleTexture = false;
 	}
-	public void setRotateTexture(boolean value) {
-		rotateTexture = value;
+	public boolean getNotScaleTexture() {
+		return !scaleTexture;
+	}
+	public boolean getNotRotateTexture() {
+		return !rotateTexture;
+	}
+	public void setNotRotateTexture() {
+		rotateTexture = false;
 	}
 	public Point3d localToTexture(Point3d localPoint) {
 		Point3d texturePoint = new Point3d(localPoint);
-		if (scaleTexture)
+		if (!scaleTexture)
 			getScaling().transform(texturePoint);
-		if (rotateTexture)
+		if (!rotateTexture)
 			getRotation().transform(texturePoint);
 		texturePoint.x = texturePoint.x;
 		texturePoint.y = texturePoint.y;

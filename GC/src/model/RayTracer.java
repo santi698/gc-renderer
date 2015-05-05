@@ -20,18 +20,22 @@ import application.Main;
 
 public class RayTracer {
 	public static final float invGamma = 1f/2.2f;
+	private static final boolean DEBUG = true;
 	private Scene scene;
 	private boolean AAEnabled = true;
 	private boolean showTime;
 	private Sampler sampler;
 	private long startTime;
 	private DoubleProperty progress = new SimpleDoubleProperty();
+	int pixelsSet = 0;	
 	
 	public DoubleProperty getProgressProperty() {
 		return progress;
 	}
 	
 	public RayTracer(Scene scene, int AASamples, int rayDepth, boolean showTime) {
+		if (DEBUG)
+			System.out.println("Debug mode");
 		if (rayDepth >= 0) {
 			Material.REFLECTIONDEPTH = rayDepth;
 			Material.REFRACTIONDEPTH = rayDepth;
@@ -53,13 +57,13 @@ public class RayTracer {
 	
 	public BufferedImage render() {
 		List<CompletableFuture<?>> futures = new LinkedList<CompletableFuture<?>>();
-		BufferedImage bi = new BufferedImage(scene.getCamera().getXRes(), scene.getCamera().getYRes(), BufferedImage.TYPE_INT_RGB);
+		BufferedImage image = new BufferedImage(scene.getCamera().getXRes(), scene.getCamera().getYRes(), BufferedImage.TYPE_INT_RGB);
 		setUp();
 		startTime = System.currentTimeMillis();
 		for (int i = 0; i < scene.getCamera().getXRes(); i++) {
 			for (int j = 0; j < scene.getCamera().getYRes(); j++) {
 				CompletableFuture<Color3f> tracing = CompletableFuture.supplyAsync(packetTracer(i, j));
-				futures.add(tracing.thenAccept(colorSetter(i, j, bi)));
+				futures.add(tracing.thenAccept(colorSetter(i, j, image)));
 				try {
 					tracing.get();
 				} catch (Exception e) {
@@ -76,18 +80,23 @@ public class RayTracer {
 		}
 		if (showTime) {
 			double renderTime = ((System.currentTimeMillis()-startTime)/1000f);
-			System.out.println("Renderizado en " + renderTime + " segundos ("+ 1/renderTime + ") FPS.");
+			System.out.printf("Renderizado en %f segundos (%f FPS).\n", renderTime ,1/renderTime );
 		}
-		return bi;
+		return image;
 	}
 	private Consumer<Color3f> colorSetter(int i, int j, BufferedImage bi) {
 		return (color) -> {
-			color.clamp(0, 1); //FIXME Guardar todo en una matriz y/o aplicar alguna compresión de rango no (o menos) destructiva.
+			float max = (Math.max(color.x, Math.max(color.y, color.z)));
+			if (max>1)
+				if (DEBUG)
+					color.set(1,0,1);
+				else
+					color.scale(1f/max);
 			color.x = (float)Math.pow(color.x, invGamma);
 			color.y = (float)Math.pow(color.y, invGamma);
 			color.z = (float)Math.pow(color.z, invGamma);
 			bi.setRGB(i, j, color.get().getRGB());
-			int pixelsSet = ((i>0)?(i-1)*bi.getHeight():0) + j;
+			pixelsSet++;
 			progress.set(((double)pixelsSet/(bi.getWidth()*bi.getHeight())));
 		};
 	}

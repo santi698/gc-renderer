@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project GC">
+    <target name="create_run_jar">
+    	<mkdir dir="${basedir}/bin"/>
+    	<javac classpath="${basedir}/lib/hamcrest-core-1.3.jar:${basedir}/lib/junit-4.12.jar:${basedir}/lib/vecmath-1.5.2.jar:${basedir}/lib/commons-cli-1.2.jar" srcdir="${basedir}/src" destdir="${basedir}/bin"/>
+    	<copy file="${basedir}/src/application/application.css" todir="${basedir}/bin/application/"/>
+    	<copy file="${basedir}/src/controller/MainView.fxml" todir="${basedir}/bin/controller/"/>
+        <jar destfile="${basedir}/RayTracer.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="application.Main"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="${basedir}/bin"/>
+        	<fileset dir="${basedir}/textures/"/>
+            <zipfileset excludes="META-INF/*.SF" src="/home/santi698/Descargas/eclipse/plugins/org.eclipse.fx.ide.css.jfx8_1.2.0.201501301049.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${basedir}/lib/hamcrest-core-1.3.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${basedir}/lib/junit-4.12.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${basedir}/lib/vecmath-1.5.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${basedir}/lib/commons-cli-1.2-javadoc.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${basedir}/lib/commons-cli-1.2-sources.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="${basedir}/lib/commons-cli-1.2.jar"/>
+        </jar>
+    </target>
+</project>

@@ -58,6 +58,10 @@ public class Phong extends Material {
 				r.sub(l);
 				
 				Color3f diffuseColor = new Color3f(lambert.apply(l, n, v));
+				if (diffuseColor.x < 0) {
+					diffuseColor.absolute();
+					System.out.println(ic);
+				}
 				diffuseColor.scale((float)(kd*id));
 				diffuseColor.x *= lightColor.x;
 				diffuseColor.y *= lightColor.y;

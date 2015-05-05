@@ -9,6 +9,9 @@ import model.texture.Texture;
 
 public class Metal extends Phong {
 	private double reflectivity;
+	public Metal(Texture texture) {
+		this(texture, 0.4);
+	}
 	public Metal(Texture texture, double roughness) {
 		super(texture, roughness, 0.5, 1);
 		reflectivity = 1/(1 + 100*(roughness));
