@@ -5,10 +5,12 @@ import javax.vecmath.Vector3d;
 
 import model.DistributionFunction;
 
-public class PerfectSpecular extends DistributionFunction {
+public class PerfectSpecular implements DistributionFunction {
 	private double alpha;
-	public PerfectSpecular(double alpha) {
+	private double kR;
+	public PerfectSpecular(double alpha, double kR) {
 		this.alpha = alpha;
+		this.kR = kR;
 	}
 	@Override
 	public Color3f apply(Vector3d l, Vector3d n, Vector3d v) {
@@ -16,7 +18,7 @@ public class PerfectSpecular extends DistributionFunction {
 		r.scale(2*l.dot(n));
 		r.sub(l);
 		if (v.dot(r) > 0) {
-			float value = (float)Math.pow(Math.abs(v.dot(r)), alpha);
+			float value = (float)(kR*Math.pow(Math.abs(v.dot(r)), alpha));
 			return new Color3f(value, value, value);
 		}
 		else return new Color3f();

@@ -19,13 +19,14 @@ import model.light.Light;
 import model.light.PointLight;
 import model.light.SpotLight;
 import model.materials.Glass;
-import model.materials.Lambert;
+import model.materials.Matte2;
+import model.materials.PureDiffuse;
 import model.materials.Material;
 import model.materials.Matte;
 import model.materials.Metal;
 import model.materials.Mirror;
 //import model.light.SpotLight;
-import model.materials.Phong;
+import model.materials.DiffuseAndSpecular;
 import model.materials.PolishedMarble;
 import model.shapes.Cylinder;
 import model.shapes.Disc;
@@ -51,7 +52,7 @@ public class SampleScene extends Scene {
 						new PointLight(new Point3d(0, 0.5, 1), new Color3f(0.8f,0.8f,1f), 0.001),
 						new SpotLight(new Point3d(0,2,0.3), new Color3f(1,1f,1f), 0.005, spherePos, Math.toRadians(45)),
 						new SpotLight(new Point3d(-1,2,-1), new Color3f(0.9f,0.9f,1), 0.04, spherePos, Math.toRadians(30)),
-						new DirectionalLight(new Vector3d(0,-0.05,1), sunsetColor, 2)
+						new DirectionalLight(new Vector3d(0,-0.1,1), sunsetColor, 5)
 						};
 	
 	//Bodies
@@ -75,7 +76,7 @@ public class SampleScene extends Scene {
 
 	final static Body[] bodies = new Body[] {
 //											new SimpleBody(s2, new PolishedMarble(new CheckerBoardTexture(0.1))),
-											new SimpleBody(s2, new Matte(new ImageTexture(Main.class.getResource("/textures/seamlesspaper2.jpg")))),
+											new SimpleBody(s2, new Matte2(new ImageTexture(Main.class.getResource("/textures/seamlesspaper2.jpg")), 0.31, 0.85)),
 //											new SimpleBody(s, new Metal(new Color3f(0.99f,0.99f,0.05f), 200)),
 //											new SimpleBody(s, new Metal(new ImageTexture("textures/2400/earth_night.jpg"), 0.4)),
 //											new SimpleBody(s, new Matte(new CheckerBoardTexture(0.1))),
@@ -85,11 +86,12 @@ public class SampleScene extends Scene {
 //											new SimpleBody(s, new Phong(new PlainTexture (new Color3f(0.95f, 0.95f, 0.95f)), 1e3, 0.5, 0.5)),
 //											new SimpleBody(p, new Metal(new PlainTexture(new Color3f(0.25f, 0.40f, 0.25f)), 0.5)),
 //											new SimpleBody(p, new Metal(new CheckerBoardTexture(0.5), 0.5)),
-											new SimpleBody(p, new Matte(new ImageTexture(Main.class.getResource("/textures/1024/Wood 2.png"), 0.2))),
+											new SimpleBody(p, new Matte2(new ImageTexture(Main.class.getResource("/textures/1024/Wood 2.png"), 0.2), 0, 0.75)),
 //											new SimpleBody(p, new Mirror(new Color3f(0.25f, 0.40f, 0.25f), 0.15)),
-											new SimpleBody(t, new PolishedMarble(new PlainTexture(new Color3f(0.85f,0.01f,0.01f)))),
+//											new SimpleBody(t, new PolishedMarble(new PlainTexture(new Color3f(0.85f,0.01f,0.01f)))),
 //											new SimpleBody(t, new PolishedMarble(new CheckerBoardTexture(0.1))),
-											new SimpleBody(t2, new Mirror(new PlainTexture(new Color3f(0.85f,0.85f,0.85f)))),
+											new SimpleBody(t, new PolishedMarble(new PlainTexture(new Color3f(0.85f,0.01f,0.01f)))),
+//											new SimpleBody(t2, new Mirror(new PlainTexture(new Color3f(0.85f,0.85f,0.85f)))),
 //											new SimpleBody(scn, new PolishedMarble(new PlainTexture(new Color3f(0.9f, 0.1f, 0.1f)))),
 //											new UniformCompoundBody(new Shape[]{scn, scv}, new Glass(new PlainTexture(new Color3f(0.95f, 0.05f, 0.05f))))
 

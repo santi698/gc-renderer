@@ -9,7 +9,7 @@ import model.texture.Texture;
 
 public class PolishedMarble extends Phong {
 	public PolishedMarble(Texture bodyTexture) {
-		super(bodyTexture, 300, 0.5, 1);
+		super(bodyTexture, 300, 0.5, 0.75/Math.PI);
 	}
 	@Override
 	public Color3f shade(IntersectionContext ic, Light[] lights, Body[] bodies,

@@ -20,6 +20,7 @@ public class ThinLensCamera extends Camera {
 		this.sampler = new Multijittered(numSamples);
 		sampler.generateSamples();
 		sampler.genShuffledIndices();
+
 	}
 	@Override
 	public Point2d[] sampleLens() {
@@ -36,6 +37,8 @@ public class ThinLensCamera extends Camera {
 		this.sampler = new Multijittered(numSamples);
 		sampler.generateSamples();
 		sampler.genShuffledIndices();
+
+
 	}
 	
 	@Override

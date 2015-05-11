@@ -13,7 +13,7 @@ public class Metal extends Phong {
 		this(texture, 0.4);
 	}
 	public Metal(Texture texture, double roughness) {
-		super(texture, roughness, 0.5, 1);
+		super(texture, roughness,0.5, 0.75/Math.PI);
 		reflectivity = 1/(1 + 100*(roughness));
 	}
 	@Override

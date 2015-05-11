@@ -10,10 +10,10 @@ import model.texture.Texture;
 
 public class Mirror extends Phong {
 	public Mirror() {
-		super(new PlainTexture(new Color3f(1,1,1)), 2000, 0.5, 0);
+		super(new PlainTexture(new Color3f(1,1,1)), 20000, 0, 1, 0);
 	}
 	public Mirror(Texture texture) {
-		super(texture, 2000, 0, 1, 0);
+		super(texture, 20000, 0, 1, 0);
 	}
 	@Override
 	public Color3f shade(IntersectionContext ic, Light[] lights, Body[] bodies, int refractionDepth, int reflectionDepth) {

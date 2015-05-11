@@ -20,7 +20,7 @@ import application.Main;
 
 public class RayTracer {
 	public static final float invGamma = 1f/2.2f;
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 	private Scene scene;
 	private boolean AAEnabled = true;
 	private boolean showTime;

@@ -6,17 +6,17 @@ import javax.vecmath.Vector3d;
 
 import util.Vectors;
 import model.Body;
+import model.DistributionFunction;
 import model.IntersectionContext;
-import model.brdfs.PerfectDiffuse;
 import model.light.Light;
 import model.texture.Texture;
 
-public class Lambert extends Material {
-	private double ka =0.2, kd=1;
-	private PerfectDiffuse lambert;
-	public Lambert(Texture texture) {
+public abstract class PureDiffuse extends Material {
+	private double ka =0.2;
+	private DistributionFunction brdf;
+	public PureDiffuse(Texture texture, DistributionFunction brdf) {
 		super(texture);
-		this.lambert = new PerfectDiffuse();
+		this.brdf = brdf;
 	}
 	@Override
 	public Color3f shade(IntersectionContext ic, Light[] lights, Body[] bodies, int refractionDepth, int reflectionDepth) {
@@ -30,12 +30,12 @@ public class Lambert extends Material {
 		for (Light light: lights) {
 			double visibility = light.isVisible(p, bodies);
 			if (visibility > 0) {
-				Color3f diffuseColor = lambert.apply(light.getDirectionFromTo(p), n, v);
+				Color3f diffuseColor = brdf.apply(light.getDirectionFromTo(p), n, v);
 				if (diffuseColor.x < 0) {
+					System.out.println("Diffuse color out of range. Value: " + diffuseColor.x+ "\n" + ic);
 					diffuseColor.absolute();
-					System.out.println(ic);
 				}
-				diffuseColor.scale((float)(kd * visibility * light.getIntensity(p)));
+				diffuseColor.scale((float)(visibility * light.getIntensity(p)));
 				Color3f lightColor = new Color3f(light.getColor());
 				diffuseColor.x *= lightColor.x;
 				diffuseColor.y *= lightColor.y;

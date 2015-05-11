@@ -21,11 +21,12 @@ public class Plane extends Shape {
 	public IntersectionContext intersect (Ray ray) {
 		Point3d rayOrigin = toLocal(ray.getOrigin());
 		Vector3d rayDirection = toLocal(ray.getDirection());
+		Vector3d normal = new Vector3d(this.normal);
 		double differenceY = -rayOrigin.y;
 		double normalY = 1;
 		double t = differenceY/rayDirection.y;
-		if (normalY*rayDirection.y < 0) {
-//			normal.negate();
+		if (normalY*rayDirection.y > 0) {
+			normal.negate();
 		}
 		if (t > EPS) {
 			Vector3d displacement = new Vector3d(rayDirection);

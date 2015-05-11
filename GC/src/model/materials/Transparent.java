@@ -14,7 +14,7 @@ public class Transparent extends Phong {
 	private Texture cFIn = super.getTexture();
 	private Color3f cFOut = new Color3f(1,1,1);
 	public Transparent(Texture texture, double refractionIndex) {
-		super(texture, 400, 0, 1, 0);
+		super(texture, 20000, 0, 1, 0);
 		this.refractionIndex = refractionIndex;
 	}
 	public double calculateReflectionCoefficient(Ray refracted, Ray reflected, IntersectionContext ic) {

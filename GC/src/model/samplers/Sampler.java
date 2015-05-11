@@ -1,11 +1,17 @@
 package model.samplers;
 
-import java.util.Arrays;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+import static java.lang.Math.PI;
+
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 import javax.vecmath.Point2d;
+import javax.vecmath.Point3d;
 
 public abstract class Sampler {
 	protected final int numSamples;
@@ -28,17 +34,14 @@ public abstract class Sampler {
 	}
 	
 	public void genShuffledIndices() {
-		Integer[] indices = new Integer[numSamples];
-		for (int i = 0; i < indices.length; i++) {
-			indices[i] =  i;
+		ArrayList<Integer> indices = new ArrayList<Integer>(numSamples);
+		for (int i = 0; i < numSamples; i++) {
+			indices.add(i);
 		}
 		for (int i = 0; i < numSets; i++) {
-			List<Integer> list = Arrays.asList(indices);
-			Collections.shuffle(list);
-			indices = list.toArray(indices);
-//			Collections.shuffle(indices); FIXME
+			Collections.shuffle(indices);
 			for (int j = 0; j < numSamples; j++) {
-				shuffledIndices[i*numSamples+j]= indices[j];
+				shuffledIndices[i*numSamples+j] = indices.get(j);
 			}
 		}
 	}
@@ -86,7 +89,18 @@ public abstract class Sampler {
 					phi = 0.0;
 			}	
 		}
-		phi *= Math.PI / 4.0f;
-		return new Point2d(r*Math.cos(phi), r*Math.sin(phi));
+		phi *= PI / 4.0f;
+		return new Point2d(r*cos(phi), r*sin(phi));
+	}
+	
+	public Point3d sampleHemisphere(double e) {
+		Point2d sqPoint = sampleUnitSquare();
+		
+		double cosPhi = cos(2*PI*sqPoint.x);
+		double sinPhi = sin(2*PI*sqPoint.x);
+		double cosTheta = pow((1-sqPoint.y), 1/(e+1));
+		double sinTheta = sqrt(1-cosTheta*cosTheta);
+		
+		return new Point3d(sinTheta*cosPhi, sinTheta*sinPhi, cosTheta);
 	}
 }

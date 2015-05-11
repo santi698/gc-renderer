@@ -49,7 +49,7 @@ public abstract class Sphere extends Shape {
 				Point3d localHitPoint = new Point3d(Vectors.add(rayOrigin,rayDisplacement));
 				if (checkBounds(localHitPoint)) {
 					Point2d uv = getUVCoordinates(localHitPoint);
-					Vector3d normal = toGlobal(getNormalAt(localHitPoint, true));
+					Vector3d normal = normalToGlobal(getNormalAt(localHitPoint, true));
 					normal.normalize();
 					return new IntersectionContext(t, normal, ray, true, uv.x, uv.y);
 				}
@@ -62,7 +62,7 @@ public abstract class Sphere extends Shape {
 				Point3d localHitPoint = new Point3d(Vectors.add(rayOrigin,rayDisplacement));
 				if (checkBounds(localHitPoint)) {
 					Point2d uv = getUVCoordinates(localHitPoint);
-					Vector3d normal = toGlobal(getNormalAt(localHitPoint, false));
+					Vector3d normal = normalToGlobal(getNormalAt(localHitPoint, false));
 					normal.normalize();
 					return new IntersectionContext(t, normal, ray, true, uv.x, uv.y);
 				}
