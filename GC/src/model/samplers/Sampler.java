@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.Random;
 
 import javax.vecmath.Point2d;
-import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 
 public abstract class Sampler {
 	protected final int numSamples;
@@ -93,7 +93,7 @@ public abstract class Sampler {
 		return new Point2d(r*cos(phi), r*sin(phi));
 	}
 	
-	public Point3d sampleHemisphere(double e) {
+	public Vector3d sampleHemisphere(double e) {
 		Point2d sqPoint = sampleUnitSquare();
 		
 		double cosPhi = cos(2*PI*sqPoint.x);
@@ -101,6 +101,14 @@ public abstract class Sampler {
 		double cosTheta = pow((1-sqPoint.y), 1/(e+1));
 		double sinTheta = sqrt(1-cosTheta*cosTheta);
 		
-		return new Point3d(sinTheta*cosPhi, sinTheta*sinPhi, cosTheta);
+		return new Vector3d(sinTheta*cosPhi, sinTheta*sinPhi, cosTheta);
+	}
+	
+	public Vector3d[] sampleHemisphereSet(double e) {
+		Vector3d[] set = new Vector3d[numSamples];
+		for (int i = 0; i < numSamples; i++) {
+			set[i] = sampleHemisphere(e);
+		}
+		return set;
 	}
 }

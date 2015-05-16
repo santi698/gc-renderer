@@ -52,4 +52,9 @@ public class Vectors {
 		v.sub(v2);
 		return v;
 	}
+	public static Vector3d negate(Vector3d v) {
+		Vector3d v1 = new Vector3d(v);
+		v1.negate();
+		return v1;
+	}
 }

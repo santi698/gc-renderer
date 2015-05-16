@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -21,13 +20,15 @@ import application.Main;
 public class RayTracer {
 	public static final float invGamma = 1f/2.2f;
 	private static final boolean DEBUG = false;
+	private static final boolean THREADINGDISABLED = false;
+	private int packetSize = 4;
 	private Scene scene;
 	private boolean AAEnabled = true;
 	private boolean showTime;
 	private Sampler sampler;
 	private long startTime;
 	private DoubleProperty progress = new SimpleDoubleProperty();
-	int pixelsSet = 0;	
+	private int pixelsSet = 0;	
 	
 	public DoubleProperty getProgressProperty() {
 		return progress;
@@ -60,14 +61,16 @@ public class RayTracer {
 		BufferedImage image = new BufferedImage(scene.getCamera().getXRes(), scene.getCamera().getYRes(), BufferedImage.TYPE_INT_RGB);
 		setUp();
 		startTime = System.currentTimeMillis();
-		for (int i = 0; i < scene.getCamera().getXRes(); i++) {
-			for (int j = 0; j < scene.getCamera().getYRes(); j++) {
-				CompletableFuture<Color3f> tracing = CompletableFuture.supplyAsync(packetTracer(i, j));
-				futures.add(tracing.thenAccept(colorSetter(i, j, image)));
-				try {
-					tracing.get();
-				} catch (Exception e) {
-					e.printStackTrace();
+		for (int i = 0; i < scene.getCamera().getXRes()-(packetSize-1); i+=packetSize) {
+			for (int j = 0; j < scene.getCamera().getYRes()-(packetSize-1); j+=packetSize) {
+				CompletableFuture<Void> tracing = CompletableFuture.runAsync(packetTracer(i, j, image));
+				futures.add(tracing);
+				if (THREADINGDISABLED) {
+					try {
+						tracing.get();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -100,34 +103,44 @@ public class RayTracer {
 			progress.set(((double)pixelsSet/(bi.getWidth()*bi.getHeight())));
 		};
 	}
-	private Supplier<Color3f> packetTracer(int i, int j) {
+	private Runnable packetTracer(int i, int j, BufferedImage bi) {
 		return () -> {
-			Color3f resultColor = new Color3f();
-			Point2d[] lensSamples = scene.getCamera().sampleLens();
-			if (AAEnabled) {
-				for (int k = 0; k < Main.AASamples; k++) {
-					Point2d sample = sampler.sampleUnitSquare();
-					Ray ray;
-					if (lensSamples.length == 1)
-						ray = scene.getCamera().rayThroughPixel(i + sample.x, j + sample.y, lensSamples[0]);
-					else {
-						ray = scene.getCamera().rayThroughPixel(i + sample.x, j + sample.y, lensSamples[k]);
+			int packetSizeX = this.packetSize;
+			int packetSizeY = this.packetSize;
+			if (i > scene.getCamera().getXRes()-2*packetSize) //Si estoy en la ultima columna
+				packetSizeX += scene.getCamera().getXRes()%packetSize;
+			if (j > scene.getCamera().getYRes()-2*packetSize) //Si estoy en la ultima fila
+				packetSizeY += scene.getCamera().getYRes()%packetSize;
+			for (int x = 0; x < packetSizeX; x++) {
+				for (int y = 0; y < packetSizeY; y++) {
+					Color3f resultColor = new Color3f();
+					Point2d[] lensSamples = scene.getCamera().sampleLens();
+					if (AAEnabled) {
+						for (int k = 0; k < Main.AASamples; k++) {
+							Point2d sample = sampler.sampleUnitSquare();
+							Ray ray;
+							if (lensSamples.length == 1)
+								ray = scene.getCamera().rayThroughPixel(i + x + sample.x, j + y + sample.y, lensSamples[0]);
+							else {
+								ray = scene.getCamera().rayThroughPixel(i + x + sample.x, j + y + sample.y, lensSamples[k]);
+							}
+							Color3f color = ray.trace(scene.getObjects()).shade(scene.getLights(), scene.getObjects(), 0, 0);
+							resultColor.add(color);
+						}
+					} else {
+						for (Point2d lensSample : lensSamples) {
+							Ray ray = scene.getCamera().rayThroughPixel(i + x, j + y, lensSample);
+							Color3f color = ray.trace(scene.getObjects()).shade(scene.getLights(), scene.getObjects(), 0, 0);
+							resultColor.add(color);
+						}
 					}
-					Color3f color = ray.trace(scene.getObjects()).shade(scene.getLights(), scene.getObjects(), 0, 0);
-					resultColor.add(color);
-				}
-			} else {
-				for (Point2d lensSample : lensSamples) {
-					Ray ray = scene.getCamera().rayThroughPixel(i, j, lensSample);
-					Color3f color = ray.trace(scene.getObjects()).shade(scene.getLights(), scene.getObjects(), 0, 0);
-					resultColor.add(color);
+					if (AAEnabled)
+						resultColor.scale(1f/Main.AASamples);
+					else
+						resultColor.scale(1f/lensSamples.length);
+					colorSetter(i+x, j+y, bi).accept(resultColor);
 				}
 			}
-			if (AAEnabled)
-				resultColor.scale(1f/Main.AASamples);
-			else
-				resultColor.scale(1f/lensSamples.length);
-			return resultColor;
 		};
 	}
 }
