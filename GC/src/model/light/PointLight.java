@@ -1,5 +1,7 @@
 package model.light;
 
+import java.util.Arrays;
+
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -23,7 +25,7 @@ public class PointLight extends Light {
 		Vector3d direction = Vectors.normalize(Vectors.sub(position, point));
 		Ray ray = new Ray(direction, point);
 		double maxT = position.distance(point);
-		IntersectionContext ic = ray.trace(bodies);
+		IntersectionContext ic = ray.trace(Arrays.asList(bodies));
 		if (ic.getHit() && maxT - ic.getT() > Shape.EPS)
 			return 0;
 		return 1;

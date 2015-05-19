@@ -27,7 +27,7 @@ public abstract class Sphere extends Shape {
 		this.minTheta = minTheta;
 		this.maxTheta = maxTheta;
 	}
-	public IntersectionContext intersect(Ray ray) {
+	public IntersectionContext trace(Ray ray) {
 		Vector3d rayDirection = toLocal(ray.getDirection());
 		Point3d rayOrigin = toLocal(ray.getOrigin());
 		double t;

@@ -15,9 +15,12 @@ import javax.vecmath.Point2d;
 import model.materials.Material;
 import model.samplers.Multijittered;
 import model.samplers.Sampler;
+import model.trees.DummyTree;
+import model.trees.TraceableTree;
 import application.Main;
 
 public class RayTracer {
+	private TraceableTree sceneTree;
 	public static final float invGamma = 1f/2.2f;
 	private static final boolean DEBUG = false;
 	private static final boolean THREADINGDISABLED = false;
@@ -44,6 +47,7 @@ public class RayTracer {
 		//TODO Traer el control de las muestras de AA hasta acá.
 		this.scene = scene;
 		this.showTime = showTime;
+		this.sceneTree = new DummyTree(scene.getObjects());
 	}
 	public void setAA(boolean b) {
 		AAEnabled = b;
@@ -124,13 +128,13 @@ public class RayTracer {
 							else {
 								ray = scene.getCamera().rayThroughPixel(i + x + sample.x, j + y + sample.y, lensSamples[k]);
 							}
-							Color3f color = ray.trace(scene.getObjects()).shade(scene.getLights(), scene.getObjects(), 0, 0);
+							Color3f color = sceneTree.trace(ray).shade(scene.getLights(), scene.getObjects(), 0, 0);
 							resultColor.add(color);
 						}
 					} else {
 						for (Point2d lensSample : lensSamples) {
 							Ray ray = scene.getCamera().rayThroughPixel(i + x, j + y, lensSample);
-							Color3f color = ray.trace(scene.getObjects()).shade(scene.getLights(), scene.getObjects(), 0, 0);
+							Color3f color = sceneTree.trace(ray).shade(scene.getLights(), scene.getObjects(), 0, 0);
 							resultColor.add(color);
 						}
 					}

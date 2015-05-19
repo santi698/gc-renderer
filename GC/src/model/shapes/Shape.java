@@ -6,15 +6,16 @@ import javax.vecmath.Vector3d;
 import model.IntersectionContext;
 import model.Ray;
 import model.WorldObject;
+import model.trees.Traceable;
 
-public abstract class Shape extends WorldObject {
+public abstract class Shape extends WorldObject implements Traceable {
 	//Necesario para evitar self-occlusion.
 	private boolean scaleTexture = true;
 	private boolean rotateTexture = true;
 	public Shape(Vector3d translation, Vector3d rotation, double scale) {
 		super(translation, rotation, scale);
 	}
-	public abstract IntersectionContext intersect(Ray ray);
+	public abstract IntersectionContext trace(Ray ray);
 	
 	public void setNotScaleTexture() {
 		scaleTexture = false;

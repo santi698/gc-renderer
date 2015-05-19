@@ -17,7 +17,7 @@ public class Cylinder extends Shape {
 		this.radius = radius;
 	}
 	@Override
-	public IntersectionContext intersect(Ray ray) {
+	public IntersectionContext trace(Ray ray) {
 		Vector3d rayDirection = toLocal(ray.getDirection());
 		Point3d rayOrigin = toLocal(ray.getOrigin());
 		double a = rayDirection.x*rayDirection.x + rayDirection.z*rayDirection.z;

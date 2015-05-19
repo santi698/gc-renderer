@@ -1,8 +1,11 @@
 package model;
 
+import java.util.Arrays;
+
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import model.trees.Traceable;
 import util.Vectors;
 
 public class Ray {
@@ -19,22 +22,25 @@ public class Ray {
 	public Point3d getOrigin() {
 		return origin;
 	}
-	public IntersectionContext trace(Body[] bodies) {
-		Body closestBody = null;
+	public IntersectionContext trace(Traceable[] objects) {
+		return trace(Arrays.asList(objects));
+	}
+	public IntersectionContext trace(Iterable<Traceable> objects) {
+		Traceable closestObject = null;
 		IntersectionContext effectiveIC = null;
 		double minDistance = Double.MAX_VALUE;
-		for (Body body : bodies) {
-			IntersectionContext ic = body.intersect(this);
+		for (Traceable object : objects) {
+			IntersectionContext ic = object.trace(this);
 			if (ic.getHit()) {
 				double distance = origin.distance(ic.getIntersectionPoint());
 				if (distance < minDistance) {
 					minDistance = distance;
-					closestBody = body;
+					closestObject = object;
 					effectiveIC = ic;
 				}
 			}
 		}
-		if (closestBody != null) {
+		if (closestObject != null) {
 			return effectiveIC;
 		}
 		else

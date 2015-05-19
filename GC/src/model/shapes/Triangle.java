@@ -22,7 +22,7 @@ public class Triangle extends Shape {
 	}
 
 	@Override
-	public IntersectionContext intersect(Ray ray) {
+	public IntersectionContext trace(Ray ray) {
 		Vector3d normal = new Vector3d(this.normal);
 		Vector3d P = Vectors.cross(ray.getDirection(), d2);
 		double det = P.dot(d1);

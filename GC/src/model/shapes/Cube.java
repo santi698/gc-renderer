@@ -9,7 +9,7 @@ public class Cube extends Shape {
 		super(null,null,0);
 	}
 	@Override
-	public IntersectionContext intersect(Ray ray) {
+	public IntersectionContext trace(Ray ray) {
 		return null;
 	}
 }

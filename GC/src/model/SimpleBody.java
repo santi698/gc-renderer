@@ -13,8 +13,8 @@ public class SimpleBody implements Body {
 	public Material getMaterial() {
 		return material;
 	}
-	public IntersectionContext intersect(Ray ray) {
-		IntersectionContext ic = shape.intersect(ray);
+	public IntersectionContext trace(Ray ray) {
+		IntersectionContext ic = shape.trace(ray);
 		ic.setMaterial(this.getMaterial());
 		return ic;
 	}

@@ -18,7 +18,7 @@ public class Plane extends Shape {
 		super(new Vector3d(point), Vectors.scale(Vectors.normalize(normal), normal.angle(new Vector3d(0,1,0))), scale);
 		this.normal = Vectors.normalize(normal);
 	}
-	public IntersectionContext intersect (Ray ray) {
+	public IntersectionContext trace (Ray ray) {
 		Point3d rayOrigin = toLocal(ray.getOrigin());
 		Vector3d rayDirection = toLocal(ray.getDirection());
 		Vector3d normal = new Vector3d(this.normal);

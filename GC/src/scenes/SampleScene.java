@@ -20,7 +20,7 @@ import model.light.PointLight;
 import model.light.SpotLight;
 import model.materials.Glass;
 import model.materials.Matte2;
-import model.materials.PolishedMarble2;
+import model.materials.Metal2;
 import model.materials.PureDiffuse;
 import model.materials.Material;
 import model.materials.Matte;
@@ -51,9 +51,9 @@ public class SampleScene extends Scene {
 	//Lights
 	final static Light[] lights = new Light[] {
 						new PointLight(new Point3d(0, 0.5, 1), new Color3f(0.8f,0.8f,1f), 0.001),
-						new SpotLight(new Point3d(0,2,0.3), new Color3f(1,1f,1f), 0.005, spherePos, Math.toRadians(45)),
+						new SpotLight(new Point3d(0,2,0.3), new Color3f(1,1f,1f), 0.05, spherePos, Math.toRadians(45)),
 						new SpotLight(new Point3d(-1,2,-1), new Color3f(0.9f,0.9f,1), 0.04, spherePos, Math.toRadians(30)),
-						new DirectionalLight(new Vector3d(0,-0.1,1), sunsetColor, 5)
+						new DirectionalLight(new Vector3d(0,-0.1,1), sunsetColor, 0.5	)
 						};
 	
 	//Bodies
@@ -81,8 +81,8 @@ public class SampleScene extends Scene {
 //											new SimpleBody(s, new Metal(new Color3f(0.99f,0.99f,0.05f), 200)),
 //											new SimpleBody(s, new Metal(new ImageTexture("textures/2400/earth_night.jpg"), 0.4)),
 //											new SimpleBody(s, new Matte2(new CheckerBoardTexture(0.1), 0.1, 0.85)),
-//											new SimpleBody(s, new Glass(new PlainTexture(new Color3f(0.9f, 0.1f, 0.1f)))),
-											new SimpleBody(s, new PolishedMarble2(new PlainTexture(new Color3f(0.75f,0.75f,0.75f)))),
+											new SimpleBody(s, new Glass(new PlainTexture(new Color3f(0.9f, 0.1f, 0.1f)))),
+//											new SimpleBody(s, new PolishedMarble2(new PlainTexture(new Color3f(0.5f,0.5f,0.5f)))),
 //											new SimpleBody(s, new Mirror(new PlainTexture (new Color3f(0.65f, 0.65f, 0.65f)))),
 //											new SimpleBody(s, new Phong(new PlainTexture (new Color3f(0.95f, 0.95f, 0.95f)), 1e3, 0.5, 0.5)),
 //											new SimpleBody(p, new Metal(new PlainTexture(new Color3f(0.25f, 0.40f, 0.25f)), 0.5)),
@@ -90,7 +90,7 @@ public class SampleScene extends Scene {
 											new SimpleBody(p, new Matte2(new ImageTexture(Main.class.getResource("/textures/1024/Wood 2.png"), 0.2), 0, 0.75)),
 //											new SimpleBody(p, new Mirror(new Color3f(0.25f, 0.40f, 0.25f), 0.15)),
 //											new SimpleBody(t, new PolishedMarble(new PlainTexture(new Color3f(0.85f,0.01f,0.01f)))),
-//											new SimpleBody(t, new PolishedMarble2(new PlainTexture(new Color3f(0.85f,0.01f,0.01f)))),
+											new SimpleBody(t, new Metal2(new PlainTexture(new Color3f(173f/255f, 178f/255f, 189f/255f)),1e-100)),
 //											new SimpleBody(t2, new Mirror(new PlainTexture(new Color3f(0.85f,0.85f,0.85f)))),
 //											new SimpleBody(scn, new PolishedMarble(new PlainTexture(new Color3f(0.9f, 0.1f, 0.1f)))),
 //											new UniformCompoundBody(new Shape[]{scn, scv}, new Glass(new PlainTexture(new Color3f(0.95f, 0.05f, 0.05f))))

@@ -36,12 +36,12 @@ public class testSphere {
 		r1 = new Ray(new Vector3d(0,1,0), new Point3d(1,-1,0));
 		r2 = new Ray(new Vector3d(0,1,0), new Point3d(0,5,0));
 		r3 = new Ray(new Vector3d(0,1,0), new Point3d(0,0,0));
-		ic11 = s1.intersect(r1);
-		ic12 = s1.intersect(r2);
-		ic13 = s1.intersect(r3);
-		ic21 = s2.intersect(r1);
-		ic22 = s2.intersect(r2);
-		ic23 = s2.intersect(r3);
+		ic11 = s1.trace(r1);
+		ic12 = s1.trace(r2);
+		ic13 = s1.trace(r3);
+		ic21 = s2.trace(r1);
+		ic22 = s2.trace(r2);
+		ic23 = s2.trace(r3);
 	}
 
 	@Test

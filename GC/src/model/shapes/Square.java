@@ -12,8 +12,8 @@ public class Square extends Plane {
 		super(normal, center, side);
 	}
 	@Override
-	public IntersectionContext intersect(Ray ray) {
-		IntersectionContext ic = super.intersect(ray);
+	public IntersectionContext trace(Ray ray) {
+		IntersectionContext ic = super.trace(ray);
 		if (ic.getHit()) {
 			Point3d hitPoint = toLocal(Vectors.add(ic.getRay().getOrigin(), Vectors.scale(ic.getRay().getDirection(), ic.getT())));
 			if (hitPoint.x < -0.5 || hitPoint.x > 0.5 || hitPoint.z < -0.5 ||hitPoint.z > 0.5)

@@ -11,11 +11,11 @@ public class UniformCompoundBody implements Body {
 		this.material = material;
 	}
 	@Override
-	public IntersectionContext intersect(Ray ray) {
+	public IntersectionContext trace(Ray ray) {
 		IntersectionContext effectiveIc = IntersectionContext.noHit();
 		double minT = Double.MAX_VALUE;
 		for (Shape shape : shapes) {
-			IntersectionContext ic = shape.intersect(ray);
+			IntersectionContext ic = shape.trace(ray);
 			if (ic.getT() < minT) {
 				minT = ic.getT();
 				effectiveIc = ic;
