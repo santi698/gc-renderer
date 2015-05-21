@@ -11,11 +11,18 @@ import model.texture.Texture;
 public class Transparent extends Phong {
 	private double refractionIndex;
 	private float kR;
+	private float kT;
 	private Texture cFIn = super.getTexture();
 	private Color3f cFOut = new Color3f(1,1,1);
 	public Transparent(Texture texture, double refractionIndex) {
-		super(texture, 20000, 0, 1, 0);
+		this(texture, refractionIndex, 1, 1);
+	}
+	public Transparent(Texture texture, double refractionIndex, float kR, float kT) {
+		super(texture, 200000, 0, 1, 0);
 		this.refractionIndex = refractionIndex;
+		this.kR = kR;
+		this.kT = kT;
+		System.out.println(kR);
 	}
 	public double calculateReflectionCoefficient(Ray refracted, Ray reflected, IntersectionContext ic) {
 		double n1,n2;
@@ -78,10 +85,12 @@ public class Transparent extends Phong {
 		}
 		else
 			rfColor = new Color3f(1,0,1);
-		kR = (float)calculateReflectionCoefficient(refracted, reflected, ic);
-		rrColor.scale(1f-kR);
-		rfColor.scale(kR);
-		phongColor.scale(kR);
+		float rC = (float)calculateReflectionCoefficient(refracted, reflected, ic);
+		float localKr = kR*rC;
+		float localKt = kT*(1-rC);
+		rrColor.scale(localKt);
+		rfColor.scale(localKr);
+		phongColor.scale(localKr);
 		rrColor.add(rfColor);
 		rrColor.add(phongColor);
 		return rrColor;
