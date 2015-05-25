@@ -60,4 +60,10 @@ public class Cylinder extends Shape {
 		uv.y = texturePoint.y*heightFactor;
 		return uv;
 	}
+	
+	@Override
+	public BoundingBox getBoundingBox() {
+		//TODO
+		return null;
+	}
 }

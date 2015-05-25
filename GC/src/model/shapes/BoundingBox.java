@@ -151,4 +151,14 @@ public class BoundingBox extends Shape {
 		if(bbox.z1 > z1)
 			z1 = bbox.z1;
 	}
+	
+	
+	public Point3d getMidpoint(){
+		return new Point3d((x0+x1)/2,(y0+y1)/2,(y0+y1)/2);
+	}
+	
+	@Override
+	public BoundingBox getBoundingBox() {
+		return this;
+	}
 }

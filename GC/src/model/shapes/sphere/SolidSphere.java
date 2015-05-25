@@ -14,4 +14,5 @@ public class SolidSphere extends Sphere {
 	protected Vector3d getNormalAt(Point3d localHitPoint, boolean isOutside) {
 		return new Vector3d(localHitPoint); //Siempre apunta hacia afuera.
 	}
+
 }

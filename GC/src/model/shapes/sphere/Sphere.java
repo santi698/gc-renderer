@@ -6,6 +6,7 @@ import javax.vecmath.Vector3d;
 
 import model.IntersectionContext;
 import model.Ray;
+import model.shapes.BoundingBox;
 import model.shapes.Shape;
 import util.Vectors;
 
@@ -93,5 +94,11 @@ public abstract class Sphere extends Shape {
 		}
 			
 		return uv;
+	}
+	
+	@Override
+	public BoundingBox getBoundingBox() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

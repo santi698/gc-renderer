@@ -40,4 +40,6 @@ public abstract class Shape extends WorldObject implements Traceable {
 		texturePoint.z = texturePoint.z;
 		return texturePoint;
 	}
+	
+	public abstract BoundingBox getBoundingBox();
 }
