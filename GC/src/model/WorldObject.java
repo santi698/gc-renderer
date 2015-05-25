@@ -13,31 +13,20 @@ public class WorldObject {
 	private Matrix4d toGlobal;
 	private Matrix4d toLocal;
 	private Matrix4d toGlobalT;
-	private Matrix4d translation;
-	private Matrix4d rotation;
-	private Matrix4d scaling;
-	private Matrix4d invTranslation;
-	private Matrix4d invRotation;
-	private Matrix4d invScaling;
+	public WorldObject(Matrix4d transform) {
+		toGlobal = transform;
+		updateMatrices();
+	}
 	public WorldObject(Vector3d translation, Vector3d rotation, double scale) {
-		this.invTranslation = translateMatrix(translation);
-		this.invRotation = rotateMatrix(rotation);
-		this.invScaling = scaleMatrix(scale);
+		toGlobal = new Matrix4d();
+		toGlobal.setIdentity();
+		toGlobal.mul(translateMatrix(translation));
+		toGlobal.mul(rotateMatrix(rotation));
+		toGlobal.mul(scaleMatrix(scale));
 		updateMatrices();
 	}
 	
 	public void updateMatrices() {
-		toGlobal = new Matrix4d();
-		toGlobal.setIdentity();
-		toGlobal.mul(this.invTranslation);
-		toGlobal.mul(this.invRotation);
-		toGlobal.mul(this.invScaling);
-		this.scaling = new Matrix4d();
-		this.rotation = new Matrix4d();
-		this.translation = new Matrix4d();
-		this.scaling.invert(invScaling);
-		this.rotation.invert(invRotation);
-		this.translation.invert(invTranslation);
 		toLocal = new Matrix4d(toGlobal);
 		toLocal.invert();
 		toGlobalT = new Matrix4d(toGlobal);
@@ -81,31 +70,24 @@ public class WorldObject {
 		globalNormal.normalize();
 		return globalNormal;
 	}
-	public Vector3d rotateVector(Vector3d vector) {
-		Vector3d result = new Vector3d(vector);
-		invRotation.transform(vector);
-		return result;
+	public void transform(Matrix4d transform) {
+		toGlobal.mul(transform);
+		updateMatrices();
 	}
 	public void rotate(Vector3d rotation) {
-		this.invRotation.mul(rotateMatrix(rotation));
+		toGlobal.mul(rotateMatrix(rotation));
 		updateMatrices();
 	}
 	public void rotate(Matrix4d rotation) {
-		this.invRotation.mul(rotation);
+		toGlobal.mul(rotation);
 		updateMatrices();
 	}
 	public void translate(Vector3d translation) {
-		this.invTranslation.mul(translateMatrix(translation));
+		toGlobal.mul(translateMatrix(translation));
 		updateMatrices();
 	}
 	public void scale(double scale) {
-		this.invScaling.mul(scaleMatrix(scale));
+		toGlobal.mul(scaleMatrix(scale));
 		updateMatrices();
-	}
-	public Matrix4d getScaling() {
-		return invScaling;
-	}
-	public Matrix4d getRotation() {
-		return invRotation;
 	}
 }

@@ -45,7 +45,7 @@ public class Main extends Application {
 		int aaSamples = Integer.parseInt(cl.getOptionValue("aa"));
 		scenes.Scene scene;
 		if (cl.hasOption("i")) {
-			scene = new SampleScene();//new SceneFromFile(cl.getOptionValue("i"));
+			scene = new SceneFromFile(cl.getOptionValue("i"));
 		} else {
 			scene = new SampleScene();
 		}
@@ -58,6 +58,15 @@ public class Main extends Application {
 				BufferedImage i = rayTracer.render();
 				ImageIO.write(i, "png", file);
 				System.out.println("Imagen escrita a: " + file.getAbsolutePath());
+			} else {
+				int times = Integer.parseInt(cl.getOptionValue("b"));
+				long time = System.currentTimeMillis();
+				for (int i = 0; i < times; i++) {
+					rayTracer.render();
+				}
+				System.out.println("Terminado.");
+				System.out.println("Tiempo promedio por render: " + (System.currentTimeMillis()-time)/1000/times + " segundos");
+				System.out.println("Tiempo total: " + (System.currentTimeMillis()-time)/1000 + " segundos");
 			}
 			System.exit(0);
 		}

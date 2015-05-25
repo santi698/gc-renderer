@@ -32,9 +32,9 @@ public abstract class Shape extends WorldObject implements Traceable {
 	public Point3d localToTexture(Point3d localPoint) {
 		Point3d texturePoint = new Point3d(localPoint);
 		if (!scaleTexture)
-			getScaling().transform(texturePoint);
+//			getScaling().transform(texturePoint); TODO
 		if (!rotateTexture)
-			getRotation().transform(texturePoint);
+//			getRotation().transform(texturePoint); TODO
 		texturePoint.x = texturePoint.x;
 		texturePoint.y = texturePoint.y;
 		texturePoint.z = texturePoint.z;

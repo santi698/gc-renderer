@@ -12,17 +12,29 @@ import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import util.Vectors;
 import model.Body;
 import model.SimpleBody;
 import model.cameras.Camera;
+import model.cameras.PinholeCamera;
+import model.light.DirectionalLight;
 import model.light.Light;
 import model.light.PointLight;
+import model.materials.Glass;
 import model.materials.Material;
+import model.materials.Matte2;
+import model.materials.Metal2;
+import model.materials.Mirror;
+import model.shapes.BoundingBox;
 import model.shapes.Mesh;
+import model.shapes.Plane;
 import model.shapes.Shape;
+import model.shapes.sphere.SolidSphere;
 import model.texture.ImageTexture;
+import model.texture.PlainTexture;
 import model.texture.Texture;
-public class SceneFromFile /* extends Scene*/ {
+@SuppressWarnings("unchecked")
+public class SceneFromFile implements Scene {
 	
 	Map<String,Material> materials;
 	List<Light> lights;
@@ -46,12 +58,12 @@ public class SceneFromFile /* extends Scene*/ {
 		boolean inCamera = true;
 		boolean inIncludes = false;
 		
-		Point3d position = null;
-		Point3d lookAt = null;
-		Point3d up = null;
-		double fov = 0;
-		int xRes = 0;
-		int yRes = 0;
+		Point3d position = new Point3d();
+		Point3d lookAt = new Point3d(0,0,1);
+		Vector3d up = new Vector3d(0,1,0);
+		double fov = 90;
+		int xRes = 800;
+		int yRes = 600;
 		
 		String currentLine;
 		
@@ -69,7 +81,7 @@ public class SceneFromFile /* extends Scene*/ {
 					String[] args = currentLine.split(" ");
 					position = new Point3d(Double.parseDouble(args[1]),Double.parseDouble(args[2]),Double.parseDouble(args[3]));
 					lookAt = new Point3d(Double.parseDouble(args[4]),Double.parseDouble(args[5]),Double.parseDouble(args[6]));
-					up = new Point3d(Double.parseDouble(args[7]),Double.parseDouble(args[8]),Double.parseDouble(args[9]));
+					up = new Vector3d(Double.parseDouble(args[7]),Double.parseDouble(args[8]),Double.parseDouble(args[9]));
 					
 				}else if(currentLine.startsWith("\t\"float fov\"")){
 					int firstBracket= currentLine.indexOf('[') + 1;
@@ -84,7 +96,7 @@ public class SceneFromFile /* extends Scene*/ {
 					int lastBracket= currentLine.lastIndexOf(']');
 					yRes = Integer.parseInt(currentLine.substring(firstBracket,lastBracket));
 					
-					//camera = new PinholeCamera();
+					camera = new PinholeCamera(position, lookAt, up, fov/49.13*0.035, xRes, yRes);
 
 					inCamera = false;
 					inIncludes = true;
@@ -165,7 +177,7 @@ public class SceneFromFile /* extends Scene*/ {
 				//The suggested number of shadow samples when computing illumination from the given light.
 				int nsamples = ((List<Integer>) arguments.get("nsamples")).get(0);
 				
-				//light = new Infinite ?
+				//light = new Infinite ? TODO
 				
 				break;
 			case "distant":
@@ -176,11 +188,8 @@ public class SceneFromFile /* extends Scene*/ {
 				List<Double> fromTo = (List<Double>) arguments.get("from/to");
 				Point3d from2 = new Point3d(fromTo.get(0),fromTo.get(1),fromTo.get(2));
 				Point3d to = new Point3d(fromTo.get(3),fromTo.get(4),fromTo.get(5));
-				
-				//Half angle of the light source in radians. Must be > 0 for soft shadows
-				float theta = ((List<Float>)  arguments.get("theta")).get(0);
-				
-				//light = new Distant ?		
+								
+				light = new DirectionalLight(Vectors.sub(to, from2), color3, intensity);		
 				
 				break;
 			default:
@@ -266,18 +275,19 @@ public class SceneFromFile /* extends Scene*/ {
 		case "plane":
 			//Vector3 de normales
 			List<Double> N = (List<Double>)arguments.get("N");
-			// shape = new Plane();
+			Vector3d normal = new Vector3d(N.get(0), N.get(1), N.get(2));
+			shape = new Plane(normal, new Point3d(position));
 			break;
 		case "box":
 			float width = ((List<Float>) arguments.get("width")).get(0);
 			float height = ((List<Float>) arguments.get("height")).get(0);
 			float depth = ((List<Float>) arguments.get("depth")).get(0);
-			//shape = new Box();
+			shape = new BoundingBox(position.x-width/2, position.x+width/2, position.y-height/2, position.y+height/2, position.z-depth/2, position.z+depth/2);
 			break;
 		case "sphere":
 			float radius = ((List<Float>) arguments.get("radius")).get(0);
 			
-			//shape = new Sphere(radius);
+			shape = new SolidSphere(new Point3d(position), radius);
 			
 			break;
 		default:
@@ -342,7 +352,7 @@ public class SceneFromFile /* extends Scene*/ {
 		
 		Material material = null;
 		
-		Texture texture = null;
+		Texture texture = new PlainTexture(new Color3f());
 		if(textureArgs != null){
 			if(textureArgs.containsKey("filename")){
 				texture = new ImageTexture( (String) textureArgs.get("filename"));
@@ -354,24 +364,22 @@ public class SceneFromFile /* extends Scene*/ {
 			case "matte":
 				Color3f Kd = (Color3f)arguments.get("Kd");
 				float sigma = ((List<Float>) arguments.get("sigma")).get(0);
-				// material = new Matte();
+				material = new Matte2(texture, sigma, Kd.x); //TODO
 				break;
 			case "mirror":
-				float _filmindex = ((List<Float>) arguments.get("filmindex")).get(0);
 				Color3f _Kr = (Color3f)arguments.get("Kr");
-				//material = new Mirror();
+				material = new Mirror(_Kr.x); //TODO
 				break;
 			case "glass":
 				Color3f Kr = (Color3f)arguments.get("Kr");
 				Color3f Kt = (Color3f)arguments.get("Kt");
 				float index = ((List<Float>) arguments.get("index")).get(0);
-				float filmindex = ((List<Float>) arguments.get("filmindex")).get(0);
-				// material = new Glass();
+				material = new Glass(Kr.x, Kt.x, texture, index);
 				break;
 			case "metal2":
 				float uroughness = ((List<Float>) arguments.get("uroughness")).get(0);
 				float vroughness = ((List<Float>) arguments.get("vroughness")).get(0);
-				//material = new Metal2(texture,uroughness);
+				material = new Metal2(texture,uroughness);
 				break;
 			default:
 				System.out.println(type + " Material not supported");
@@ -450,6 +458,21 @@ public class SceneFromFile /* extends Scene*/ {
 				System.out.println(ArgumentType + " not supported.");
 				break;
 		}
+	}
+
+	@Override
+	public List<Light> getLights() {
+		return lights;
+	}
+
+	@Override
+	public List<Body> getObjects() {
+		return bodies;
+	}
+
+	@Override
+	public Camera getCamera() {
+		return camera;
 	}
 	
 }

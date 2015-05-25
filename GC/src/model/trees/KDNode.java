@@ -5,12 +5,10 @@ import java.util.List;
 
 import javax.vecmath.Point3d;
 
-import model.Body;
 import model.IntersectionContext;
 import model.Ray;
 import model.shapes.BoundingBox;
 import model.shapes.Shape;
-import model.shapes.Triangle;
 
 public class KDNode {
 
