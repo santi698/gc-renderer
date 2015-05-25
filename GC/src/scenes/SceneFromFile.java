@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import javax.vecmath.Color3f;
+import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -206,9 +207,7 @@ public class SceneFromFile implements Scene {
 		
 		Map<String,Object> arguments = new HashMap<String,Object>();
 		
-		Vector3d position = null;
-		Vector3d rotation = null;
-		double scale = 0.0d;
+		Matrix4d transform = null;
 		
 		String shapeType = "";
 
@@ -217,10 +216,12 @@ public class SceneFromFile implements Scene {
 			
 			if(currentLine.startsWith("Transform")){
 				String[] values = currentLine.substring(11,currentLine.length()-1).split(" ");
-								
-				scale = Double.parseDouble(values[0]);
-				//rotation = ;
-				position = new Vector3d(Double.parseDouble(values[12]),Double.parseDouble(values[13]),Double.parseDouble(values[14]));
+					
+				transform = new Matrix4d(	Double.parseDouble(values[0]),Double.parseDouble(values[1]),Double.parseDouble(values[2]),Double.parseDouble(values[3]),
+												Double.parseDouble(values[4]),Double.parseDouble(values[5]),Double.parseDouble(values[6]),Double.parseDouble(values[7]),
+												Double.parseDouble(values[8]),Double.parseDouble(values[9]),Double.parseDouble(values[10]),Double.parseDouble(values[11]),
+												Double.parseDouble(values[12]),Double.parseDouble(values[13]),Double.parseDouble(values[14]),Double.parseDouble(values[15]));
+
 
 			}else if(currentLine.startsWith("NamedMaterial")){
 				
@@ -240,7 +241,7 @@ public class SceneFromFile implements Scene {
 			
 			}else if(currentLine.startsWith("AttributeEnd")){
 		
-				bodies.add(new SimpleBody(getShapeFromArguments(shapeType,arguments,position,rotation,scale),material));
+				bodies.add(new SimpleBody(getShapeFromArguments(shapeType,arguments,transform),material));
 				System.out.println("added "+ shapeType  + " with material "+ material);
 				material = null;
 				arguments.clear();
@@ -253,7 +254,7 @@ public class SceneFromFile implements Scene {
 		return;	
 	}
 	
-	public Shape getShapeFromArguments(String shapeType, Map<String,Object> arguments, Vector3d position, Vector3d rotation, double scale){
+	public Shape getShapeFromArguments(String shapeType, Map<String,Object> arguments, Matrix4d transform){
 		
 		Shape shape = null;
 		
@@ -267,7 +268,7 @@ public class SceneFromFile implements Scene {
 				 UVs = (List<Float>) arguments.get("uv");
 			}
 			
-			shape = new Mesh(position,rotation,scale,triindices,P,UVs);
+			shape = new Mesh(Matrix4d transform,triindices,P,UVs);
 			break;
 		case "plane":
 			//Vector3 de normales
