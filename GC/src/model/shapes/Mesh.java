@@ -28,7 +28,6 @@ public class Mesh extends Shape {
 			
 			//Utilizar los UVs!
 			Vector2d uv = new Vector2d(UVs.get(2*i), UVs.get(2*i+1));
-			
 			Triangle t = new Triangle(	new Point3d(P.get(triindices.get(9*i)),P.get(triindices.get(9*i+1)),P.get(triindices.get(9*i+2))),
 										new Point3d(P.get(triindices.get(9*i+3)),P.get(triindices.get(9*i+4)),P.get(triindices.get(9*i+5))),
 										new Point3d(P.get(triindices.get(9*i+6)),P.get(triindices.get(9*i+7)),P.get(triindices.get(9*i+8))));

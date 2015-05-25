@@ -11,7 +11,7 @@ public class DummyTree extends TraceableTree {
 	public DummyTree() {
 		objects = new LinkedList<Traceable>();
 	}
-	public DummyTree(List<? extends Traceable> objects) {
+	public DummyTree(List<Traceable> objects) {
 		this();
 		addAll(objects);
 	}
