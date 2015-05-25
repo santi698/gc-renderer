@@ -1,5 +1,8 @@
 package model.shapes;
 
+import java.util.List;
+
+import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -10,6 +13,8 @@ import util.Vectors;
 public class Triangle extends Shape {
 	private Point3d p1;
 
+	private Point2d uv;
+	
 	private Vector3d d1;
 	private Vector3d d2;
 	private Vector3d normal;
@@ -31,6 +36,34 @@ public class Triangle extends Shape {
 		double maxZ = Math.min(Math.min(p1.z, p2.z),p3.z);
 		this.bbox = new BoundingBox(minX,minY,minZ,maxX,maxY,maxZ);
 	}
+	
+	
+
+	public Triangle(int i, List<Integer> triindices, Point3d[] points, Vector3d[] normals, Point2d[] uv) {
+		super(new Vector3d(), new Vector3d(), 1);
+		
+		p1 = points[triindices.get(3*i)];
+		this.d1 = Vectors.sub(points[triindices.get(3*i+1)], p1);
+		this.d2 = Vectors.sub(points[triindices.get(3*i+2)], p1);	
+		this.normal = normals[3*i];
+		
+		if(uv != null)
+			this.uv = uv[2*i];
+		
+		Point3d p2 = points[triindices.get(3*i+1)];
+		Point3d p3 = points[triindices.get(3*i+2)];
+
+		double minX = Math.min(Math.min(p1.x, p2.x),p3.x);
+		double maxX = Math.min(Math.min(p1.x, p2.x),p3.x);
+		double minY = Math.min(Math.min(p1.y, p2.y),p3.y);
+		double maxY = Math.min(Math.min(p1.y, p2.y),p3.y);
+		double minZ = Math.min(Math.min(p1.z, p2.z),p3.z);
+		double maxZ = Math.min(Math.min(p1.z, p2.z),p3.z);
+		this.bbox = new BoundingBox(minX,minY,minZ,maxX,maxY,maxZ);
+	}
+
+
+
 
 	@Override
 	public IntersectionContext trace(Ray ray) {
