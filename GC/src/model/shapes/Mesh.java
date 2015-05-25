@@ -18,7 +18,8 @@ public class Mesh extends Shape {
 	BoundingBox bbox = new BoundingBox(0,0,0,0,0,0);
 	
 	public Mesh(Matrix4d transform, List<Integer> triindices, List<Double> P, List<Float> UVs) {
-		super(transform);
+		super(new Vector3d(), new Vector3d(), 1);
+		this.transform(transform);
 		
 		List<Shape> triangles = new ArrayList<Shape>();
 		
