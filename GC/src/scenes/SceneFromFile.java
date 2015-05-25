@@ -23,7 +23,7 @@ import model.light.PointLight;
 import model.materials.Glass;
 import model.materials.Material;
 import model.materials.Matte2;
-import model.materials.Metal2;
+import model.materials.Metal;
 import model.materials.Mirror;
 import model.shapes.BoundingBox;
 import model.shapes.Mesh;
@@ -172,10 +172,7 @@ public class SceneFromFile implements Scene {
 				break;
 			case "infinite":
 				//The color of the light.
-				Color3f color2 = (Color3f) arguments.get("L");
-				
-				//The suggested number of shadow samples when computing illumination from the given light.
-				int nsamples = ((List<Integer>) arguments.get("nsamples")).get(0);
+//				Color3f color2 = (Color3f) arguments.get("L");
 				
 				//light = new Infinite ? TODO
 				
@@ -378,8 +375,7 @@ public class SceneFromFile implements Scene {
 				break;
 			case "metal2":
 				float uroughness = ((List<Float>) arguments.get("uroughness")).get(0);
-				float vroughness = ((List<Float>) arguments.get("vroughness")).get(0);
-				material = new Metal2(texture,uroughness);
+				material = new Metal(texture,uroughness);
 				break;
 			default:
 				System.out.println(type + " Material not supported");
