@@ -3,6 +3,7 @@ package model.shapes;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
@@ -16,8 +17,8 @@ public class Mesh extends Shape {
 	KDNode kdnode = null;
 	BoundingBox bbox = new BoundingBox(0,0,0,0,0,0);
 	
-	public Mesh(Vector3d translation, Vector3d rotation, double scale, List<Integer> triindices, List<Double> P, List<Float> UVs) {
-		super(translation, rotation, scale);
+	public Mesh(Matrix4d transform, List<Integer> triindices, List<Double> P, List<Float> UVs) {
+		super(transform);
 		
 		List<Shape> triangles = new ArrayList<Shape>();
 		
