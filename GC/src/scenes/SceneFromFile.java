@@ -268,24 +268,27 @@ public class SceneFromFile implements Scene {
 				 UVs = (List<Float>) arguments.get("uv");
 			}
 			
-			shape = new Mesh(Matrix4d transform,triindices,P,UVs);
+			shape = new Mesh(transform,triindices,P,UVs);
 			break;
 		case "plane":
 			//Vector3 de normales
 			List<Double> N = (List<Double>)arguments.get("N");
 			Vector3d normal = new Vector3d(N.get(0), N.get(1), N.get(2));
-			shape = new Plane(normal, new Point3d(position));
+			shape = new Plane(normal, new Point3d(0,0,0));
+			shape.transform(transform);
 			break;
 		case "box":
 			float width = ((List<Float>) arguments.get("width")).get(0);
 			float height = ((List<Float>) arguments.get("height")).get(0);
 			float depth = ((List<Float>) arguments.get("depth")).get(0);
-			shape = new BoundingBox(position.x-width/2, position.x+width/2, position.y-height/2, position.y+height/2, position.z-depth/2, position.z+depth/2);
+			shape = new BoundingBox(-width/2, +width/2, -height/2, +height/2, -depth/2, +depth/2);
+			shape.transform(transform);
 			break;
 		case "sphere":
 			float radius = ((List<Float>) arguments.get("radius")).get(0);
 			
-			shape = new SolidSphere(new Point3d(position), radius);
+			shape = new SolidSphere(new Point3d(0,0,0), radius);
+			shape.transform(transform);
 			
 			break;
 		default:
