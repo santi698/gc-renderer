@@ -1,6 +1,7 @@
 package model;
 
 import model.materials.Material;
+import model.shapes.BoundingBox;
 import model.shapes.Shape;
 
 public class SimpleBody implements Body {
@@ -17,5 +18,9 @@ public class SimpleBody implements Body {
 		IntersectionContext ic = shape.trace(ray);
 		ic.setMaterial(this.getMaterial());
 		return ic;
+	}
+	@Override
+	public BoundingBox getBoundingBox() {
+		return shape.getBoundingBox();
 	}
 }

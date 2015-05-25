@@ -14,5 +14,4 @@ public class ThinSphere extends Sphere {
 			normal.negate();
 		return normal;
 	}
-
 }

@@ -46,4 +46,9 @@ public class Plane extends Shape {
 		uv.y = texturePoint.z;
 		return uv;
 	}
+	@Override
+	public BoundingBox getBoundingBox() {
+		// TODO
+		return null;
+	}
 }

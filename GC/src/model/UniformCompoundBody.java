@@ -1,6 +1,7 @@
 package model;
 
 import model.materials.Material;
+import model.shapes.BoundingBox;
 import model.shapes.Shape;
 
 public class UniformCompoundBody implements Body {
@@ -23,5 +24,15 @@ public class UniformCompoundBody implements Body {
 		}
 		effectiveIc.setMaterial(this.material);
 		return effectiveIc;
+	}
+
+	public BoundingBox getBoundingBox() {
+		BoundingBox bbox = new BoundingBox(0,0,0,0,0,0);
+		
+		for(Shape s: shapes)
+			bbox.expand(s.getBoundingBox());
+		
+		return bbox;
+		
 	}
 }

@@ -18,11 +18,10 @@ import model.cameras.Camera;
 import model.light.Light;
 import model.light.PointLight;
 import model.materials.Material;
-import model.materials.Metal2;
 import model.shapes.Mesh;
 import model.shapes.Shape;
-import model.shapes.sphere.Sphere;
 import model.texture.ImageTexture;
+import model.texture.Texture;
 public class SceneFromFile /* extends Scene*/ {
 	
 	Map<String,Material> materials;
@@ -31,67 +30,121 @@ public class SceneFromFile /* extends Scene*/ {
 	Camera camera;
 	int AASamples = 32;
 	
-	public SceneFromFile() throws FileNotFoundException{
+	public SceneFromFile(String fileDir) throws FileNotFoundException{
 		
 		bodies = new ArrayList<Body>();
 		lights = new ArrayList<Light>();
 		materials = new HashMap<String,Material>();
 		
-		materialParser("C:\\Users\\Dam\\Desktop\\untitled\\Scene\\00001\\LuxRender-Materials.lxm");
-		geometryParser("C:\\Users\\Dam\\Desktop\\untitled\\Scene\\00001\\LuxRender-Geometry.lxo");
-		cameraParser("C:\\Users\\Dam\\Desktop\\DemoScene.lxs");
-		lightsParser("C:\\Users\\Dam\\Desktop\\DemoScene.lxs");
+		mainParser(fileDir);
+		
 	}
-	
-	
-	public void lightsParser(String fileDir) throws FileNotFoundException{
+		
+	public void mainParser(String fileDir) throws FileNotFoundException{
 		Scanner in = new Scanner(new FileReader(fileDir));
+				
+		boolean inCamera = true;
+		boolean inIncludes = false;
+		
+		Point3d position = null;
+		Point3d lookAt = null;
+		Point3d up = null;
+		double fov = 0;
+		int xRes = 0;
+		int yRes = 0;
+		
+		String currentLine;
 		
 		Map<String,Object> arguments = new HashMap<String,Object>();
 		
 		String lightType = "";
-		
-		String currentLine;
-		
+				
 		boolean inLight = false;
 		
 		while(in.hasNextLine()){
 			currentLine = in.nextLine();
 			
-			if(currentLine.startsWith("AttributeBegin")){
-				inLight = true;
-			}else if (currentLine.startsWith("AttributeEnd")){
-				
-				lights.add(GetLightFromArguments(lightType,arguments));
-				arguments.clear();
-				lightType= "";
-				inLight = false;
-			}			
-			
-			if(inLight){
-				if(currentLine.startsWith("AreaLightSource")){
+			if(inCamera){
+				if(currentLine.startsWith("LookAt")){
+					String[] args = currentLine.split(" ");
+					position = new Point3d(Double.parseDouble(args[1]),Double.parseDouble(args[2]),Double.parseDouble(args[3]));
+					lookAt = new Point3d(Double.parseDouble(args[4]),Double.parseDouble(args[5]),Double.parseDouble(args[6]));
+					up = new Point3d(Double.parseDouble(args[7]),Double.parseDouble(args[8]),Double.parseDouble(args[9]));
 					
+				}else if(currentLine.startsWith("\t\"float fov\"")){
+					int firstBracket= currentLine.indexOf('[') + 1;
+					int lastBracket= currentLine.lastIndexOf(']');
+					fov = Double.parseDouble(currentLine.substring(firstBracket,lastBracket));
+				}else if(currentLine.startsWith("\t\"integer xresolution\"")){
+					int firstBracket= currentLine.indexOf('[') + 1;
+					int lastBracket= currentLine.lastIndexOf(']');
+					xRes = Integer.parseInt(currentLine.substring(firstBracket,lastBracket));
+				}else if(currentLine.startsWith("\t\"integer yresolution\"")){
+					int firstBracket= currentLine.indexOf('[') + 1;
+					int lastBracket= currentLine.lastIndexOf(']');
+					yRes = Integer.parseInt(currentLine.substring(firstBracket,lastBracket));
+					
+					//camera = new PinholeCamera();
+
+					inCamera = false;
+					inIncludes = true;
+				}
+			}else if (inIncludes){
+				
+				if(currentLine.startsWith("Include")){
 					int firstQuote= currentLine.indexOf('"') + 1;
 					int lastQuote= currentLine.lastIndexOf('"');
-					lightType = currentLine.substring(firstQuote,lastQuote);
+					String FileDirection = currentLine.substring(firstQuote,lastQuote);
 					
-				}else if(currentLine.startsWith("\t")){
-		
-					ParseArgument(currentLine,arguments);
+					if(FileDirection.endsWith(".lxm\""))
+						materialParser(FileDirection);
+					else
+						geometryParser(FileDirection);
+					
+				}else if(currentLine.startsWith("AttributeBegin") || currentLine.startsWith("TransformBegin")){
+					inLight = true;
+					inIncludes = false;
+				}
 				
+			}else{
+				
+				if(currentLine.startsWith("AttributeBegin") || currentLine.startsWith("TransformBegin")){
+					inLight = true;
+				}else if (currentLine.startsWith("AttributeEnd") || currentLine.startsWith("TransformEnd")){
+					
+					lights.add(getLightFromArguments(lightType,arguments));
+					arguments.clear();
+					lightType= "";
+					inLight = false;
+				}			
+				
+				if(inLight){
+					if(currentLine.startsWith("AreaLightSource")){
+						
+						int firstQuote= currentLine.indexOf('"') + 1;
+						int lastQuote= currentLine.lastIndexOf('"');
+						lightType = currentLine.substring(firstQuote,lastQuote);
+						
+					}else if(currentLine.startsWith("\t")){
+			
+						parseArgument(currentLine,arguments);
+					
+					}
 				}
 			}
+
 		}
+		
 		
 		in.close();
 		return;	
-	}	
+	}
 	
-	public Light GetLightFromArguments(String lightType, Map<String,Object> arguments){
+	public Light getLightFromArguments(String lightType, Map<String,Object> arguments){
 		
 		Light light = null;
 		
-		float intensity = (float) arguments.get("gain");
+		float intensity = ((List<Float>) arguments.get("gain")).get(0);
 		
 		switch(lightType){
 			case "point":
@@ -125,7 +178,7 @@ public class SceneFromFile /* extends Scene*/ {
 				Point3d to = new Point3d(fromTo.get(3),fromTo.get(4),fromTo.get(5));
 				
 				//Half angle of the light source in radians. Must be > 0 for soft shadows
-				float theta = (float) arguments.get("theta");
+				float theta = ((List<Float>)  arguments.get("theta")).get(0);
 				
 				//light = new Distant ?		
 				
@@ -136,49 +189,6 @@ public class SceneFromFile /* extends Scene*/ {
 		}
 		
 		return light;
-	}
-
-	public void cameraParser(String fileDir) throws FileNotFoundException{
-		Scanner in = new Scanner(new FileReader(fileDir));
-				
-		Point3d position = null;
-		Point3d lookAt = null;
-		Point3d up = null;
-		double fov = 0;
-		int xRes = 0;
-		int yRes = 0;
-		
-		String currentLine;
-		
-		while(in.hasNextLine()){
-			currentLine = in.nextLine();
-			if(currentLine.startsWith("LookAt")){
-				String[] args = currentLine.split(" ");
-				position = new Point3d(Double.parseDouble(args[1]),Double.parseDouble(args[2]),Double.parseDouble(args[3]));
-				lookAt = new Point3d(Double.parseDouble(args[4]),Double.parseDouble(args[5]),Double.parseDouble(args[6]));
-				up = new Point3d(Double.parseDouble(args[7]),Double.parseDouble(args[8]),Double.parseDouble(args[9]));
-				
-			}else if(currentLine.startsWith("\t\"float fov\"")){
-				int firstBracket= currentLine.indexOf('[') + 1;
-				int lastBracket= currentLine.lastIndexOf(']');
-				fov = Double.parseDouble(currentLine.substring(firstBracket,lastBracket));
-			}else if(currentLine.startsWith("\t\"integer xresolution\"")){
-				int firstBracket= currentLine.indexOf('[') + 1;
-				int lastBracket= currentLine.lastIndexOf(']');
-				xRes = Integer.parseInt(currentLine.substring(firstBracket,lastBracket));
-			}else if(currentLine.startsWith("\t\"integer yresolution\"")){
-				int firstBracket= currentLine.indexOf('[') + 1;
-				int lastBracket= currentLine.lastIndexOf(']');
-				yRes = Integer.parseInt(currentLine.substring(firstBracket,lastBracket));
-				break;
-			}
-		}
-
-		
-		//camera = new PinholeCamera();
-		
-		in.close();
-		return;	
 	}
 	
 	public void geometryParser(String fileDir) throws FileNotFoundException{
@@ -220,11 +230,11 @@ public class SceneFromFile /* extends Scene*/ {
 				
 			}else if(currentLine.startsWith("\t")){
 				
-				ParseArgument(currentLine,arguments);
+				parseArgument(currentLine,arguments);
 			
 			}else if(currentLine.startsWith("AttributeEnd")){
 		
-				bodies.add(new SimpleBody(GetShapeFromArguments(shapeType,arguments,position,rotation,scale),material));
+				bodies.add(new SimpleBody(getShapeFromArguments(shapeType,arguments,position,rotation,scale),material));
 				System.out.println("added "+ shapeType  + " with material "+ material);
 				material = null;
 				arguments.clear();
@@ -237,7 +247,7 @@ public class SceneFromFile /* extends Scene*/ {
 		return;	
 	}
 	
-	public Shape GetShapeFromArguments(String shapeType, Map<String,Object> arguments, Vector3d position, Vector3d rotation, double scale){
+	public Shape getShapeFromArguments(String shapeType, Map<String,Object> arguments, Vector3d position, Vector3d rotation, double scale){
 		
 		Shape shape = null;
 		
@@ -246,7 +256,12 @@ public class SceneFromFile /* extends Scene*/ {
 			List<Integer> triindices = (List<Integer>)arguments.get("triindices");
 			List<Double> P = (List<Double>)arguments.get("P");
 			
-			shape = new Mesh(position,rotation,scale,triindices,P);
+			List<Float> UVs = null;
+			if(arguments.containsKey("uv")){
+				 UVs = (List<Float>) arguments.get("uv");
+			}
+			
+			shape = new Mesh(position,rotation,scale,triindices,P,UVs);
 			break;
 		case "plane":
 			//Vector3 de normales
@@ -254,13 +269,13 @@ public class SceneFromFile /* extends Scene*/ {
 			// shape = new Plane();
 			break;
 		case "box":
-			float width = (float)arguments.get("width");
-			float height = (float)arguments.get("height");
-			float depth = (float)arguments.get("depth");
+			float width = ((List<Float>) arguments.get("width")).get(0);
+			float height = ((List<Float>) arguments.get("height")).get(0);
+			float depth = ((List<Float>) arguments.get("depth")).get(0);
 			//shape = new Box();
 			break;
 		case "sphere":
-			float radius = (float)arguments.get("radius");
+			float radius = ((List<Float>) arguments.get("radius")).get(0);
 			
 			//shape = new Sphere(radius);
 			
@@ -279,8 +294,10 @@ public class SceneFromFile /* extends Scene*/ {
 		
 		Map<String,Object> arguments = new HashMap<String,Object>();
 		String currentMaterialName = "";
+	
+		String currentTextureName = "";
 		
-		ImageTexture texture = null;
+		Map<String,Map<String,Object>> textures = new HashMap<String,Map<String,Object>>();
 		
 		while(in.hasNextLine()){
 			String currentLine = in.nextLine();
@@ -293,16 +310,26 @@ public class SceneFromFile /* extends Scene*/ {
 			
 			}else if(currentLine.startsWith("\t")){
 				
-				ParseArgument(currentLine,arguments);
+				parseArgument(currentLine,arguments);
 				
 			} else if(currentLine.startsWith("Texture")){
-
+					
+				currentTextureName = currentLine.split("\"")[1];
 			
 			} else if( currentLine.equals("") && !currentMaterialName.equals("")){
-					materials.put(currentMaterialName, GetMaterialFromArguments(arguments,texture));
+				if(currentMaterialName.equals("")){
+					textures.put(currentTextureName, new HashMap<String,Object>(arguments));
+				}else{
+					if(currentTextureName.equals(""))
+						materials.put(currentMaterialName, getMaterialFromArguments(arguments,null));
+					else
+						materials.put(currentMaterialName, getMaterialFromArguments(arguments,textures.get(currentTextureName)));
+
 					currentMaterialName = "";
-					texture = null;
-					arguments.clear();
+					currentTextureName = "";
+				}
+				
+				arguments.clear();
 			}
 					
 		}
@@ -311,33 +338,40 @@ public class SceneFromFile /* extends Scene*/ {
 		return;	
 	}
 	
-	public Material GetMaterialFromArguments(Map<String,Object> arguments, ImageTexture texture){
+	public Material getMaterialFromArguments(Map<String,Object> arguments, Map<String,Object> textureArgs){
 		
 		Material material = null;
+		
+		Texture texture = null;
+		if(textureArgs != null){
+			if(textureArgs.containsKey("filename")){
+				texture = new ImageTexture( (String) textureArgs.get("filename"));
+			}			
+		}
 		
 		String type = (String)arguments.get("type");
 		switch(type){
 			case "matte":
 				Color3f Kd = (Color3f)arguments.get("Kd");
-				float sigma = (float)arguments.get("sigma");
+				float sigma = ((List<Float>) arguments.get("sigma")).get(0);
 				// material = new Matte();
 				break;
 			case "mirror":
-				float _filmindex = (float)arguments.get("filmindex");
+				float _filmindex = ((List<Float>) arguments.get("filmindex")).get(0);
 				Color3f _Kr = (Color3f)arguments.get("Kr");
 				//material = new Mirror();
 				break;
 			case "glass":
 				Color3f Kr = (Color3f)arguments.get("Kr");
 				Color3f Kt = (Color3f)arguments.get("Kt");
-				float index = (float)arguments.get("index");
-				float filmindex = (float)arguments.get("filmindex");
+				float index = ((List<Float>) arguments.get("index")).get(0);
+				float filmindex = ((List<Float>) arguments.get("filmindex")).get(0);
 				// material = new Glass();
 				break;
 			case "metal2":
-				float uroughness = (float)arguments.get("uroughness");
-				float vroughness = (float)arguments.get("vroughness");
-				material = new Metal2(texture,uroughness);
+				float uroughness = ((List<Float>) arguments.get("uroughness")).get(0);
+				float vroughness = ((List<Float>) arguments.get("vroughness")).get(0);
+				//material = new Metal2(texture,uroughness);
 				break;
 			default:
 				System.out.println(type + " Material not supported");
@@ -348,7 +382,7 @@ public class SceneFromFile /* extends Scene*/ {
 		
 	}	
 	
-	public void ParseArgument(String line, Map<String,Object> arguments){
+	public void parseArgument(String line, Map<String,Object> arguments){
 		String[] splitedLine = line.split("\"");
 		
 		String ArgumentType = splitedLine[1].split(" ")[0];
@@ -366,8 +400,11 @@ public class SceneFromFile /* extends Scene*/ {
 				break;
 				
 			case "float":
+				List<Float> doubles = new ArrayList<Float>();
+				for(String s: ArgumentValue.split(" "))
+					doubles.add(Float.parseFloat(s));
 				
-				arguments.put(ArgumentName,Float.parseFloat(ArgumentValue));
+				arguments.put(ArgumentName,doubles);
 				break;
 				
 			case "string":
@@ -395,18 +432,18 @@ public class SceneFromFile /* extends Scene*/ {
 
 				break;
 			case "point":
-				List<Double> doubles = new ArrayList<Double>();
+				List<Double> doubles1 = new ArrayList<Double>();
 				for(String s: ArgumentValue.split(" "))
-					doubles.add(Double.parseDouble(s));
+					doubles1.add(Double.parseDouble(s));
 				
-				arguments.put(ArgumentName,doubles);
+				arguments.put(ArgumentName,doubles1);
 				break;
 			case "normal":
-				List<Double> _doubles = new ArrayList<Double>();
+				List<Double> doubles2 = new ArrayList<Double>();
 				for(String s: ArgumentValue.split(" "))
-					_doubles.add(Double.parseDouble(s));
+					doubles2.add(Double.parseDouble(s));
 				
-				arguments.put(ArgumentName,_doubles);
+				arguments.put(ArgumentName,doubles2);
 				
 				break;
 			default:

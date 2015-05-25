@@ -9,9 +9,6 @@ import util.Vectors;
 
 public class Triangle extends Shape {
 	private Point3d p1;
-	
-	private Point3d p2;
-	private Point3d p3;
 
 	private Vector3d d1;
 	private Vector3d d2;
@@ -22,8 +19,6 @@ public class Triangle extends Shape {
 	public Triangle(Point3d p1, Point3d p2, Point3d p3) {
 		super(new Vector3d(), new Vector3d(), 1);
 		this.p1 = new Point3d(p1);
-		this.p2 = new Point3d(p2);
-		this.p3 = new Point3d(p3);
 		this.d1 = Vectors.sub(p2, p1);
 		this.d2 = Vectors.sub(p3, p1);	
 		this.normal = Vectors.normalize(Vectors.cross(d1, d2));
@@ -34,7 +29,6 @@ public class Triangle extends Shape {
 		double maxY = Math.min(Math.min(p1.y, p2.y),p3.y);
 		double minZ = Math.min(Math.min(p1.z, p2.z),p3.z);
 		double maxZ = Math.min(Math.min(p1.z, p2.z),p3.z);
-		
 		this.bbox = new BoundingBox(minX,minY,minZ,maxX,maxY,maxZ);
 	}
 
@@ -65,8 +59,5 @@ public class Triangle extends Shape {
 	public BoundingBox getBoundingBox(){
 		return bbox;
 	}
-	
-	public Point3d getMidpoint(){
-		return new Point3d((p1.x+p2.x+p3.x)/3,(p1.y+p2.y+p3.y)/3,(p1.z+p2.z+p3.z)/3);
-	}
+
 }
