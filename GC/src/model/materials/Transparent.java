@@ -1,5 +1,7 @@
 package model.materials;
 
+import java.util.List;
+
 import javax.vecmath.Color3f;
 
 import model.Body;
@@ -52,7 +54,7 @@ public class Transparent extends Phong {
 		return targetColor;
 	}
 	@Override
-	public Color3f shade(IntersectionContext ic, Light[] lights, Body[] bodies, int refractionDepth, int reflectionDepth) {
+	public Color3f shade(IntersectionContext ic, List<Light> lights, List<Body> bodies, int refractionDepth, int reflectionDepth) {
 		Color3f rrColor;
 		Color3f rfColor;
 		Color3f phongColor = super.shade(ic, lights, bodies, refractionDepth, reflectionDepth);

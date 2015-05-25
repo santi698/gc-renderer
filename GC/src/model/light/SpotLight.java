@@ -1,5 +1,7 @@
 package model.light;
 
+import java.util.List;
+
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -18,7 +20,7 @@ public class SpotLight extends PointLight {
 	}
 	
 	@Override
-	public double isVisible(Point3d point, Body[] bodies) {
+	public double isVisible(Point3d point, List<Body> bodies) {
 		Vector3d direction = Vectors.normalize(Vectors.sub(point, getPosition()));
 		double incidenceAngle = direction.angle(this.direction);
 		if (incidenceAngle > angle/2)

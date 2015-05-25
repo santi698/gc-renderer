@@ -12,6 +12,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point2d;
 
+import scenes.Scene;
 import model.materials.Material;
 import model.samplers.Multijittered;
 import model.samplers.Sampler;

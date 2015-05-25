@@ -1,5 +1,7 @@
 package model.materials;
 
+import java.util.List;
+
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -20,7 +22,7 @@ public abstract class Material {
 		super();
 		this.texture = texture;
 	}
-	public abstract Color3f shade(IntersectionContext ic, Light[] lights, Body[] bodies, int refractionDepth, int reflectionDepth);
+	public abstract Color3f shade(IntersectionContext ic, List<Light> lights, List<Body> bodies, int refractionDepth, int reflectionDepth);
 	
 	public Color3f getColor(double u, double v) {
 		return texture.get(u, v);

@@ -1,5 +1,7 @@
 package model.materials;
 
+import java.util.List;
+
 import javax.vecmath.Color3f;
 import javax.vecmath.Vector3d;
 
@@ -36,7 +38,7 @@ public class GeneralRealistic extends Phong{
 		this.numSamples = numSamples;
 	}
 @Override
-	public Color3f shade(IntersectionContext ic, Light[] lights, Body[] bodies,
+	public Color3f shade(IntersectionContext ic, List<Light> lights, List<Body> bodies,
 			int refractionDepth, int reflectionDepth) {
 	    Color3f color = new Color3f();
 	    Color3f reflectedColor;
@@ -66,7 +68,7 @@ public class GeneralRealistic extends Phong{
 		color.add(absorptedColor);
 		return color;
 	}
-	private Color3f calculateColor(Ray mainRay, Vector3d normal, DistributionFunction bxdf, double exponent, Light[] lights, Body[] bodies, int refractionDepth, int reflectionDepth) {
+	private Color3f calculateColor(Ray mainRay, Vector3d normal, DistributionFunction bxdf, double exponent, List<Light> lights, List<Body> bodies, int refractionDepth, int reflectionDepth) {
 		if (Double.isInfinite(exponent)) {
 			return mainRay.trace(bodies).shade(lights, bodies, refractionDepth, reflectionDepth);
 		}

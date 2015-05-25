@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -59,7 +61,7 @@ public class IntersectionContext {
 	public void setMaterial(Material material) {
 		this.material = material;
 	}
-	public Color3f shade(Light[] lights, Body[] bodies, int refractionDepth, int reflectionDepth) {
+	public Color3f shade(List<Light> lights, List<Body> bodies, int refractionDepth, int reflectionDepth) {
 		if (material == null || !this.hit) {
 			return new Color3f(BGCOLOR);
 		}

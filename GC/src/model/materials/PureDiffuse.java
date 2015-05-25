@@ -1,5 +1,7 @@
 package model.materials;
 
+import java.util.List;
+
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -19,7 +21,7 @@ public abstract class PureDiffuse extends Material {
 		this.brdf = brdf;
 	}
 	@Override
-	public Color3f shade(IntersectionContext ic, Light[] lights, Body[] bodies, int refractionDepth, int reflectionDepth) {
+	public Color3f shade(IntersectionContext ic, List<Light> lights, List<Body> bodies, int refractionDepth, int reflectionDepth) {
 		Point3d p = ic.getIntersectionPoint();
 		Vector3d v = Vectors.scale(ic.getRay().getDirection(), -1);
 		Vector3d n = ic.getNormal();

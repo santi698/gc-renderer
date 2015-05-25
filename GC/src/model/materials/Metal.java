@@ -1,5 +1,7 @@
 package model.materials;
 
+import java.util.List;
+
 import javax.vecmath.Color3f;
 
 import model.Body;
@@ -17,7 +19,7 @@ public class Metal extends Phong {
 		reflectivity = 1/(1 + 100*(roughness));
 	}
 	@Override
-	public Color3f shade(IntersectionContext ic, Light[] lights, Body[] bodies,
+	public Color3f shade(IntersectionContext ic, List<Light> lights, List<Body> bodies,
 			int refractionDepth, int reflectionDepth) {
 		Color3f color = new Color3f();
 		Color3f phongColor = super.shade(ic, lights, bodies, refractionDepth, reflectionDepth);

@@ -1,5 +1,7 @@
 package model.light;
 
+import java.util.List;
+
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -15,7 +17,7 @@ public abstract class Light {
 		this.intensity = intensity;
 	}
 	
-	public abstract double isVisible(Point3d point, Body[] bodies);
+	public abstract double isVisible(Point3d point, List<Body> bodies);
 	
 	public abstract Vector3d getDirectionFromTo(Point3d point);
 	

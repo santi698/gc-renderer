@@ -25,6 +25,7 @@ public class WorldObject {
 		this.invScaling = scaleMatrix(scale);
 		updateMatrices();
 	}
+	
 	public void updateMatrices() {
 		toGlobal = new Matrix4d();
 		toGlobal.setIdentity();

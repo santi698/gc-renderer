@@ -1,5 +1,9 @@
 package scenes;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
+
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -9,7 +13,6 @@ import application.Main;
 import static util.Vectors.*;
 import model.Body;
 import model.SimpleBody;
-import model.Scene;
 import model.UniformCompoundBody;
 import model.cameras.Camera;
 import model.cameras.PinholeCamera;
@@ -44,17 +47,17 @@ import model.texture.ImageTexture;
 import model.texture.PlainTexture;
 
 @SuppressWarnings("unused")
-public class SampleScene extends Scene {
+public class SampleScene implements Scene {
 	final static int AASamples = Main.AASamples;
 	final static Color3f sunsetColor = new Color3f(1,0.85f,0.66f);
 	final static Point3d spherePos = new Point3d(0, 0.05, 0.5);
 	//Lights
-	final static Light[] lights = new Light[] {
+	List<Light> lights = Arrays.asList(new Light[] {
 						new PointLight(new Point3d(0, 0.5, 1), new Color3f(0.8f,0.8f,1f), 0.001),
 						new SpotLight(new Point3d(0,2,0.3), new Color3f(1,1f,1f), 0.05, spherePos, Math.toRadians(45)),
 						new SpotLight(new Point3d(-1,2,-1), new Color3f(0.9f,0.9f,1), 0.04, spherePos, Math.toRadians(30)),
 						new DirectionalLight(new Vector3d(0,-0.1,1), sunsetColor, 0.5	)
-						};
+						});
 	
 	//Bodies
 	final static SolidSphere s2 = new SolidSphere(new Point3d(-0.075, 0.02, 0.5), 0.02);
@@ -75,7 +78,7 @@ public class SampleScene extends Scene {
 		scv.rotate(new Vector3d(0, yRotation, 0));
 	}
 
-	final static Body[] bodies = new Body[] {
+	List<Body> bodies = Arrays.asList(new Body[] {
 //											new SimpleBody(s2, new PolishedMarble(new CheckerBoardTexture(0.1))),
 											new SimpleBody(s2, new Matte2(new ImageTexture(Main.class.getResource("/textures/seamlesspaper2.jpg")), 0.31, 0.65)),
 //											new SimpleBody(s, new Metal(new Color3f(0.99f,0.99f,0.05f), 200)),
@@ -95,14 +98,25 @@ public class SampleScene extends Scene {
 //											new SimpleBody(scn, new PolishedMarble(new PlainTexture(new Color3f(0.9f, 0.1f, 0.1f)))),
 //											new UniformCompoundBody(new Shape[]{scn, scv}, new Glass(new PlainTexture(new Color3f(0.95f, 0.05f, 0.05f))))
 
-	};
+	});
 
 	//Camera
-	final static Camera camera = new ThinLensCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,1,0), 0.018, 640, 480, 5.6, spherePos, AASamples);
+	Camera camera = new ThinLensCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,1,0), 0.018, 640, 480, 5.6, spherePos, AASamples);
 //	final static Camera camera = new ThinLensCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,1,0), 0.018, 1376, 768, 5.6, spherePos, AASamples);
 //	final static Camera camera = new PinholeCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,1,0), 0.018, 640, 480);
-	
-	public SampleScene() {
-		super(lights,bodies,camera, AASamples);
+	public SampleScene() {}
+	@Override
+	public Camera getCamera() {
+		// TODO Auto-generated method stub
+		return camera;
+	}
+	@Override
+	public List<Light> getLights() {
+		// TODO Auto-generated method stub
+		return lights;
+	}
+	@Override
+	public List<Body> getObjects() {
+		return bodies;
 	}
 }

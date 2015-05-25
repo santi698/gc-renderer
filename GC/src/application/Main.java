@@ -26,6 +26,7 @@ import org.apache.commons.cli.ParseException;
 
 import model.RayTracer;
 import scenes.SampleScene;
+import scenes.SceneFromFile;
 import controller.MainViewController;
 
 public class Main extends Application {
@@ -42,14 +43,22 @@ public class Main extends Application {
 		if (cl.hasOption("d"))
 			rayDepth = Integer.parseInt(cl.getOptionValue("d"));
 		int aaSamples = Integer.parseInt(cl.getOptionValue("aa"));
-		RayTracer rayTracer = new RayTracer(new SampleScene(), aaSamples, rayDepth, cl.hasOption("time"));
+		scenes.Scene scene;
+		if (cl.hasOption("i")) {
+			scene = new SampleScene();//new SceneFromFile(cl.getOptionValue("i"));
+		} else {
+			scene = new SampleScene();
+		}
+		RayTracer rayTracer = new RayTracer(scene, aaSamples, rayDepth, cl.hasOption("time"));
 		String filename = cl.getOptionValue("o");
 		if (!cl.hasOption("gui")) {
-			rayTracer.getProgressProperty().addListener((obj, o, n)->printProgress(n.doubleValue()));
-			File file = new File("renders/"+ filename);
-			BufferedImage i = rayTracer.render();
-			ImageIO.write(i, "png", file);
-			System.out.println("Imagen escrita a: " + file.getAbsolutePath());
+			if (!cl.hasOption("b")) {
+				rayTracer.getProgressProperty().addListener((obj, o, n)->printProgress(n.doubleValue()));
+				File file = new File("renders/"+ filename);
+				BufferedImage i = rayTracer.render();
+				ImageIO.write(i, "png", file);
+				System.out.println("Imagen escrita a: " + file.getAbsolutePath());
+			}
 			System.exit(0);
 		}
 		this.primaryStage = primaryStage;
@@ -57,11 +66,11 @@ public class Main extends Application {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setLocation(MainViewController.class.getResource("MainView.fxml"));
 			rootLayout = (BorderPane) loader.load();
-			Scene scene = new Scene(rootLayout);
+			Scene fxScene = new Scene(rootLayout);
 			MainViewController controller = loader.getController();
 			controller.setMainApp(this);
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			primaryStage.setScene(scene);
+			fxScene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			primaryStage.setScene(fxScene);
 			primaryStage.setTitle("Ray Tracer");
 			primaryStage.show();
 			rayTracer.getProgressProperty().addListener(
@@ -106,11 +115,11 @@ public class Main extends Application {
 		Option gui = new Option("gui", "Mostrar la interfaz gráfica");
 		Option help = new Option("help", "Mostrar la ayuda");
 		Option time = new Option("time", "Mostrar en consola el tiempo que llevó el renderizado.");
-//		Option inputFile = OptionBuilder.withArgName("archivo")
-//                .hasArg()
-//                .withDescription("nombre del archivo de escena")
-// 	              .isRequired() FIXME cambiar cuando el parser esté listo
-//                .create("i");
+		Option inputFile = OptionBuilder.withArgName("archivo")
+                .hasArg()
+                .withDescription("nombre del archivo de escena")
+// 	            .isRequired() FIXME cambiar cuando el parser esté listo
+                .create("i");
 		
 		Option outputFile = OptionBuilder.withArgName("archivo")
                 .hasArg()
@@ -134,7 +143,7 @@ public class Main extends Application {
 		options.addOption(gui);
 		options.addOption(time);
 		options.addOption(help);
-//		options.addOption(inputFile);
+		options.addOption(inputFile);
 		options.addOption(outputFile);
 		options.addOption(aaSamples);
 		options.addOption(benchmark);
