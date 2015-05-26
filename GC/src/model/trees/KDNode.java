@@ -31,6 +31,8 @@ public class KDNode extends TraceableTree{
 			this.bbox = shapes.get(0).getBoundingBox();
 			this.left = new KDNode();
 			this.right = new KDNode();
+			this.left.bodies = new LinkedList<Traceable>();
+			this.right.bodies = new LinkedList<Traceable>();
 			return this;
 		}
 
@@ -99,6 +101,8 @@ public class KDNode extends TraceableTree{
 		} else {
 			this.left = new KDNode();
 			this.right = new KDNode();
+			this.left.bodies = new LinkedList<Traceable>();
+			this.right.bodies = new LinkedList<Traceable>();
 		}
 		return this;
 	}

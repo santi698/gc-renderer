@@ -109,10 +109,13 @@ public class SceneFromFile implements Scene {
 					int lastQuote= currentLine.lastIndexOf('"');
 					String FileDirection = currentLine.substring(firstQuote,lastQuote);
 					
+					if(!fileDir.endsWith("/"))
+						fileDir = fileDir + "/";
+					
 					if(FileDirection.endsWith(".lxm\""))
-						materialParser(FileDirection);
+						materialParser(fileDir + FileDirection);
 					else
-						geometryParser(FileDirection);
+						geometryParser(fileDir + FileDirection);
 					
 				}else if(currentLine.startsWith("AttributeBegin") || currentLine.startsWith("TransformBegin")){
 					inLight = true;
