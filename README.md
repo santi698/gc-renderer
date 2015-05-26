@@ -21,8 +21,11 @@ Características
 Cómo armar el proyecto
 -------------
 `git clone https://github.com/santi698/gc-renderer.git`
+
 `cd gc-renderer/GC`
+
 `ant create_run_jar`
+
 Carpetas
 -------------
 
