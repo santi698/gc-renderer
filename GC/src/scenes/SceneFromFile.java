@@ -262,18 +262,19 @@ public class SceneFromFile implements Scene {
 		case "mesh":
 			List<Integer> triindices = (List<Integer>)arguments.get("triindices");
 			List<Double> P = (List<Double>)arguments.get("P");
+			List<Double> N = (List<Double>)arguments.get("N");
 			
 			List<Float> UVs = null;
 			if(arguments.containsKey("uv")){
 				 UVs = (List<Float>) arguments.get("uv");
 			}
 			
-			shape = new Mesh(transform,triindices,P,UVs);
+			shape = new Mesh(transform,triindices,P,N,UVs);
 			break;
 		case "plane":
 			//Vector3 de normales
-			List<Double> N = (List<Double>)arguments.get("N");
-			Vector3d normal = new Vector3d(N.get(0), N.get(1), N.get(2));
+			List<Double> N2 = (List<Double>)arguments.get("N");
+			Vector3d normal = new Vector3d(N2.get(0), N2.get(1), N2.get(2));
 			shape = new Plane(normal, new Point3d(0,0,0));
 			shape.transform(transform);
 			break;

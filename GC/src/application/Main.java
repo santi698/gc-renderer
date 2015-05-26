@@ -2,6 +2,7 @@ package application;
 	
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
@@ -100,6 +101,7 @@ public class Main extends Application {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+
 	}
 	
 	public static void main(String[] args) {
