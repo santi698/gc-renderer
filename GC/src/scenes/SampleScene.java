@@ -101,9 +101,9 @@ public class SampleScene implements Scene {
 	});
 
 	//Camera
-	Camera camera = new ThinLensCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,1,0), 0.018, 640, 480, 5.6, spherePos, AASamples);
-//	final static Camera camera = new ThinLensCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,1,0), 0.018, 1376, 768, 5.6, spherePos, AASamples);
-//	final static Camera camera = new PinholeCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,1,0), 0.018, 640, 480);
+//	Camera camera = new ThinLensCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,1,0), 0.018, 640, 480, 5.6, spherePos, AASamples);
+//	Camera camera = new ThinLensCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,1,0), 0.018, 1376, 768, 5.6, spherePos, AASamples);
+	Camera camera = new PinholeCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,1,0), 0.018, 640, 480);
 	public SampleScene() {}
 	@Override
 	public Camera getCamera() {

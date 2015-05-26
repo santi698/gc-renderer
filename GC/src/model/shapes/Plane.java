@@ -48,7 +48,6 @@ public class Plane extends Shape {
 	}
 	@Override
 	public BoundingBox getBoundingBox() {
-		// TODO
-		return null;
+		return new BoundingBox(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 	}
 }

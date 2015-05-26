@@ -1,7 +1,5 @@
 package model;
 
-import java.util.List;
-
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -21,9 +19,6 @@ public class Ray {
 	}
 	public Point3d getOrigin() {
 		return origin;
-	}
-	public IntersectionContext trace(List<Body> objects) {
-		return trace(objects);
 	}
 	public IntersectionContext trace(Iterable<? extends Traceable> objects) {
 		Traceable closestObject = null;

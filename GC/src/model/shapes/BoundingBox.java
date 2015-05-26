@@ -90,7 +90,7 @@ public class BoundingBox extends Shape {
 			if(t0 < t1)
 				isOutside = true;
 			
-			Point3d rayOrigin = toLocal(ray.getOrigin());
+			Point3d rayOrigin = ray.getOrigin();
 			Point3d hitPoint = new Point3d(rayOrigin);
 			Vector3d displacement = new Vector3d(ray.getDirection());
 			displacement.scale(t1);

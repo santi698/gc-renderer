@@ -16,9 +16,11 @@ public abstract class Sphere extends Shape {
 	private double maxPhi = Math.PI;
 	private double minTheta = -Math.PI/2;
 	private double maxTheta = Math.PI/2;
+	private Point3d center;
 	
 	public Sphere(Point3d center, double radius) {
 		super(new Vector3d(center), new Vector3d(), radius);
+		this.center = center;
 		this.radius = radius;
 	}
 	public Sphere(Point3d center, double radius, double minPhi, double maxPhi, double minTheta, double maxTheta) {
@@ -98,7 +100,6 @@ public abstract class Sphere extends Shape {
 	
 	@Override
 	public BoundingBox getBoundingBox() {
-		// TODO Auto-generated method stub
-		return null;
+		return new BoundingBox(center.x-radius, center.y-radius, center.z-radius, center.x+radius, center.y+radius, center.z+radius);
 	}
 }

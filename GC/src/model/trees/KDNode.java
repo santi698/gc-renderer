@@ -21,24 +21,23 @@ public class KDNode extends TraceableTree{
 	}
 
 	public KDNode build(List<? extends Traceable> shapes, int depth) {
-		KDNode node = new KDNode();
-		node.bodies = new LinkedList<Traceable>(shapes);
-		node.left = null;
-		node.right = null;
-		node.bbox = new BoundingBox(0,0,0,0,0,0);
+		this.bodies = new LinkedList<Traceable>(shapes);
+		this.left = null;
+		this.right = null;
+		this.bbox = new BoundingBox(0,0,0,0,0,0);
 		if (shapes.size() == 0)
-			return node;
+			return this;
 		if (shapes.size() == 1) {
-			node.bbox = shapes.get(0).getBoundingBox();
-			node.left = new KDNode();
-			node.right = new KDNode();
-			return node;
+			this.bbox = shapes.get(0).getBoundingBox();
+			this.left = new KDNode();
+			this.right = new KDNode();
+			return this;
 		}
 
 		// get a bounding box surrounding all the bodies
-		node.bbox = shapes.get(0).getBoundingBox();
+		this.bbox = shapes.get(0).getBoundingBox();
 		for (int i = 1; i < shapes.size(); i++) {
-			node.bbox.expand(shapes.get(i).getBoundingBox());
+			this.bbox.expand(shapes.get(i).getBoundingBox());
 		}
 
 		Point3d midpt = new Point3d(0, 0, 0);
@@ -51,7 +50,7 @@ public class KDNode extends TraceableTree{
 
 		List<Traceable> left_shape = new LinkedList<Traceable>();
 		List<Traceable> right_shape = new LinkedList<Traceable>();
-		int axis = node.bbox.longestAxis();
+		int axis = this.bbox.longestAxis();
 		for (int i = 0; i < shapes.size(); i++) {
 			// split bodies based on their midpoints side of avg in longest axis
 			
@@ -95,13 +94,13 @@ public class KDNode extends TraceableTree{
 		if ((float) matches / left_shape.size() < 0.5
 				&& (float) matches / right_shape.size() < 0.5) {
 			// recurse down left and right sides
-			node.left = build(left_shape, depth + 1);
-			node.right = build(right_shape, depth + 1);
+			this.left = build(left_shape, depth + 1);
+			this.right = build(right_shape, depth + 1);
 		} else {
-			node.left = new KDNode();
-			node.right = new KDNode();
+			this.left = new KDNode();
+			this.right = new KDNode();
 		}
-		return node;
+		return this;
 	}
 
 	public IntersectionContext hit(KDNode node, Ray ray){
