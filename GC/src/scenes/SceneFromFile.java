@@ -108,7 +108,7 @@ public class SceneFromFile implements Scene {
 					int firstQuote= currentLine.indexOf('"') + 1;
 					int lastQuote= currentLine.lastIndexOf('"');
 					String FileDirection = currentLine.substring(firstQuote,lastQuote);
-					
+					fileDir = fileDir.substring(0, fileDir.lastIndexOf("/"));
 					if(!fileDir.endsWith("/"))
 						fileDir = fileDir + "/";
 					
