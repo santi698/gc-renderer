@@ -64,8 +64,9 @@ public class BoundingBox extends Shape {
 			tz_max = (z0 - oz) * c;
 		}
 		
+		
 		double t0, t1;
-
+		/*
 		if(tx_min > ty_min)
 			t0 = tx_min;
 		else
@@ -104,6 +105,60 @@ public class BoundingBox extends Shape {
 			return new IntersectionContext(t1, normal , ray, true, uv.x, uv.y);
 		}
 		else return IntersectionContext.noHit();
+		*/
+		
+		int face_in, face_out;
+		
+		if(tx_min > ty_min){
+			t0 = tx_min;
+			face_in = (a >= 0.0 ) ? 0 : 3 ;
+		}else{
+			t0 = ty_min;
+			face_in = (b >= 0.0 ) ? 1 : 4 ;
+		}
+		
+		if( tz_min > t0){
+			t0 = tz_min;
+			face_in = (c >= 0.0 ) ? 2 : 5 ;
+		}
+		
+		if(tz_max < ty_max){
+			t1 = tz_max;
+			face_out = (a >= 0.0 ) ? 3 : 0 ;
+		}else{
+			t1 = ty_max;
+			face_out = (b >= 0.0 ) ? 4 : 1 ;
+		}
+		
+		if( tz_max < t1){
+			t1 = tz_max;
+			face_out = (c >= 0.0 ) ? 5 : 2 ;
+		}
+		
+		double tmin = 0.0d;
+		Vector3d normal = null;
+		if(t0 < t1 && t1 > EPS){
+			if(t0 > EPS){
+				tmin = t0;
+				normal = getNormal(face_in);
+			}else{
+				tmin = t1;
+				normal = getNormal(face_out);
+			}
+			
+			Vector3d dir = ray.getDirection();
+			dir.scale(tmin);
+			Point3d ori = ray.getOrigin();
+			ori.add(dir);
+			Point3d localHitPoint = ori;
+			
+			Point2d uv = getUVCoordinates(localHitPoint);
+			
+			return new IntersectionContext(tmin,normal,ray,true,uv.x,uv.y);
+		}	
+		
+		return IntersectionContext.noHit();
+		
 	}
 	
 	private Point2d getUVCoordinates(Point3d localHitPoint) {
@@ -114,12 +169,24 @@ public class BoundingBox extends Shape {
 		return uv;
 	}
 	
-	protected Vector3d getNormalAt(Point3d localHitPoint, boolean isOutside) {
-		Vector3d normal = new Vector3d(localHitPoint);
-		if(!isOutside)
-			normal.negate();
+	protected Vector3d getNormal(int face_hit) {
+
+		switch(face_hit){
+		case 0:
+			return new Vector3d(-1,0,0);
+		case 1:
+			return new Vector3d(0,-1,0);
+		case 2:
+			return new Vector3d(0,0,-1);
+		case 3:
+			return new Vector3d(1,0,0);
+		case 4:
+			return new Vector3d(0,1,0);
+		case 5:
+			return new Vector3d(0,0,1);
+		}
 		
-		return normal;
+		return null;
 	}
 	
 	public int longestAxis(){
