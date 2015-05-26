@@ -18,7 +18,11 @@ Características
   - Formas: Esferas, Planos infinitos, cuadrados, cilindros, círculos, triángulos, formas compuestas, 
   - Materiales: Matte, Vidrio, Difuso, Espejo, *Piedra Pulida*
   - Soporta parcialmente el formato de escena de LuxRender
-
+Cómo armar el proyecto
+-------------
+`git clone https://github.com/santi698/gc-renderer.git`
+`cd gc-renderer/GC`
+`ant create_run_jar`
 Carpetas
 -------------
 
