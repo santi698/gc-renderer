@@ -47,7 +47,7 @@ public class BoundingBox extends Shape {
 		}
 		
 		double b = 1.0f / dy;
-		if(a >= 0){
+		if(b >= 0){
 			ty_min = (y0 - oy) * b;
 			ty_max = (y1 - oy) * b;
 		}else{
@@ -56,7 +56,7 @@ public class BoundingBox extends Shape {
 		}
 		
 		double c = 1.0f / dz;
-		if(a >= 0){
+		if(c >= 0){
 			tz_min = (z0 - oz) * c;
 			tz_max = (z1 - oz) * c;
 		}else{

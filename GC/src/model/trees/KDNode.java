@@ -112,7 +112,6 @@ public class KDNode extends TraceableTree{
 	public IntersectionContext hit(KDNode node, Ray ray){
 		//check if the ray intersects the bounding box of the given node
 		if (node.bbox.trace(ray) != IntersectionContext.noHit()){
-			System.out.println("bbox with bodies #"+ bodies.size() + " hit");
 			//if either child still has triangles, recurse down both sides and check for intersections
 			if (node.left.bodies.size() > 0 || node.left.bodies.size() > 0){
 				IntersectionContext hitleft = hit(node.left, ray);
