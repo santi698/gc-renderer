@@ -1,5 +1,6 @@
 package scenes;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -78,6 +79,8 @@ public class SceneFromFile implements Scene {
 		
 		while(in.hasNextLine()){
 			currentLine = in.nextLine();
+			if (currentLine.startsWith("#"))
+				continue;
 			
 			if(inCamera){
 				if(currentLine.startsWith("LookAt")){
@@ -98,8 +101,7 @@ public class SceneFromFile implements Scene {
 					int firstBracket= currentLine.indexOf('[') + 1;
 					int lastBracket= currentLine.lastIndexOf(']');
 					yRes = Integer.parseInt(currentLine.substring(firstBracket,lastBracket));
-					
-					camera = new PinholeCamera(position, lookAt, up, fov/49.13*0.035, xRes, yRes);
+					camera = new PinholeCamera(position, lookAt, up, (fov/49.13)*0.035, xRes, yRes);
 
 					inCamera = false;
 					inIncludes = true;
@@ -112,9 +114,9 @@ public class SceneFromFile implements Scene {
 					int lastQuote= currentLine.lastIndexOf('"');
 					String FileDirection = currentLine.substring(firstQuote,lastQuote);
 					
-					int lastBracket= fileDir.lastIndexOf('\\');
+					int lastBracket= fileDir.lastIndexOf(File.separatorChar);
 					String append = fileDir.substring(0,lastBracket);
-					FileDirection = append + "\\"  + FileDirection;
+					FileDirection = append + File.separatorChar + FileDirection;
 					
 					if(FileDirection.endsWith(".lxm"))
 						materialParser(FileDirection);
@@ -320,6 +322,8 @@ public class SceneFromFile implements Scene {
 		
 		while(in.hasNextLine()){
 			String currentLine = in.nextLine();
+			if (currentLine.startsWith("#"))
+				continue;
 					
 			if(currentLine.startsWith("MakeNamedMaterial")){
 				
@@ -332,10 +336,8 @@ public class SceneFromFile implements Scene {
 				parseArgument(currentLine,arguments);
 				
 			} else if(currentLine.startsWith("Texture")){
-					
 				currentTextureName = currentLine.split("\"")[1];
-			
-			} else if( currentLine.equals("") && !currentMaterialName.equals("")){
+			} else if( currentLine.equals("")){
 				if(currentMaterialName.equals("")){
 					textures.put(currentTextureName, getTextureFromArguments(arguments));
 					System.out.println("ADDED TEXTURE" + currentTextureName);
@@ -370,13 +372,13 @@ public class SceneFromFile implements Scene {
 	}
 		
 	public Texture getTextureFromArguments(Map<String,Object> arguments){
-		Texture texture = new PlainTexture(new Color3f());
 		if(arguments != null){
 			if(arguments.containsKey("string filename")){
-				texture = new ImageTexture( (String) arguments.get("string filename"));
+				return new ImageTexture("charizard/imagen.jpg");
+//				return new ImageTexture( (String) arguments.get("string filename"));
 			}			
 		}
-		return texture;
+		return new PlainTexture(new Color3f());
 	}
 	
 	public Material getMaterialFromArguments(Map<String,Object> arguments, Map<String,Texture> textures){

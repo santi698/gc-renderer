@@ -1,7 +1,7 @@
 # Materials File
 
 Texture "Kd_color" "color" "imagemap"
-	"string filename" ["/media/joe/DATA/Itba/Computacion_Grafica/TP/cg-2015a/images/charizard.jpg"]
+	"string filename" ["/home/santi698/Documentos/Repor/GC/GC/charizard/imagen.jpg"]
 	"integer discardmipmaps" [0]
 	"float gain" [1.000000000000000]
 	"float gamma" [2.200000047683716]

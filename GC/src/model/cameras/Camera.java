@@ -35,23 +35,6 @@ public abstract class Camera extends WorldObject{
 			this.pixelSize = 2*focalLength*Math.sin(FOV/2)/xres;
 		this.rotate(calculateRotation());
 	}
-	public Camera(Point3d position, Point3d lookAt, Vector3d up, double fov, int xres, int yres, boolean a) {
-		super(new Vector3d(position), new Vector3d(0,0,0), 1);
-		double FOV = fov;
-		this.position = position;
-		this.direction = Vectors.normalize(Vectors.sub(lookAt, position));
-		this.up = Vectors.normalize(up);
-		this.right = Vectors.cross(direction, up);
-		this.up = Vectors.normalize(Vectors.cross(right, direction));
-		this.focalLength = FOV/Math.toRadians(49.13)*focalLength/0.035;
-		this.xRes = xres;
-		this.yRes = yres;
-		if (yres > xres)
-			this.pixelSize = 2*focalLength*Math.sin(FOV/2)/yres;
-		else
-			this.pixelSize = 2*focalLength*Math.sin(FOV/2)/xres;
-		this.rotate(calculateRotation());
-	}
 	private Matrix4d calculateRotation() {
 		Matrix4d rotation = new Matrix4d(
 				right.x,	right.y,	right.z,	0,

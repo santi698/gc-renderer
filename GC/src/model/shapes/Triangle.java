@@ -11,15 +11,17 @@ import model.Ray;
 import util.Vectors;
 
 public class Triangle extends Shape {
-	private Point3d p1;
-
-	private Point2d uv;
+	private boolean isMeshTriangle = false;
+	private Vector3d[] normals = new Vector3d[3];
+	private Point2d[] uvs = new Point2d[3];
 	
+	private Point3d p1;	
 	private Vector3d d1;
 	private Vector3d d2;
 	private Vector3d normal;
 	
 	public BoundingBox bbox;
+	private int index;
 	
 	public Triangle(Point3d p1, Point3d p2, Point3d p3) {
 		super(new Vector3d(), new Vector3d(), 1);
@@ -41,17 +43,15 @@ public class Triangle extends Shape {
 
 	public Triangle(int i, List<Integer> triindices, Point3d[] points, Vector3d[] normals, Point2d[] uv) {
 		super(new Vector3d(), new Vector3d(), 1);
+		isMeshTriangle = true;
+		this.normals = new Vector3d[]{normals[triindices.get(3*i)], normals[triindices.get(3*i+1)], normals[triindices.get(3*i+2)]};
+		this.uvs = new Point2d[] {uv[triindices.get(3*i)], uv[triindices.get(3*i+1)], uv[triindices.get(3*i+2)]};
+		this.index = i;
 		
 		p1 = points[triindices.get(3*i)];
 		this.d1 = Vectors.sub(points[triindices.get(3*i+1)], p1);
 		this.d2 = Vectors.sub(points[triindices.get(3*i+2)], p1);
-		
-		//TODO usa solo la normal de un vertice
-		this.normal = normals[triindices.get(3*i)];
-		
-		//TODO usa solo un uv
-		if(uv != null)
-			this.uv = uv[triindices.get(2*i)];
+		this.normal = Vectors.normalize(Vectors.cross(d1, d2));
 		
 		Point3d p2 = points[triindices.get(3*i+1)];
 		Point3d p3 = points[triindices.get(3*i+2)];
@@ -87,8 +87,8 @@ public class Triangle extends Shape {
 		if (t > EPS) {
 			if (normal.dot(ray.getDirection()) > EPS)
 				normal.negate();
-			
-			return new IntersectionContext(t, normal, ray, true, u, v);
+			Point2d uv = getGlobalUV(new Point2d(u,v));
+			return new IntersectionContext(t, getNormal(new Point2d(u,v)), ray, true, uv.x, uv.y);
 		}
 		return IntersectionContext.noHit();
 	}
@@ -96,5 +96,28 @@ public class Triangle extends Shape {
 	public BoundingBox getBoundingBox(){
 		return bbox;
 	}
-
+	public Vector3d getNormal(Point2d uv) {
+		if (isMeshTriangle) {
+			Vector3d uv1 = Vectors.scale(normals[0], 1-uv.x-uv.y);
+			Vector3d u2 = Vectors.scale(normals[1], uv.x);
+			Vector3d v2 = Vectors.scale(normals[2], uv.y);
+			return (Vectors.add(Vectors.add(uv1, u2), v2));
+		}
+		return normal;
+	}
+	public Point2d getGlobalUV(Point2d localUv) {
+		if (isMeshTriangle) {
+			Point2d uv1 = new Point2d(uvs[0]);
+			Point2d u2 = new Point2d(uvs[1]);
+			Point2d v2 = new Point2d(uvs[2]);
+			uv1.scale(1-localUv.x-localUv.y);
+			u2.scale(localUv.x);
+			v2.scale(localUv.y);
+			Point2d result = uv1;
+			result.add(u2);
+			result.add(v2);
+			return result;
+		}
+		return localUv;
+	}
 }

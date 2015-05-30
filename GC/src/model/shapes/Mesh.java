@@ -10,11 +10,13 @@ import javax.vecmath.Vector3d;
 
 import model.IntersectionContext;
 import model.Ray;
+import model.trees.DummyTree;
 import model.trees.KDNode;
+import model.trees.TraceableTree;
 
 public class Mesh extends Shape {
 
-	KDNode kdnode = null;
+	TraceableTree kdnode = null;
 	BoundingBox bbox = new BoundingBox(0,0,0,0,0,0);
 	
 	public Mesh(Matrix4d transform, List<Integer> triindices, List<Double> P, List<Double> N , List<Float> UVs) {
@@ -36,7 +38,7 @@ public class Mesh extends Shape {
 		if(UVs != null){
 			 uv = new Point2d[UVs.size()/2];
 			 for(int i = 0; i < UVs.size()/2; i++)
-				uv[i] = new Point2d(P.get(2*i),P.get(2*i+1));
+				uv[i] = new Point2d(UVs.get(2*i),UVs.get(2*i+1));
 		}
 		
 		Triangle t = null;
@@ -46,13 +48,14 @@ public class Mesh extends Shape {
 			triangles.add(t);
 		}
 				
-		kdnode = new KDNode();
-		kdnode.build(triangles,0);
+//		kdnode = new KDNode();
+		kdnode = new DummyTree();
+		kdnode.addAll(triangles);
 	}
 
 	@Override
 	public IntersectionContext trace(Ray ray) {
-		return kdnode.hit(kdnode, ray);
+		return kdnode.trace(ray);
 	}
 
 	@Override
