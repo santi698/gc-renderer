@@ -10,8 +10,8 @@ import model.Ray;
 
 public class BoundingBox extends Shape {
 
-	double x0,y0,z0;
-	double x1,y1,z1;
+	public double x0,y0,z0;
+	public double x1,y1,z1;
 
 	public BoundingBox(double x0, double y0, double z0, double x1, double y1, double z1) {
 		super(new Vector3d(), new Vector3d(), 1);
@@ -66,46 +66,6 @@ public class BoundingBox extends Shape {
 		
 		
 		double t0, t1;
-		/*
-		if(tx_min > ty_min)
-			t0 = tx_min;
-		else
-			t0 = ty_min;
-		
-		if(tz_min > t0)
-			t0 = tz_min;
-		
-		if(tx_max < ty_max)
-			t1 = tx_max;
-		else
-			t1 = ty_max;
-		
-		if(tz_max < t1)
-			t1 = tz_max;
-		
-
-		if ( t1 > EPS) {
-			
-			boolean isOutside = false;
-			
-			if(t0 < t1)
-				isOutside = true;
-			
-			Point3d rayOrigin = ray.getOrigin();
-			Point3d hitPoint = new Point3d(rayOrigin);
-			Vector3d displacement = new Vector3d(ray.getDirection());
-			displacement.scale(t1);
-			hitPoint.add(displacement);
-			Point2d uv = getUVCoordinates(hitPoint);
-			
-			Point3d localHitPoint = new Point3d(Vectors.add(rayOrigin,displacement));
-			Vector3d normal = normalToGlobal(getNormalAt(localHitPoint, isOutside));
-			normal.normalize();
-			
-			return new IntersectionContext(t1, normal , ray, true, uv.x, uv.y);
-		}
-		else return IntersectionContext.noHit();
-		*/
 		
 		int face_in, face_out;
 		
@@ -205,6 +165,7 @@ public class BoundingBox extends Shape {
 	public void expand(BoundingBox bbox){
 		if(x0 > bbox.x0)
 			x0 = bbox.x0;
+		
 		if(bbox.x1 > x1)
 			x1 = bbox.x1;
 		

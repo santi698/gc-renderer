@@ -44,11 +44,14 @@ public class Triangle extends Shape {
 		
 		p1 = points[triindices.get(3*i)];
 		this.d1 = Vectors.sub(points[triindices.get(3*i+1)], p1);
-		this.d2 = Vectors.sub(points[triindices.get(3*i+2)], p1);	
-		this.normal = normals[3*i];
+		this.d2 = Vectors.sub(points[triindices.get(3*i+2)], p1);
 		
+		//TODO usa solo la normal de un vertice
+		this.normal = normals[triindices.get(3*i)];
+		
+		//TODO usa solo un uv
 		if(uv != null)
-			this.uv = uv[2*i];
+			this.uv = uv[triindices.get(2*i)];
 		
 		Point3d p2 = points[triindices.get(3*i+1)];
 		Point3d p3 = points[triindices.get(3*i+2)];
@@ -84,6 +87,7 @@ public class Triangle extends Shape {
 		if (t > EPS) {
 			if (normal.dot(ray.getDirection()) > EPS)
 				normal.negate();
+			
 			return new IntersectionContext(t, normal, ray, true, u, v);
 		}
 		return IntersectionContext.noHit();

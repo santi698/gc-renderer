@@ -13,6 +13,7 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import application.Main;
 import util.Vectors;
 import model.Body;
 import model.SimpleBody;
@@ -23,6 +24,7 @@ import model.light.Light;
 import model.light.PointLight;
 import model.materials.Glass;
 import model.materials.Material;
+import model.materials.Matte;
 import model.materials.Matte2;
 import model.materials.Metal;
 import model.materials.Mirror;
@@ -105,17 +107,19 @@ public class SceneFromFile implements Scene {
 			}else if (inIncludes){
 				
 				if(currentLine.startsWith("Include")){
+					
 					int firstQuote= currentLine.indexOf('"') + 1;
 					int lastQuote= currentLine.lastIndexOf('"');
 					String FileDirection = currentLine.substring(firstQuote,lastQuote);
-					fileDir = fileDir.substring(0, fileDir.lastIndexOf("/"));
-					if(!fileDir.endsWith("/"))
-						fileDir = fileDir + "/";
 					
-					if(FileDirection.endsWith(".lxm\""))
-						materialParser(fileDir + FileDirection);
+					int lastBracket= fileDir.lastIndexOf('\\');
+					String append = fileDir.substring(0,lastBracket);
+					FileDirection = append + "\\"  + FileDirection;
+					
+					if(FileDirection.endsWith(".lxm"))
+						materialParser(FileDirection);
 					else
-						geometryParser(fileDir + FileDirection);
+						geometryParser(FileDirection);
 					
 				}else if(currentLine.startsWith("AttributeBegin") || currentLine.startsWith("TransformBegin")){
 					inLight = true;
@@ -123,19 +127,21 @@ public class SceneFromFile implements Scene {
 				}
 				
 			}else{
-				
+
 				if(currentLine.startsWith("AttributeBegin") || currentLine.startsWith("TransformBegin")){
 					inLight = true;
 				}else if (currentLine.startsWith("AttributeEnd") || currentLine.startsWith("TransformEnd")){
 					
 					lights.add(getLightFromArguments(lightType,arguments));
+					
+					System.out.println("ADDED "+ lightType + " light");
 					arguments.clear();
 					lightType= "";
 					inLight = false;
 				}			
 				
 				if(inLight){
-					if(currentLine.startsWith("AreaLightSource")){
+					if(currentLine.startsWith("LightSource")){
 						
 						int firstQuote= currentLine.indexOf('"') + 1;
 						int lastQuote= currentLine.lastIndexOf('"');
@@ -148,9 +154,7 @@ public class SceneFromFile implements Scene {
 					}
 				}
 			}
-
 		}
-		
 		
 		in.close();
 		return;	
@@ -160,15 +164,15 @@ public class SceneFromFile implements Scene {
 		
 		Light light = null;
 		
-		float intensity = ((List<Float>) arguments.get("gain")).get(0);
+		float intensity = ((List<Float>) arguments.get("float gain")).get(0);
 		
 		switch(lightType){
 			case "point":
 				//The color of the light.
-				Color3f color = (Color3f) arguments.get("I");
+				Color3f color = (Color3f) arguments.get("color L");
 				
 				//The location of the point light.
-				List<Double> fromList = (List<Double>) arguments.get("from/to");
+				List<Double> fromList = (List<Double>) arguments.get("point from");
 				Point3d from = new Point3d(fromList.get(0),fromList.get(1),fromList.get(2));
 				
 				light = new PointLight(from, color, intensity);
@@ -183,10 +187,10 @@ public class SceneFromFile implements Scene {
 				break;
 			case "distant":
 				//The color of the light.	
-				Color3f color3 = (Color3f) arguments.get("L");
+				Color3f color3 = (Color3f) arguments.get("color L");
 
 				//The two points defining the light direction. Default is down the z axis.
-				List<Double> fromTo = (List<Double>) arguments.get("from/to");
+				List<Double> fromTo = (List<Double>) arguments.get("point from/to");
 				Point3d from2 = new Point3d(fromTo.get(0),fromTo.get(1),fromTo.get(2));
 				Point3d to = new Point3d(fromTo.get(3),fromTo.get(4),fromTo.get(5));
 								
@@ -194,7 +198,7 @@ public class SceneFromFile implements Scene {
 				
 				break;
 			default:
-				System.out.println(lightType + " not supported.");
+				System.out.println(lightType + "light not supported.");
 				break;
 		}
 		
@@ -263,40 +267,40 @@ public class SceneFromFile implements Scene {
 		
 		switch(shapeType){
 		case "mesh":
-			List<Integer> triindices = (List<Integer>)arguments.get("triindices");
-			List<Double> P = (List<Double>)arguments.get("P");
-			List<Double> N = (List<Double>)arguments.get("N");
+			List<Integer> triindices = (List<Integer>)arguments.get("integer triindices");
+			List<Double> P = (List<Double>)arguments.get("point P");
+			List<Double> N = (List<Double>)arguments.get("normal N");
 			
 			List<Float> UVs = null;
-			if(arguments.containsKey("uv")){
-				 UVs = (List<Float>) arguments.get("uv");
+			if(arguments.containsKey("float uv")){
+				 UVs = (List<Float>) arguments.get("float uv");
 			}
 			
 			shape = new Mesh(transform,triindices,P,N,UVs);
 			break;
 		case "plane":
 			//Vector3 de normales
-			List<Double> N2 = (List<Double>)arguments.get("N");
+			List<Double> N2 = (List<Double>)arguments.get("normal N");
 			Vector3d normal = new Vector3d(N2.get(0), N2.get(1), N2.get(2));
 			shape = new Plane(normal, new Point3d(0,0,0));
 			shape.transform(transform);
 			break;
 		case "box":
-			float width = ((List<Float>) arguments.get("width")).get(0);
-			float height = ((List<Float>) arguments.get("height")).get(0);
-			float depth = ((List<Float>) arguments.get("depth")).get(0);
+			float width = ((List<Float>) arguments.get("float width")).get(0);
+			float height = ((List<Float>) arguments.get("float height")).get(0);
+			float depth = ((List<Float>) arguments.get("float depth")).get(0);
 			shape = new BoundingBox(-width/2, +width/2, -height/2, +height/2, -depth/2, +depth/2);
 			shape.transform(transform);
 			break;
 		case "sphere":
-			float radius = ((List<Float>) arguments.get("radius")).get(0);
+			float radius = ((List<Float>) arguments.get("float radius")).get(0);
 			
 			shape = new SolidSphere(new Point3d(0,0,0), radius);
 			shape.transform(transform);
 			
 			break;
 		default:
-			System.out.println(shapeType + " not supported.");
+			System.out.println(shapeType + " shape not supported.");
 		}
 		
 		return shape;
@@ -312,11 +316,11 @@ public class SceneFromFile implements Scene {
 	
 		String currentTextureName = "";
 		
-		Map<String,Map<String,Object>> textures = new HashMap<String,Map<String,Object>>();
+		Map<String,Texture> textures = new HashMap<String,Texture>();
 		
 		while(in.hasNextLine()){
 			String currentLine = in.nextLine();
-			
+					
 			if(currentLine.startsWith("MakeNamedMaterial")){
 				
 				int firstQuote= currentLine.indexOf('"') + 1;
@@ -333,12 +337,15 @@ public class SceneFromFile implements Scene {
 			
 			} else if( currentLine.equals("") && !currentMaterialName.equals("")){
 				if(currentMaterialName.equals("")){
-					textures.put(currentTextureName, new HashMap<String,Object>(arguments));
+					textures.put(currentTextureName, getTextureFromArguments(arguments));
+					System.out.println("ADDED TEXTURE" + currentTextureName);
 				}else{
-					if(currentTextureName.equals(""))
+					if(currentTextureName.equals("")){
 						materials.put(currentMaterialName, getMaterialFromArguments(arguments,null));
-					else
-						materials.put(currentMaterialName, getMaterialFromArguments(arguments,textures.get(currentTextureName)));
+					}else{
+						materials.put(currentMaterialName, getMaterialFromArguments(arguments,textures));
+					}
+					System.out.println("ADDED MATERIAL " + currentMaterialName);
 
 					currentMaterialName = "";
 					currentTextureName = "";
@@ -349,44 +356,64 @@ public class SceneFromFile implements Scene {
 					
 		}
 		
+		//Scanner closes before last empty line
+
+		if(currentTextureName.equals("")){
+			materials.put(currentMaterialName, getMaterialFromArguments(arguments,null));
+		}else{
+			materials.put(currentMaterialName, getMaterialFromArguments(arguments,textures));
+		}
+		System.out.println("ADDED MATERIAL " + currentMaterialName);
+		
 		in.close();
 		return;	
 	}
-	
-	public Material getMaterialFromArguments(Map<String,Object> arguments, Map<String,Object> textureArgs){
 		
-		Material material = null;
-		
+	public Texture getTextureFromArguments(Map<String,Object> arguments){
 		Texture texture = new PlainTexture(new Color3f());
-		if(textureArgs != null){
-			if(textureArgs.containsKey("filename")){
-				texture = new ImageTexture( (String) textureArgs.get("filename"));
+		if(arguments != null){
+			if(arguments.containsKey("string filename")){
+				texture = new ImageTexture( (String) arguments.get("string filename"));
 			}			
 		}
+		return texture;
+	}
+	
+	public Material getMaterialFromArguments(Map<String,Object> arguments, Map<String,Texture> textures){
 		
-		String type = (String)arguments.get("type");
+		Material material = null;
+				
+		Texture texture = null;
+		if(arguments.containsKey("texture Kd"))
+			texture = textures.get((String)arguments.get("texture Kd"));
+		
+		String type = (String)arguments.get("string type");
 		switch(type){
 			case "matte":
-				Color3f Kd = (Color3f)arguments.get("Kd");
-				float sigma = ((List<Float>) arguments.get("sigma")).get(0);
+				
+				Color3f Kd = new Color3f(1,1,1);
+				if(arguments.containsKey("color Kd"))
+					Kd = (Color3f)arguments.get("color Kd");
+				
+				float sigma = ((List<Float>) arguments.get("float sigma")).get(0);
 				material = new Matte2(texture, sigma, Kd.x); //TODO
 				break;
 			case "mirror":
-				Color3f _Kr = (Color3f)arguments.get("Kr");
+				Color3f _Kr = (Color3f)arguments.get("color Kr");
 				material = new Mirror(_Kr.x); //TODO
 				break;
 			case "glass":
-				Color3f Kr = (Color3f)arguments.get("Kr");
-				Color3f Kt = (Color3f)arguments.get("Kt");
-				float index = ((List<Float>) arguments.get("index")).get(0);
+				Color3f Kr = (Color3f)arguments.get("color Kr");
+				Color3f Kt = (Color3f)arguments.get("color Kt");
+				float index = ((List<Float>) arguments.get("float index")).get(0);
 				material = new Glass(Kr.x, Kt.x, texture, index);
 				break;
 			case "metal2":
-				float uroughness = ((List<Float>) arguments.get("uroughness")).get(0);
+				float uroughness = ((List<Float>) arguments.get("float uroughness")).get(0);
 				material = new Metal(texture,uroughness);
 				break;
 			default:
-				System.out.println(type + " Material not supported");
+				material = new Matte2(null,0.31,0.65);
 				break;
 		}
 		
@@ -401,6 +428,9 @@ public class SceneFromFile implements Scene {
 		String ArgumentName = splitedLine[1].split(" ")[1];
 		
 		String ArgumentValue = line.substring(ArgumentType.length() + ArgumentName.length() + 6,line.length()-1);
+		
+		//Fix for Kd being a color and also a texture
+		ArgumentName = splitedLine[1];
 		
 		switch(ArgumentType){
 			case "bool":
@@ -456,10 +486,12 @@ public class SceneFromFile implements Scene {
 					doubles2.add(Double.parseDouble(s));
 				
 				arguments.put(ArgumentName,doubles2);
-				
+				break;
+			case "texture":
+				arguments.put(ArgumentName,ArgumentValue.substring(1, ArgumentValue.length()-1));
 				break;
 			default:
-				System.out.println(ArgumentType + " not supported.");
+				System.out.println(ArgumentType + " type not supported.");
 				break;
 		}
 	}
