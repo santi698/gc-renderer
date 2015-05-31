@@ -57,32 +57,33 @@ public class KDNode extends TraceableTree{
 		List<Traceable> right_shape = new LinkedList<Traceable>();
 		int axis = this.bbox.longestAxis();
 		
-		if(depth < 3)
-			System.out.println("longest axis:" + axis) ;
-			
 		
 		for (int i = 0; i < shapes.size(); i++) {
 			// split bodies based on their midpoints side of avg in longest axis
 			
 			Traceable auxTri = shapes.get(i);
+
 			switch (axis) {
 			case 0:
-				if(midpt.x >= auxTri.getBoundingBox().getMidpoint().x)
+				if(midpt.x >= auxTri.getBoundingBox().getMidpoint().x){
 					right_shape.add(auxTri);
-				else
+				}else{
 					left_shape.add(auxTri);
+					}
 				break;
 			case 1:
-				if(midpt.y >= auxTri.getBoundingBox().getMidpoint().y)
+				if(midpt.y >= auxTri.getBoundingBox().getMidpoint().y){
 					right_shape.add(auxTri);
-				else
+				}else{
 					left_shape.add(auxTri);
+				}
 				break;
 			case 2:
-				if(midpt.z >= auxTri.getBoundingBox().getMidpoint().z)
+				if(midpt.z >= auxTri.getBoundingBox().getMidpoint().z){
 					right_shape.add(auxTri);
-				else
+				}else{
 					left_shape.add(auxTri);
+				}
 				break;
 			}
 		}

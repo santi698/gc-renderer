@@ -69,7 +69,7 @@ public class SampleScene implements Scene {
 	final static Plane p = new Plane(new Vector3d(0,1,0), new Point3d(0, 0, 0.5)); //Plano horizontal (piso)
 	final static Triangle t = new Triangle(new Point3d(0.05,0.15,0.75), new Point3d(-0.15,0,0.5), new Point3d(0.15,0,0.8)); //Triángulo en el piso
 	final static Triangle t2 = new Triangle(new Point3d(0,0.05,0.4), new Point3d(0.1,0,0.4), new Point3d(-0.1,0,0.4)); //Triángulo en el piso
-	final static BoundingBox box = new BoundingBox(0.05, 0, 0.75, 0, 0, 0);
+	final static BoundingBox box = new BoundingBox(0,0,0,1,1,1);
 //	final static Cylinder c = new Cylinder(new Point3d(-0.05,0,0.55), new Vector3d(0, 1, 0), 0.01, 2*Math.PI*0.01);
 //	final static Disc d1 = new Disc(new Vector3d(0, 1, 0), new Point3d(-0.05, 2*Math.PI*0.01, 0.55), 0.01);
 //	final static Disc d2 = new Disc(new Vector3d(0, -1, 0), new Point3d(-0.05, 0, 0.55), 0.01);

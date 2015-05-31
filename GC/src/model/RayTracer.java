@@ -51,6 +51,10 @@ public class RayTracer {
 		//TODO Traer el control de las muestras de AA hasta acá.
 		this.scene = scene;
 		this.showTime = showTime;
+		
+		//this.sceneTree = new DummyTree();
+		//sceneTree.addAll(scene.getObjects());
+		
 		this.sceneTree = new KDNode();
 		sceneTree.addAll(scene.getObjects());
 	}

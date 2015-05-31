@@ -11,6 +11,7 @@ import javax.vecmath.Vector3d;
 import model.IntersectionContext;
 import model.Ray;
 import model.trees.KDNode;
+import model.trees.Traceable;
 
 public class Mesh extends Shape {
 
@@ -23,7 +24,7 @@ public class Mesh extends Shape {
 		this.transform(transform);
 		
 		
-		List<Shape> triangles = new ArrayList<Shape>();
+		List<Traceable> triangles = new ArrayList<Traceable>();
 
 		Point3d[] points = new Point3d[P.size()/3];
 		for(int i = 0; i < P.size()/3; i++)
@@ -51,6 +52,9 @@ public class Mesh extends Shape {
 				
 		kdnode = new KDNode();
 		kdnode.build(triangles,0);
+		
+		//this.kdnode = new DummyTree();
+		//kdnode.addAll(triangles);
 	}
 
 	@Override

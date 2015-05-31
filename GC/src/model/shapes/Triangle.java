@@ -30,11 +30,11 @@ public class Triangle extends Shape {
 		this.normal = Vectors.normalize(Vectors.cross(d1, d2));
 		
 		double minX = Math.min(Math.min(p1.x, p2.x),p3.x);
-		double maxX = Math.min(Math.min(p1.x, p2.x),p3.x);
+		double maxX = Math.max(Math.max(p1.x, p2.x),p3.x);
 		double minY = Math.min(Math.min(p1.y, p2.y),p3.y);
-		double maxY = Math.min(Math.min(p1.y, p2.y),p3.y);
+		double maxY = Math.max(Math.max(p1.y, p2.y),p3.y);
 		double minZ = Math.min(Math.min(p1.z, p2.z),p3.z);
-		double maxZ = Math.min(Math.min(p1.z, p2.z),p3.z);
+		double maxZ = Math.max(Math.max(p1.z, p2.z),p3.z);
 		this.bbox = new BoundingBox(minX,minY,minZ,maxX,maxY,maxZ);
 	}
 	
@@ -47,6 +47,7 @@ public class Triangle extends Shape {
 		this.uvs = new Point2d[] {uv[triindices.get(3*i)], uv[triindices.get(3*i+1)], uv[triindices.get(3*i+2)]};
 		
 		p1 = points[triindices.get(3*i)];
+
 		this.d1 = Vectors.sub(points[triindices.get(3*i+1)], p1);
 		this.d2 = Vectors.sub(points[triindices.get(3*i+2)], p1);
 		this.normal = Vectors.normalize(Vectors.cross(d1, d2));
@@ -55,20 +56,16 @@ public class Triangle extends Shape {
 		Point3d p3 = points[triindices.get(3*i+2)];
 
 		double minX = Math.min(Math.min(p1.x, p2.x),p3.x);
-		double maxX = Math.min(Math.min(p1.x, p2.x),p3.x);
+		double maxX = Math.max(Math.max(p1.x, p2.x),p3.x);
 		double minY = Math.min(Math.min(p1.y, p2.y),p3.y);
-		double maxY = Math.min(Math.min(p1.y, p2.y),p3.y);
+		double maxY = Math.max(Math.max(p1.y, p2.y),p3.y);
 		double minZ = Math.min(Math.min(p1.z, p2.z),p3.z);
-		double maxZ = Math.min(Math.min(p1.z, p2.z),p3.z);
+		double maxZ = Math.max(Math.max(p1.z, p2.z),p3.z);
 		this.bbox = new BoundingBox(minX,minY,minZ,maxX,maxY,maxZ);
 	}
 
-
-
-
 	@Override
 	public IntersectionContext trace(Ray ray) {
-		System.out.println("SOMEONE IS TRYING TO HIT ME");
 		Vector3d normal = new Vector3d(this.normal);
 		Vector3d P = Vectors.cross(ray.getDirection(), d2);
 		double det = P.dot(d1);

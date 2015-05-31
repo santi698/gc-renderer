@@ -148,34 +148,32 @@ public class BoundingBox extends Shape {
 	}
 	
 	public int longestAxis(){
-		double longX = Math.abs(x0 - x1);
-		double longY = Math.abs(y0 - y1);
-		double longZ = Math.abs(z0 - z1);
-		
-		if(longX > longY && longX > longZ)
-			return 0;
-		else if(longY > longX && longY > longZ)
+		double x = Math.abs(x1 - x0);
+		double y = Math.abs(y1 - y0);
+		double z = Math.abs(z1 - z0);
+		if (x >= y) {
+			if (x >= z)
+				return 0;
+			else
+				return 2;
+		} else if (y > z) {
 			return 1;
-		else
+		} else {
 			return 2;
+		}
 	}
 	
 	public void expand(BoundingBox bbox){
-		if(x0 > bbox.x0)
-			x0 = bbox.x0;
-		
-		if(bbox.x1 > x1)
-			x1 = bbox.x1;
-		
-		if(y0 > bbox.y0)
-			y0 = bbox.y0;
-		if(bbox.y1 > y1)
-			y1 = bbox.y1;
-		
-		if(z0 > bbox.z0)
-			z0 = bbox.z0;
-		if(bbox.z1 > z1)
-			z1 = bbox.z1;
+		if (bbox == null)
+			return;
+		this.x0 = Math.min(this.x0, bbox.x0);
+		this.x1 = Math.max(this.x1, bbox.x1);
+
+		this.y0 = Math.min(this.y0, bbox.y0);
+		this.y1 = Math.max(this.y1, bbox.y1);
+
+		this.z0 = Math.min(this.z0, bbox.z0);
+		this.z1 = Math.max(this.z1, bbox.z1);
 	}
 	
 	
