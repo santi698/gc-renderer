@@ -1,5 +1,6 @@
 package model.shapes;
 
+import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -14,6 +15,9 @@ public abstract class Shape extends WorldObject implements Traceable {
 	private boolean rotateTexture = true;
 	public Shape(Vector3d translation, Vector3d rotation, double scale) {
 		super(translation, rotation, scale);
+	}
+	public Shape(Matrix4d transform) {
+		super(transform);
 	}
 	public abstract IntersectionContext trace(Ray ray);
 	

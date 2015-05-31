@@ -21,7 +21,6 @@ public class Triangle extends Shape {
 	private Vector3d normal;
 	
 	public BoundingBox bbox;
-	private int index;
 	
 	public Triangle(Point3d p1, Point3d p2, Point3d p3) {
 		super(new Vector3d(), new Vector3d(), 1);
@@ -46,7 +45,6 @@ public class Triangle extends Shape {
 		isMeshTriangle = true;
 		this.normals = new Vector3d[]{normals[triindices.get(3*i)], normals[triindices.get(3*i+1)], normals[triindices.get(3*i+2)]};
 		this.uvs = new Point2d[] {uv[triindices.get(3*i)], uv[triindices.get(3*i+1)], uv[triindices.get(3*i+2)]};
-		this.index = i;
 		
 		p1 = points[triindices.get(3*i)];
 		this.d1 = Vectors.sub(points[triindices.get(3*i+1)], p1);

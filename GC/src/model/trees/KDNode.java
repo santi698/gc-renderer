@@ -143,6 +143,7 @@ public class KDNode extends TraceableTree{
 		bodies.add(object);
 		build(bodies, 0);
 	}
+	@SuppressWarnings("unchecked")
 	@Override
 	public void addAll(List<? extends Traceable> objects) {
 		bodies = (List<Traceable>)objects;

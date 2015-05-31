@@ -14,8 +14,6 @@ import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import application.Main;
-import util.Vectors;
 import model.Body;
 import model.SimpleBody;
 import model.cameras.Camera;
@@ -25,7 +23,6 @@ import model.light.Light;
 import model.light.PointLight;
 import model.materials.Glass;
 import model.materials.Material;
-import model.materials.Matte;
 import model.materials.Matte2;
 import model.materials.Metal;
 import model.materials.Mirror;
@@ -37,6 +34,7 @@ import model.shapes.sphere.SolidSphere;
 import model.texture.ImageTexture;
 import model.texture.PlainTexture;
 import model.texture.Texture;
+import util.Vectors;
 @SuppressWarnings("unchecked")
 public class SceneFromFile implements Scene {
 	
@@ -277,7 +275,6 @@ public class SceneFromFile implements Scene {
 			if(arguments.containsKey("float uv")){
 				 UVs = (List<Float>) arguments.get("float uv");
 			}
-			
 			shape = new Mesh(transform,triindices,P,N,UVs);
 			break;
 		case "plane":

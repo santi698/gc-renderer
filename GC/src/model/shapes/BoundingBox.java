@@ -4,7 +4,6 @@ import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
-import util.Vectors;
 import model.IntersectionContext;
 import model.Ray;
 
@@ -113,7 +112,7 @@ public class BoundingBox extends Shape {
 			Point3d localHitPoint = ori;
 			
 			Point2d uv = getUVCoordinates(localHitPoint);
-			
+			System.out.println("EUREKA");
 			return new IntersectionContext(tmin,normal,ray,true,uv.x,uv.y);
 		}	
 		

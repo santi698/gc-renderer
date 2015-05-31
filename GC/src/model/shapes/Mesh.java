@@ -20,8 +20,7 @@ public class Mesh extends Shape {
 	BoundingBox bbox = new BoundingBox(0,0,0,0,0,0);
 	
 	public Mesh(Matrix4d transform, List<Integer> triindices, List<Double> P, List<Double> N , List<Float> UVs) {
-		super(new Vector3d(), new Vector3d(), 1);
-		this.transform(transform);
+		super(transform);
 		
 		List<Shape> triangles = new ArrayList<Shape>();
 
@@ -48,14 +47,15 @@ public class Mesh extends Shape {
 			triangles.add(t);
 		}
 				
-//		kdnode = new KDNode();
-		kdnode = new DummyTree();
+		kdnode = new KDNode();
+//		kdnode = new DummyTree();
 		kdnode.addAll(triangles);
 	}
 
 	@Override
 	public IntersectionContext trace(Ray ray) {
-		return kdnode.trace(ray);
+		Ray localRay = new Ray(toLocal(ray.getDirection()), toLocal(ray.getOrigin()));
+		return kdnode.trace(localRay);
 	}
 
 	@Override

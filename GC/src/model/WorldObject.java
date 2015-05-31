@@ -15,6 +15,7 @@ public class WorldObject {
 	private Matrix4d toGlobalT;
 	public WorldObject(Matrix4d transform) {
 		toGlobal = transform;
+		toGlobal.invert();
 		updateMatrices();
 	}
 	public WorldObject(Vector3d translation, Vector3d rotation, double scale) {
