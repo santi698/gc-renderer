@@ -14,6 +14,7 @@ public class WorldObject {
 	private Matrix4d toLocal;
 	private Matrix4d toGlobalT;
 	public WorldObject(Matrix4d transform) {
+		transform.invert();
 		toGlobal = transform;
 		toGlobal.invert();
 		updateMatrices();
@@ -72,6 +73,7 @@ public class WorldObject {
 		return globalNormal;
 	}
 	public void transform(Matrix4d transform) {
+		transform.invert();
 		toGlobal.mul(transform);
 		updateMatrices();
 	}

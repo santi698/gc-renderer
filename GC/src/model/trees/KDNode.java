@@ -28,7 +28,7 @@ public class KDNode extends TraceableTree{
 		if (shapes.size() == 0)
 			return this;
 		if (shapes.size() == 1) {
-			this.bbox = shapes.get(0).getBoundingBox();
+			this.bbox = new BoundingBox(shapes.get(0).getBoundingBox());
 			this.left = new KDNode();
 			this.right = new KDNode();
 			this.left.bodies = new LinkedList<Traceable>();
@@ -37,7 +37,7 @@ public class KDNode extends TraceableTree{
 		}
 
 		// get a bounding box surrounding all the bodies
-		this.bbox = shapes.get(0).getBoundingBox();
+		this.bbox = new BoundingBox(shapes.get(0).getBoundingBox());
 		for (int i = 1; i < shapes.size(); i++) {
 			this.bbox.expand(shapes.get(i).getBoundingBox());
 		}
@@ -53,8 +53,8 @@ public class KDNode extends TraceableTree{
 			midpt.add(aux);
 		}
 
-		List<Traceable> left_shape = new LinkedList<Traceable>();
-		List<Traceable> right_shape = new LinkedList<Traceable>();
+		List<Traceable> left_shapes = new LinkedList<Traceable>();
+		List<Traceable> right_shapes = new LinkedList<Traceable>();
 		int axis = this.bbox.longestAxis();
 		
 		
@@ -66,47 +66,47 @@ public class KDNode extends TraceableTree{
 			switch (axis) {
 			case 0:
 				if(midpt.x >= auxTri.getBoundingBox().getMidpoint().x){
-					right_shape.add(auxTri);
+					right_shapes.add(auxTri);
 				}else{
-					left_shape.add(auxTri);
+					left_shapes.add(auxTri);
 					}
 				break;
 			case 1:
 				if(midpt.y >= auxTri.getBoundingBox().getMidpoint().y){
-					right_shape.add(auxTri);
+					right_shapes.add(auxTri);
 				}else{
-					left_shape.add(auxTri);
+					left_shapes.add(auxTri);
 				}
 				break;
 			case 2:
 				if(midpt.z >= auxTri.getBoundingBox().getMidpoint().z){
-					right_shape.add(auxTri);
+					right_shapes.add(auxTri);
 				}else{
-					left_shape.add(auxTri);
+					left_shapes.add(auxTri);
 				}
 				break;
 			}
 		}
 
-		if (left_shape.size() == 0 && right_shape.size() > 0)
-			left_shape = right_shape;
-		if (right_shape.size() == 0 && left_shape.size() > 0)
-			right_shape = left_shape;
+		if (left_shapes.size() == 0 && right_shapes.size() > 0)
+			left_shapes = right_shapes;
+		if (right_shapes.size() == 0 && left_shapes.size() > 0)
+			right_shapes = left_shapes;
 
 		// if 50% of triangles match, don't subdivide any more
 		int matches = 0;
-		for (int i = 0; i < left_shape.size(); i++) {
-			for (int j = 0; j < right_shape.size(); j++) {
-				if (left_shape.get(i) == right_shape.get(j))
+		for (int i = 0; i < left_shapes.size(); i++) {
+			for (int j = 0; j < right_shapes.size(); j++) {
+				if (left_shapes.get(i) == right_shapes.get(j))
 					matches++;
 			}
 		}
 
-		if ((float) matches / left_shape.size() < 0.5
-				&& (float) matches / right_shape.size() < 0.5) {
+		if ((float) matches / left_shapes.size() < 0.5
+				&& (float) matches / right_shapes.size() < 0.5) {
 			// recurse down left and right sides
-			this.left = build(left_shape, depth + 1);
-			this.right = build(right_shape, depth + 1);
+			this.left = build(left_shapes, depth + 1);
+			this.right = build(right_shapes, depth + 1);
 		} else {
 			this.left = new KDNode();
 			this.right = new KDNode();
@@ -122,7 +122,7 @@ public class KDNode extends TraceableTree{
 		if (node.bbox.trace(ray) != IntersectionContext.noHit()){
 			
 			//if either child still has triangles, recurse down both sides and check for intersections
-			if (!node.left.bodies.isEmpty() || !node.left.bodies.isEmpty()){
+			if (!node.left.bodies.isEmpty() || !node.right.bodies.isEmpty()){
 				IntersectionContext hitleft = hit(node.left, ray);
 				IntersectionContext hitright = hit(node.right, ray);
 				if(hitleft != IntersectionContext.noHit())
@@ -134,7 +134,7 @@ public class KDNode extends TraceableTree{
 				for (int i=0; i < node.bodies.size(); i++){
 					//if there's a hit, return 
 					IntersectionContext ic = node.bodies.get(i).trace(ray);
-					if (ic.hit){
+					if (ic.getHit()){
 						return ic;
 					}
 				}

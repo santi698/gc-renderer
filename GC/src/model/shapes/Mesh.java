@@ -10,19 +10,19 @@ import javax.vecmath.Vector3d;
 
 import model.IntersectionContext;
 import model.Ray;
+import model.trees.DummyTree;
 import model.trees.KDNode;
 import model.trees.Traceable;
+import model.trees.TraceableTree;
 
 public class Mesh extends Shape {
 
-	KDNode kdnode = null;
+	TraceableTree kdnode = null;
 	
 	BoundingBox bbox = new BoundingBox(0,0,0,0,0,0);
 	
 	public Mesh(Matrix4d transform, List<Integer> triindices, List<Double> P, List<Double> N , List<Float> UVs) {
-		super(new Vector3d(), new Vector3d(), 1);
-		this.transform(transform);
-		
+		super(transform);
 		
 		List<Traceable> triangles = new ArrayList<Traceable>();
 
@@ -50,8 +50,8 @@ public class Mesh extends Shape {
 		}
 		
 				
-		kdnode = new KDNode();
-		kdnode.build(triangles,0);
+		kdnode = new DummyTree();
+		kdnode.addAll(triangles);
 		
 		//this.kdnode = new DummyTree();
 		//kdnode.addAll(triangles);
@@ -59,6 +59,8 @@ public class Mesh extends Shape {
 
 	@Override
 	public IntersectionContext trace(Ray ray) {
+		if (getBoundingBox().trace(ray) == IntersectionContext.noHit())
+			return IntersectionContext.noHit();
 		return kdnode.trace(ray);
 	}
 

@@ -18,9 +18,9 @@ public class IntersectionContext {
 		return notHit;
 	}
 	private Material material;
-	public boolean hit;
-	public Point3d intersectionPoint;
-	public Vector3d normal;
+	private boolean hit;
+	private Point3d intersectionPoint;
+	private Vector3d normal;
 	private Ray ray;
 	public double t, u, v;
 	public IntersectionContext(double t, Vector3d normal, Ray ray, boolean hit, double u, double v) {

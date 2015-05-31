@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 import javafx.beans.property.DoubleProperty;
@@ -17,7 +16,6 @@ import model.materials.Material;
 import model.samplers.Multijittered;
 import model.samplers.Sampler;
 import model.trees.DummyTree;
-import model.trees.KDNode;
 import model.trees.KDNode;
 import model.trees.TraceableTree;
 import scenes.Scene;
@@ -52,10 +50,10 @@ public class RayTracer {
 		this.scene = scene;
 		this.showTime = showTime;
 		
-		//this.sceneTree = new DummyTree();
+		this.sceneTree = new DummyTree();
 		//sceneTree.addAll(scene.getObjects());
 		
-		this.sceneTree = new KDNode();
+//		this.sceneTree = new KDNode();
 		sceneTree.addAll(scene.getObjects());
 	}
 	public void setAA(boolean b) {
