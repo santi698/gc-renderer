@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 import javafx.beans.property.DoubleProperty;
@@ -16,6 +17,8 @@ import model.materials.Material;
 import model.samplers.Multijittered;
 import model.samplers.Sampler;
 import model.trees.DummyTree;
+import model.trees.KDNode;
+import model.trees.KDNodeBackup;
 import model.trees.TraceableTree;
 import scenes.Scene;
 import application.Main;
@@ -48,8 +51,7 @@ public class RayTracer {
 		//TODO Traer el control de las muestras de AA hasta acá.
 		this.scene = scene;
 		this.showTime = showTime;
-//		this.sceneTree = new KDNode();
-		this.sceneTree = new DummyTree();
+		this.sceneTree = new KDNodeBackup();
 		sceneTree.addAll(scene.getObjects());
 	}
 	public void setAA(boolean b) {

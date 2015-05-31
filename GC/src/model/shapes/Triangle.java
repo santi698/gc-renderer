@@ -68,6 +68,7 @@ public class Triangle extends Shape {
 
 	@Override
 	public IntersectionContext trace(Ray ray) {
+		System.out.println("SOMEONE IS TRYING TO HIT ME");
 		Vector3d normal = new Vector3d(this.normal);
 		Vector3d P = Vectors.cross(ray.getDirection(), d2);
 		double det = P.dot(d1);
