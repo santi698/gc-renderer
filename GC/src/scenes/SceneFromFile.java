@@ -155,7 +155,7 @@ public class SceneFromFile implements Scene {
 				}
 			}
 		}
-		
+
 		in.close();
 		return;	
 	}

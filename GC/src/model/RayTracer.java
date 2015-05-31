@@ -18,7 +18,7 @@ import model.samplers.Multijittered;
 import model.samplers.Sampler;
 import model.trees.DummyTree;
 import model.trees.KDNode;
-import model.trees.KDNodeBackup;
+import model.trees.KDNode;
 import model.trees.TraceableTree;
 import scenes.Scene;
 import application.Main;
@@ -51,7 +51,7 @@ public class RayTracer {
 		//TODO Traer el control de las muestras de AA hasta acá.
 		this.scene = scene;
 		this.showTime = showTime;
-		this.sceneTree = new KDNodeBackup();
+		this.sceneTree = new KDNode();
 		sceneTree.addAll(scene.getObjects());
 	}
 	public void setAA(boolean b) {
