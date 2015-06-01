@@ -44,7 +44,7 @@ public class Mesh extends Shape {
 		
 		Triangle t = null;
 		for(int i = 0; i < triindices.size()/3; i++){
-			t = new Triangle(i,triindices,points,normals,uv);
+			t = new Triangle(i,triindices,points,normals,uv, this);
 			bbox.expand(t.getBoundingBox());
 			triangles.add(t);
 		}
@@ -59,9 +59,10 @@ public class Mesh extends Shape {
 
 	@Override
 	public IntersectionContext trace(Ray ray) {
-		if (getBoundingBox().trace(ray) == IntersectionContext.noHit())
+		Ray localRay = toLocal(ray);
+		if (getBoundingBox().trace(localRay) == IntersectionContext.noHit())
 			return IntersectionContext.noHit();
-		return kdnode.trace(ray);
+		return kdnode.trace(localRay);
 	}
 
 	@Override

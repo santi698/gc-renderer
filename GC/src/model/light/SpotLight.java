@@ -20,11 +20,12 @@ public class SpotLight extends PointLight {
 	}
 	
 	@Override
-	public double isVisible(Point3d point, List<Body> bodies) {
-		Vector3d direction = Vectors.normalize(Vectors.sub(point, getPosition()));
+	public double isVisible(Point3d globalPoint, List<Body> bodies) {
+		Point3d localPoint = toLocal(globalPoint);
+		Vector3d direction = Vectors.normalize(Vectors.sub(localPoint, getPosition()));
 		double incidenceAngle = direction.angle(this.direction);
 		if (incidenceAngle > angle/2)
 			return 0;
-		return super.isVisible(point, bodies);
+		return super.isVisible(localPoint, bodies);
 	}
 }

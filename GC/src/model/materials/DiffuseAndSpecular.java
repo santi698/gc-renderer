@@ -10,18 +10,18 @@ import util.Vectors;
 import model.Body;
 import model.DistributionFunction;
 import model.IntersectionContext;
+import model.light.AmbientLight;
 import model.light.Light;
 import model.texture.Texture;
 
 public class DiffuseAndSpecular extends Material {
-	private double ka, is, id;
+	private double is, id;
 	private DistributionFunction diffuse;
 	private DistributionFunction specular;
 	public DiffuseAndSpecular(Texture bodyTexture, double ka, DistributionFunction diffuse, DistributionFunction specular) {
 		super(bodyTexture);
 		this.diffuse = diffuse;
 		this.specular = specular;
-		this.ka = ka;
 	}
 	
 	@Override
@@ -33,9 +33,15 @@ public class DiffuseAndSpecular extends Material {
 		Color3f color = new Color3f(getColor(ic.getU(), ic.getV()));
 		Color3f totalDiffuseColor = new Color3f();
 		Color3f totalSpecularColor = new Color3f();
+		Color3f totalAmbientColor = new Color3f();
 		
 		for (Light light : lights) {
-			if (light.isVisible(p, bodies) > 0) {
+			if (light instanceof AmbientLight) {
+				Color3f lightColor = new Color3f(light.getColor());
+				lightColor.scale((float) light.getIntensity(new Point3d()));
+				totalAmbientColor.add(lightColor);
+			}
+			else if (light.isVisible(p, bodies) > 0) {
 				
 				Color3f lightColor = light.getColor();
 				
@@ -66,9 +72,9 @@ public class DiffuseAndSpecular extends Material {
 				totalSpecularColor.add(specularColor);
 			}
 		}
-		color.x = (float)(color.x * totalDiffuseColor.x + color.x * ka + totalSpecularColor.x);
-		color.y = (float)(color.y * totalDiffuseColor.y + color.y * ka + totalSpecularColor.y);
-		color.z = (float)(color.z * totalDiffuseColor.z + color.z * ka + totalSpecularColor.z);
+		color.x = (float)(color.x * totalDiffuseColor.x + totalSpecularColor.x + color.x * totalAmbientColor.x);
+		color.y = (float)(color.y * totalDiffuseColor.y + totalSpecularColor.y + color.y * totalAmbientColor.y);
+		color.z = (float)(color.z * totalDiffuseColor.z + totalSpecularColor.z + color.z * totalAmbientColor.z);
 		
 		return color;
 	}

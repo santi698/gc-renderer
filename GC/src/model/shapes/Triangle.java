@@ -2,6 +2,7 @@ package model.shapes;
 
 import java.util.List;
 
+import javax.vecmath.Matrix4d;
 import javax.vecmath.Point2d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
@@ -12,6 +13,7 @@ import util.Vectors;
 
 public class Triangle extends Shape {
 	private boolean isMeshTriangle = false;
+	private Mesh mesh;
 	private Vector3d[] normals = new Vector3d[3];
 	private Point2d[] uvs = new Point2d[3];
 	
@@ -40,9 +42,10 @@ public class Triangle extends Shape {
 	
 	
 
-	public Triangle(int i, List<Integer> triindices, Point3d[] points, Vector3d[] normals, Point2d[] uv) {
+	public Triangle(int i, List<Integer> triindices, Point3d[] points, Vector3d[] normals, Point2d[] uv, Mesh mesh) {
 		super(new Vector3d(), new Vector3d(), 1);
 		isMeshTriangle = true;
+		this.mesh = mesh;
 		this.normals = new Vector3d[]{normals[triindices.get(3*i)], normals[triindices.get(3*i+1)], normals[triindices.get(3*i+2)]};
 		this.uvs = new Point2d[] {uv[triindices.get(3*i)], uv[triindices.get(3*i+1)], uv[triindices.get(3*i+2)]};
 		
@@ -97,7 +100,7 @@ public class Triangle extends Shape {
 			Vector3d uv1 = Vectors.scale(normals[0], 1-uv.x-uv.y);
 			Vector3d u2 = Vectors.scale(normals[1], uv.x);
 			Vector3d v2 = Vectors.scale(normals[2], uv.y);
-			return (Vectors.add(Vectors.add(uv1, u2), v2));
+			return (mesh.normalToGlobal(Vectors.add(Vectors.add(uv1, u2), v2)));
 		}
 		return normal;
 	}

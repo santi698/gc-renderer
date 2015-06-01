@@ -28,7 +28,7 @@ public class RayTracer {
 	private static final boolean THREADINGDISABLED = false;
 	private int packetSize = 4;
 	private Scene scene;
-	private boolean AAEnabled = true;
+	private boolean AAEnabled = false;
 	private boolean showTime;
 	private Sampler sampler;
 	private long startTime;

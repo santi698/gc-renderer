@@ -53,7 +53,7 @@ public class ImageTexture implements Texture {
 		if (vnorm < 0)
 			vnorm = 1 + vnorm;
 		int x = (int)(unorm*image.getWidth());
-		int y = (int)((1-vnorm)*image.getHeight());
+		int y = (int)((vnorm)*image.getHeight());
 		if (x >= image.getWidth() || y >= image.getHeight() || x < 0 || y < 0) {
 //			System.out.println("ERROR: " + unorm + " " + vnorm + " " + x + " " + y);
 			return new Color3f();

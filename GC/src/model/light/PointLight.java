@@ -21,26 +21,29 @@ public class PointLight extends Light {
 		this.position = position;
 	}	
 	@Override
-	public double isVisible(Point3d point, List<Body> bodies) {
-		Vector3d direction = Vectors.normalize(Vectors.sub(position, point));
-		Ray ray = new Ray(direction, point);
-		double maxT = position.distance(point);
-		IntersectionContext ic = ray.trace(bodies);
+	public double isVisible(Point3d globalPoint, List<Body> bodies) {
+		Point3d localPoint = toLocal(globalPoint);
+		Vector3d direction = Vectors.normalize(Vectors.sub(position, localPoint));
+		Ray ray = new Ray(direction, localPoint);
+		double maxT = position.distance(localPoint);
+		Ray globalRay = new Ray(toGlobal(ray.getDirection()), toGlobal(ray.getOrigin()));
+		IntersectionContext ic = globalRay.trace(bodies);
 		if (ic.getHit() && maxT - ic.getT() > Shape.EPS)
 			return 0;
 		return 1;
 	}
 	@Override
-	public double getIntensity(Point3d p) {
-		double distance = position.distance(p);
-		return LDECAY/(distance*distance)*super.getIntensity(p);
+	public double getIntensity(Point3d globalPoint) {
+		Point3d localPoint = toLocal(globalPoint);
+		double distance = position.distance(localPoint);
+		return LDECAY/(distance*distance)*super.getIntensity(localPoint);
 	}
 	
 	protected Point3d getPosition() {
-		return position;
+		return toGlobal(position);
 	}
 	@Override
 	public Vector3d getDirectionFromTo(Point3d point) {
-		return Vectors.normalize(Vectors.sub(position, point));
+		return toGlobal(Vectors.normalize(Vectors.sub(position, toLocal(point))));
 	}
 }

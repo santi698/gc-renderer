@@ -3,16 +3,20 @@ package model.light;
 import java.util.List;
 
 import javax.vecmath.Color3f;
+import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
+import util.Transformations;
 import model.Body;
+import model.WorldObject;
 
-public abstract class Light {
+public abstract class Light extends WorldObject {
 	private Color3f color;
 	private double intensity;
 	
 	protected Light(Color3f color, double intensity) {
+		super(Transformations.identityMatrix);
 		this.color = color;
 		this.intensity = intensity;
 	}

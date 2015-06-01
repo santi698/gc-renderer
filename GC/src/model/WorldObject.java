@@ -14,7 +14,6 @@ public class WorldObject {
 	private Matrix4d toLocal;
 	private Matrix4d toGlobalT;
 	public WorldObject(Matrix4d transform) {
-		transform.invert();
 		toGlobal = transform;
 		toGlobal.invert();
 		updateMatrices();
@@ -73,8 +72,8 @@ public class WorldObject {
 		return globalNormal;
 	}
 	public void transform(Matrix4d transform) {
-		transform.invert();
 		toGlobal.mul(transform);
+		toGlobal.invert();
 		updateMatrices();
 	}
 	public void rotate(Vector3d rotation) {
@@ -92,5 +91,8 @@ public class WorldObject {
 	public void scale(double scale) {
 		toGlobal.mul(scaleMatrix(scale));
 		updateMatrices();
+	}
+	public Ray toLocal(Ray ray) {
+		return new Ray(toLocal(ray.getDirection()), toLocal(ray.getOrigin()));
 	}
 }

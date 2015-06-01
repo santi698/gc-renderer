@@ -34,6 +34,7 @@ import model.shapes.sphere.SolidSphere;
 import model.texture.ImageTexture;
 import model.texture.PlainTexture;
 import model.texture.Texture;
+import util.Transformations;
 import util.Vectors;
 @SuppressWarnings("unchecked")
 public class SceneFromFile implements Scene {
@@ -70,6 +71,7 @@ public class SceneFromFile implements Scene {
 		String currentLine;
 		
 		Map<String,Object> arguments = new HashMap<String,Object>();
+		Matrix4d lightTransform = null;
 		
 		String lightType = "";
 				
@@ -132,16 +134,27 @@ public class SceneFromFile implements Scene {
 					inLight = true;
 				}else if (currentLine.startsWith("AttributeEnd") || currentLine.startsWith("TransformEnd")){
 					
-					lights.add(getLightFromArguments(lightType,arguments));
+					lights.add(getLightFromArguments(lightType,arguments, lightTransform));
 					
 					System.out.println("ADDED "+ lightType + " light");
 					arguments.clear();
 					lightType= "";
 					inLight = false;
+					lightTransform = null;
 				}			
 				
 				if(inLight){
-					if(currentLine.startsWith("LightSource")){
+					if(currentLine.startsWith("Transform")){
+						String[] values = currentLine.substring(11,currentLine.length()-1).split(" ");
+							
+						lightTransform = new Matrix4d(	Double.parseDouble(values[0]),Double.parseDouble(values[1]),Double.parseDouble(values[2]),Double.parseDouble(values[3]),
+														Double.parseDouble(values[4]),Double.parseDouble(values[5]),Double.parseDouble(values[6]),Double.parseDouble(values[7]),
+														Double.parseDouble(values[8]),Double.parseDouble(values[9]),Double.parseDouble(values[10]),Double.parseDouble(values[11]),
+														Double.parseDouble(values[12]),Double.parseDouble(values[13]),Double.parseDouble(values[14]),Double.parseDouble(values[15]));
+
+
+					}
+					else if(currentLine.startsWith("LightSource")){
 						
 						int firstQuote= currentLine.indexOf('"') + 1;
 						int lastQuote= currentLine.lastIndexOf('"');
@@ -160,7 +173,7 @@ public class SceneFromFile implements Scene {
 		return;	
 	}
 	
-	public Light getLightFromArguments(String lightType, Map<String,Object> arguments){
+	public Light getLightFromArguments(String lightType, Map<String,Object> arguments, Matrix4d lightTransform){
 		
 		Light light = null;
 		
@@ -176,6 +189,7 @@ public class SceneFromFile implements Scene {
 				Point3d from = new Point3d(fromList.get(0),fromList.get(1),fromList.get(2));
 				
 				light = new PointLight(from, color, intensity);
+				light.transform(lightTransform);
 				
 				break;
 			case "infinite":
@@ -194,7 +208,8 @@ public class SceneFromFile implements Scene {
 				Point3d from2 = new Point3d(fromTo.get(0),fromTo.get(1),fromTo.get(2));
 				Point3d to = new Point3d(fromTo.get(3),fromTo.get(4),fromTo.get(5));
 								
-				light = new DirectionalLight(Vectors.sub(to, from2), color3, intensity);		
+				light = new DirectionalLight(Vectors.sub(to, from2), color3, intensity);
+				light.transform(lightTransform);
 				
 				break;
 			default:
