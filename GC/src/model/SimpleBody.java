@@ -23,4 +23,9 @@ public class SimpleBody implements Body {
 	public BoundingBox getBoundingBox() {
 		return shape.getBoundingBox();
 	}
+	
+	@Override
+	public boolean intersectsBox(BoundingBox box) {
+		return box.intersects(shape.getBoundingBox());
+	}
 }

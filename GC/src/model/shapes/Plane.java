@@ -50,4 +50,9 @@ public class Plane extends Shape {
 	public BoundingBox getBoundingBox() {
 		return new BoundingBox(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 	}
+	
+	@Override
+	public boolean intersectsBox(BoundingBox box) {
+		return false;
+	}
 }

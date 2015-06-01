@@ -20,36 +20,38 @@ public class BoundingBox extends Shape {
 		this.y1 = y1;
 		this.z0 = z0;
 		this.z1 = z1;
-		fixOrder();
 
 	}
-	public BoundingBox(BoundingBox box) {
+	
+	public BoundingBox(BoundingBox bbox) {
 		super(new Vector3d(), new Vector3d(), 1);
-		this.x0 = box.x0;
-		this.x1 = box.x1;
-		this.y0 = box.y0;
-		this.y1 = box.y1;
-		this.z0 = box.z0;
-		this.z1 = box.z1;
-		fixOrder();
+		this.x0 = bbox.x0;
+		this.x1 = bbox.x1;
+		this.y0 = bbox.y0;
+		this.y1 = bbox.y1;
+		this.z0 = bbox.z0;
+		this.z1 = bbox.z1;
+
 	}
-	private void fixOrder() {
-		if (x1 < x0){
-			double aux = x0;
-			x0 = x1;
-			x1 = aux;
-		}
-		if (y1 < y0){
-			double aux = y0;
-			y0 = y1;
-			y1 = aux;
-		}
-		if (z1 < z0){
-			double aux = z0;
-			z0 = z1;
-			z1 = aux;
-		}
+	
+	public final boolean contains(Point3d p) {
+		if (p.x < x0 || p.x > x1 || p.y < y0 || p.y > y1 || p.z < z0
+				|| p.z > z1)
+			return false;
+		return true;
 	}
+	
+	public Vector3d getSize() {
+		return new Vector3d(x1 - x0, y1 - y0, z1 - z0);
+	}
+	
+	public final boolean intersects(BoundingBox b) {
+		if (x0 > b.x1 || x1 < b.x0 || y0 > b.y1 || y1 < b.y0
+				|| z0 > b.z1 || z1 < b.z0)
+			return false;
+		return true;
+	}
+	
 	@Override
 	public IntersectionContext trace(Ray ray) {
 		
@@ -212,5 +214,10 @@ public class BoundingBox extends Shape {
 	@Override
 	public BoundingBox getBoundingBox() {
 		return this;
+	}
+
+	@Override
+	public boolean intersectsBox(BoundingBox box) {
+		return box.intersects(this);
 	}
 }

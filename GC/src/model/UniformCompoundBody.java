@@ -35,4 +35,13 @@ public class UniformCompoundBody implements Body {
 		return bbox;
 		
 	}
+	@Override
+	public boolean intersectsBox(BoundingBox box) {
+
+		for(Shape s: shapes){
+			if(box.intersects(s.getBoundingBox()))
+				return true;
+		}
+		return false;
+	}
 }

@@ -66,4 +66,9 @@ public class Cylinder extends Shape {
 		//TODO
 		return null;
 	}
+	@Override
+	public boolean intersectsBox(BoundingBox box) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

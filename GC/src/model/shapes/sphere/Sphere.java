@@ -102,4 +102,9 @@ public abstract class Sphere extends Shape {
 	public BoundingBox getBoundingBox() {
 		return new BoundingBox(center.x-radius, center.y-radius, center.z-radius, center.x+radius, center.y+radius, center.z+radius);
 	}
+	
+	@Override
+	public boolean intersectsBox(BoundingBox box) {
+		return box.intersects(getBoundingBox());
+	}
 }
