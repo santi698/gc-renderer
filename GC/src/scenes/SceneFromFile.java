@@ -34,8 +34,6 @@ import model.shapes.sphere.SolidSphere;
 import model.texture.ImageTexture;
 import model.texture.PlainTexture;
 import model.texture.Texture;
-import model.trees.Traceable;
-import util.Transformations;
 import util.Vectors;
 @SuppressWarnings("unchecked")
 public class SceneFromFile implements Scene {
@@ -398,7 +396,7 @@ public class SceneFromFile implements Scene {
 		
 		Material material = null;
 				
-		Texture texture = null;
+		Texture texture = new PlainTexture(new Color3f());
 		if(arguments.containsKey("texture Kd"))
 			texture = textures.get((String)arguments.get("texture Kd"));
 		

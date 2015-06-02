@@ -15,7 +15,6 @@ import model.light.Light;
 import model.texture.Texture;
 
 public abstract class PureDiffuse extends Material {
-	private double ka =0.2;
 	private DistributionFunction brdf;
 	public PureDiffuse(Texture texture, DistributionFunction brdf) {
 		super(texture);

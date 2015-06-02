@@ -8,14 +8,13 @@ import javax.vecmath.Vector3d;
 
 import model.IntersectionContext;
 import model.Ray;
-import model.trees.OctreeNode;
 import util.Vectors;
 
 public class Triangle extends Shape {
 	private boolean isMeshTriangle = false;
 	private Mesh mesh;
 	private Vector3d[] normals = new Vector3d[3];
-	private Point2d[] uvs = new Point2d[3];
+	private Point2d[] uvs = null;
 	
 	private Point3d p1;
 	private Point3d p2;
@@ -53,7 +52,8 @@ public class Triangle extends Shape {
 		isMeshTriangle = true;
 		this.mesh = mesh;
 		this.normals = new Vector3d[]{normals[triindices.get(3*i)], normals[triindices.get(3*i+1)], normals[triindices.get(3*i+2)]};
-		this.uvs = new Point2d[] {uv[triindices.get(3*i)], uv[triindices.get(3*i+1)], uv[triindices.get(3*i+2)]};
+		if (uv != null)
+			this.uvs = new Point2d[] {uv[triindices.get(3*i)], uv[triindices.get(3*i+1)], uv[triindices.get(3*i+2)]};
 		
 		p1 = points[triindices.get(3*i)];
 		p2 = points[triindices.get(3*i+1)];
@@ -111,6 +111,8 @@ public class Triangle extends Shape {
 	}
 	public Point2d getGlobalUV(Point2d localUv) {
 		if (isMeshTriangle) {
+			if (uvs == null)
+				return new Point2d();
 			Point2d uv1 = new Point2d(uvs[0]);
 			Point2d u2 = new Point2d(uvs[1]);
 			Point2d v2 = new Point2d(uvs[2]);
@@ -170,132 +172,5 @@ public class Triangle extends Shape {
 //		if (checkIntersection(r, len))
 //			return true;
 //		return false;
-	}
-	private boolean checkIntersection(Ray r, double withinDistance) {
-		Vector3d normal = new Vector3d(this.normal);
-		
-		// Si no pertenece al plano del triángulo, no hay intersección
-		double auxDot = normal.dot(r.getDirection());
-		if (auxDot < 0) {
-			normal.scale(-1);
-		}
-		if (normal.dot(r.getDirection()) < OctreeNode.TOLERANCE) {
-			return false;
-		}
-		
-		// Sino, calcular el punto de intersección en el plano
-		Vector3d a = new Vector3d(p1);
-		a.sub(r.getOrigin());
-		double t = a.dot(normal) / r.getDirection().dot(normal);
-		if (!(t >= 0 && t < withinDistance)) {
-			return false;
-		}
-		Vector3d pointOfIntersection = new Vector3d(r.getDirection());
-		pointOfIntersection.scale(t);
-		pointOfIntersection.add(r.getOrigin());
-		
-		// Determinar si el punto de intersección pertenece al triángulo
-		if (pointBelongs(pointOfIntersection)) {
-			return true;
-		}
-		return false;
-	}
-	public boolean pointBelongs(Vector3d point) {
-		Vector3d aux = new Vector3d(point);
-		aux.sub(p1);
-		
-		// Si no pertenece al plano, return false
-		if (Math.abs(aux.dot(normal)) > OctreeNode.TOLERANCE) {
-			return false;
-		}
-		
-		Vector3d aux2 = new Vector3d(point);
-		aux2.sub(p1);
-		aux2.cross(d1, aux2);
-		if (aux2.dot(normal) < 0) {
-			return false;
-		}
-		
-		aux2 = new Vector3d(point);
-		aux2.sub(p2);
-		aux2.cross(Vectors.sub(p3,p2), aux2);
-		if (aux2.dot(normal) < 0) {
-			return false;
-		}
-		
-		aux2 = new Vector3d(point);
-		aux2.sub(p3);
-		aux2.cross(Vectors.sub(p1,p3), aux2);
-		if (aux2.dot(normal) < 0) {
-			return false;
-		}
-		
-		return true;
-	}
-	private boolean edgeIntersectsBox(Point3d p1, Point3d p2, BoundingBox bb) {
-		double t1, t2, tmin = -Double.MAX_VALUE, tmax = Double.MAX_VALUE;
-		double dirx = p2.x - p1.x, diry = p2.y - p1.y, dirz = p2.z - p1.z;
-		double len = Math.sqrt(dirx * dirx + diry * diry + dirz * dirz);
-		if (dirx == 0.0) {
-			if (p1.x < bb.x0 || p1.x > bb.x1)
-				return false;
-		} else {
-			t1 = (bb.x0 - p1.x) * len / dirx;
-			t2 = (bb.x1 - p1.x) * len / dirx;
-			if (t1 < t2) {
-				if (t1 > tmin)
-					tmin = t1;
-				if (t2 < tmax)
-					tmax = t2;
-			} else {
-				if (t2 > tmin)
-					tmin = t2;
-				if (t1 < tmax)
-					tmax = t1;
-			}
-			if (tmin > tmax || tmin > len || tmax < 0.0)
-				return false;
-		}
-		if (diry == 0.0) {
-			if (p1.y < bb.y0 || p1.y > bb.y1)
-				return false;
-		} else {
-			t1 = (bb.y0 - p1.y) * len / diry;
-			t2 = (bb.y1 - p1.y) * len / diry;
-			if (t1 < t2) {
-				if (t1 > tmin)
-					tmin = t1;
-				if (t2 < tmax)
-					tmax = t2;
-			} else {
-				if (t2 > tmin)
-					tmin = t2;
-				if (t1 < tmax)
-					tmax = t1;
-			}
-			if (tmin > tmax || tmin > len || tmax < 0.0)
-				return false;
-		}
-		if (dirz == 0.0) {
-			if (p1.z < bb.z0 || p1.z > bb.z1)
-				return false;
-		} else {
-			t1 = (bb.z0 - p1.z) * len / dirz;
-			t2 = (bb.z1 - p1.z) * len / dirz;
-			if (t1 < t2) {
-				if (t1 > tmin)
-					tmin = t1;
-				if (t2 < tmax)
-					tmax = t2;
-			} else {
-				if (t2 > tmin)
-					tmin = t2;
-				if (t1 < tmax)
-					tmax = t1;
-			}
-			if (tmin > tmax || tmin > len || tmax < 0.0)
-				return false;
-		}
-		return true;
 	}
 }

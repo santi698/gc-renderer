@@ -11,19 +11,17 @@ import javax.vecmath.Vector3d;
 
 import model.IntersectionContext;
 import model.Ray;
-import model.trees.OctreeNode;
+import model.trees.DummyTree;
 import model.trees.Traceable;
 
 public class Mesh extends Shape {
 
-	OctreeNode kdnode = null;
+	DummyTree kdnode = null;
 	
 	BoundingBox bbox = new BoundingBox(0,0,0,0,0,0);
 	
 	public Mesh(Matrix4d transform, List<Integer> triindices, List<Double> P, List<Double> N , List<Float> UVs) {
-		super(new Vector3d(), new Vector3d(), 1);
-		this.transform(transform);
-		
+		super(transform);		
 		
 		Traceable[] triangles = new Traceable[triindices.size()/3];
 		BoundingBox[] boxes = new BoundingBox[triindices.size()/3];
@@ -53,7 +51,7 @@ public class Mesh extends Shape {
 		}
 		
 				
-		kdnode = new OctreeNode(new ArrayList<>(Arrays.asList(triangles)), bbox, 0);
+		kdnode = new DummyTree(new ArrayList<>(Arrays.asList(triangles)));
 		
 		//this.kdnode = new DummyTree();
 		//kdnode.addAll(triangles);

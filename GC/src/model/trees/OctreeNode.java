@@ -19,7 +19,7 @@ public class OctreeNode extends BoundingBox {
 
 	public OctreeNode(List<Traceable> shapes,BoundingBox bbox, int depth){
 		super(bbox);
-		if(shapes.size() < MAX_OBJECTS_PER_NODE || depth >= MAX_OCTREE_DEPTH){
+		if(shapes.size() > MAX_OBJECTS_PER_NODE || depth >= MAX_OCTREE_DEPTH){
 			this.shapes = shapes;
 			return;
 		}

@@ -2,7 +2,6 @@ package application;
 	
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
@@ -16,6 +15,8 @@ import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 
+import model.RayTracer;
+
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -25,7 +26,6 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import model.RayTracer;
 import scenes.SampleScene;
 import scenes.SceneFromFile;
 import controller.MainViewController;

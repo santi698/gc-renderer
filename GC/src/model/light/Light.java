@@ -3,7 +3,6 @@ package model.light;
 import java.util.List;
 
 import javax.vecmath.Color3f;
-import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 

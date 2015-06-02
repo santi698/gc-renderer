@@ -16,7 +16,6 @@ import model.materials.Material;
 import model.samplers.Multijittered;
 import model.samplers.Sampler;
 import model.trees.DummyTree;
-import model.trees.Traceable;
 import scenes.Scene;
 import application.Main;
 
@@ -27,7 +26,7 @@ public class RayTracer {
 	private static final boolean THREADINGDISABLED = false;
 	private int packetSize = 4;
 	private Scene scene;
-	private boolean AAEnabled = false;
+	private boolean AAEnabled = true;
 	private boolean showTime;
 	private Sampler sampler;
 	private long startTime;
@@ -49,11 +48,8 @@ public class RayTracer {
 		this.scene = scene;
 		this.showTime = showTime;
 		
-		List <Traceable> traceables = new LinkedList<Traceable>(scene.getObjects());
-//		this.sceneTree = new OctreeNode(traceables);
 		this.sceneTree = new DummyTree();
 		sceneTree.addAll(scene.getObjects());		
-		//this.sceneTree = new KDNode(scene.getObjects());
 
 	}
 	public void setAA(boolean b) {
