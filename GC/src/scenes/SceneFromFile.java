@@ -34,6 +34,7 @@ import model.shapes.sphere.SolidSphere;
 import model.texture.ImageTexture;
 import model.texture.PlainTexture;
 import model.texture.Texture;
+import model.trees.Traceable;
 import util.Transformations;
 import util.Vectors;
 @SuppressWarnings("unchecked")
@@ -386,8 +387,8 @@ public class SceneFromFile implements Scene {
 	public Texture getTextureFromArguments(Map<String,Object> arguments){
 		if(arguments != null){
 			if(arguments.containsKey("string filename")){
-				return new ImageTexture("charizard/imagen.jpg");
-//				return new ImageTexture( (String) arguments.get("string filename"));
+				String filename = (String) arguments.get("string filename");
+				return new ImageTexture(filename);
 			}			
 		}
 		return new PlainTexture(new Color3f());

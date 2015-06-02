@@ -154,6 +154,12 @@ public class BoundingBox extends Shape {
 		uv.y = texturePoint.z;
 		return uv;
 	}
+	public final boolean intersectsBox(BoundingBox b) {
+		if (x0 > b.x1 || x1 < b.x0 || y0 > b.y1 || y1 < b.y0
+				|| z0 > b.z1 || z1 < b.z0)
+			return false;
+		return true;
+	}
 	
 	protected Vector3d getNormal(int face_hit) {
 
@@ -213,4 +219,9 @@ public class BoundingBox extends Shape {
 	public BoundingBox getBoundingBox() {
 		return this;
 	}
-}
+	public final boolean contains(Point3d p) {
+		if (p.x < x0 || p.x > x1 || p.y < y0 || p.y > y1 || p.z < z0
+				|| p.z > z1)
+			return false;
+		return true;
+	}}

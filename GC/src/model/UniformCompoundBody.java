@@ -33,6 +33,9 @@ public class UniformCompoundBody implements Body {
 			bbox.expand(s.getBoundingBox());
 		
 		return bbox;
-		
+	}
+	@Override
+	public boolean intersectsBox(BoundingBox box) {
+		return getBoundingBox().intersectsBox(box);
 	}
 }

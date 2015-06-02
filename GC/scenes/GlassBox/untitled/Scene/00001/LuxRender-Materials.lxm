@@ -1,0 +1,13 @@
+# Materials File
+
+Texture "Kd_color" "color" "imagemap"
+	"string filename" ["TODO"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "mat_0"
+	"texture Kd" ["Kd_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]

@@ -46,4 +46,7 @@ public abstract class Shape extends WorldObject implements Traceable {
 	}
 	
 	public abstract BoundingBox getBoundingBox();
+	public boolean intersectsBox(BoundingBox box) {
+		return getBoundingBox().intersectsBox(box);
+	}
 }

@@ -12,12 +12,13 @@ import model.IntersectionContext;
 import model.Ray;
 import model.trees.DummyTree;
 import model.trees.KDNode;
+import model.trees.OctreeNode;
 import model.trees.Traceable;
 import model.trees.TraceableTree;
 
 public class Mesh extends Shape {
 
-	TraceableTree kdnode = null;
+	OctreeNode kdnode = null;
 	
 	BoundingBox bbox = new BoundingBox(0,0,0,0,0,0);
 	
@@ -50,8 +51,7 @@ public class Mesh extends Shape {
 		}
 		
 				
-		kdnode = new DummyTree();
-		kdnode.addAll(triangles);
+		kdnode = new OctreeNode(triangles, bbox, 0);
 		
 		//this.kdnode = new DummyTree();
 		//kdnode.addAll(triangles);

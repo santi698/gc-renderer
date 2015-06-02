@@ -46,6 +46,7 @@ import model.shapes.sphere.ThinSphere;
 import model.texture.CheckerBoardTexture;
 import model.texture.ImageTexture;
 import model.texture.PlainTexture;
+import model.trees.Traceable;
 
 @SuppressWarnings("unused")
 public class SampleScene implements Scene {

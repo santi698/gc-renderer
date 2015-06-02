@@ -16,13 +16,13 @@ import model.materials.Material;
 import model.samplers.Multijittered;
 import model.samplers.Sampler;
 import model.trees.DummyTree;
-import model.trees.KDNode;
-import model.trees.TraceableTree;
+import model.trees.OctreeNode;
+import model.trees.Traceable;
 import scenes.Scene;
 import application.Main;
 
 public class RayTracer {
-	private TraceableTree sceneTree;
+	private DummyTree sceneTree;
 	public static final float invGamma = 1f/2.2f;
 	private static final boolean DEBUG = false;
 	private static final boolean THREADINGDISABLED = false;
@@ -50,11 +50,13 @@ public class RayTracer {
 		this.scene = scene;
 		this.showTime = showTime;
 		
+		List <Traceable> traceables = new LinkedList<Traceable>(scene.getObjects());
+//		this.sceneTree = new OctreeNode(traceables);
 		this.sceneTree = new DummyTree();
-		//sceneTree.addAll(scene.getObjects());
+		sceneTree.addAll(scene.getObjects());
 		
 //		this.sceneTree = new KDNode();
-		sceneTree.addAll(scene.getObjects());
+//		sceneTree.addAll(scene.getObjects());
 	}
 	public void setAA(boolean b) {
 		AAEnabled = b;
