@@ -20,6 +20,7 @@ public class Triangle extends Shape {
 	private Point3d p1;
 	private Point3d p2;
 	private Point3d p3;
+	
 	private Vector3d d1;
 	private Vector3d d2;
 	private Vector3d normal;
@@ -31,6 +32,7 @@ public class Triangle extends Shape {
 		this.p1 = new Point3d(p1);
 		this.p2 = new Point3d(p2);
 		this.p3 = new Point3d(p3);
+		
 		this.d1 = Vectors.sub(p2, p1);
 		this.d2 = Vectors.sub(p3, p1);	
 		this.normal = Vectors.normalize(Vectors.cross(d1, d2));
@@ -56,6 +58,7 @@ public class Triangle extends Shape {
 		p1 = points[triindices.get(3*i)];
 		p2 = points[triindices.get(3*i+1)];
 		p3 = points[triindices.get(3*i+2)];
+		
 		this.d1 = Vectors.sub(points[triindices.get(3*i+1)], p1);
 		this.d2 = Vectors.sub(points[triindices.get(3*i+2)], p1);
 		this.normal = Vectors.normalize(Vectors.cross(d1, d2));
@@ -123,7 +126,7 @@ public class Triangle extends Shape {
 	}
 	@Override
 	public boolean intersectsBox(BoundingBox bb) {
-		return getBoundingBox().intersectsBox(bb);
+		return bb.intersectsBox(getBoundingBox());
 //		// Si algún vértice está contenido en la caja, intersecta
 //		if (bb.contains(p1) || bb.contains(p2) || bb.contains(p3))
 //			return true;

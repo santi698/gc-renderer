@@ -1,6 +1,7 @@
 package model.shapes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.vecmath.Matrix4d;
@@ -10,11 +11,8 @@ import javax.vecmath.Vector3d;
 
 import model.IntersectionContext;
 import model.Ray;
-import model.trees.DummyTree;
-import model.trees.KDNode;
 import model.trees.OctreeNode;
 import model.trees.Traceable;
-import model.trees.TraceableTree;
 
 public class Mesh extends Shape {
 
@@ -23,9 +21,12 @@ public class Mesh extends Shape {
 	BoundingBox bbox = new BoundingBox(0,0,0,0,0,0);
 	
 	public Mesh(Matrix4d transform, List<Integer> triindices, List<Double> P, List<Double> N , List<Float> UVs) {
-		super(transform);
+		super(new Vector3d(), new Vector3d(), 1);
+		this.transform(transform);
 		
-		List<Traceable> triangles = new ArrayList<Traceable>();
+		
+		Traceable[] triangles = new Traceable[triindices.size()/3];
+		BoundingBox[] boxes = new BoundingBox[triindices.size()/3];
 
 		Point3d[] points = new Point3d[P.size()/3];
 		for(int i = 0; i < P.size()/3; i++)
@@ -47,11 +48,12 @@ public class Mesh extends Shape {
 		for(int i = 0; i < triindices.size()/3; i++){
 			t = new Triangle(i,triindices,points,normals,uv, this);
 			bbox.expand(t.getBoundingBox());
-			triangles.add(t);
+			triangles[i] = t;
+			boxes[i] = t.bbox;
 		}
 		
 				
-		kdnode = new OctreeNode(triangles, bbox, 0);
+		kdnode = new OctreeNode(new ArrayList<>(Arrays.asList(triangles)), bbox, 0);
 		
 		//this.kdnode = new DummyTree();
 		//kdnode.addAll(triangles);
@@ -70,4 +72,8 @@ public class Mesh extends Shape {
 		return bbox;
 	}
 
+	@Override
+	public boolean intersectsBox(BoundingBox box) {
+		return box.intersects(bbox);
+	}
 }

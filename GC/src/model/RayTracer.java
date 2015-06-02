@@ -16,7 +16,6 @@ import model.materials.Material;
 import model.samplers.Multijittered;
 import model.samplers.Sampler;
 import model.trees.DummyTree;
-import model.trees.OctreeNode;
 import model.trees.Traceable;
 import scenes.Scene;
 import application.Main;
@@ -53,10 +52,9 @@ public class RayTracer {
 		List <Traceable> traceables = new LinkedList<Traceable>(scene.getObjects());
 //		this.sceneTree = new OctreeNode(traceables);
 		this.sceneTree = new DummyTree();
-		sceneTree.addAll(scene.getObjects());
-		
-//		this.sceneTree = new KDNode();
-//		sceneTree.addAll(scene.getObjects());
+		sceneTree.addAll(scene.getObjects());		
+		//this.sceneTree = new KDNode(scene.getObjects());
+
 	}
 	public void setAA(boolean b) {
 		AAEnabled = b;
