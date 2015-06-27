@@ -12,8 +12,8 @@ import util.Vectors;
 
 public class IntersectionContext {
 	private static final IntersectionContext notHit = new IntersectionContext(Double.MAX_VALUE, null, null, false, 0, 0);
-	private static final Color3f BGCOLOR = new Color3f(173f/255f, 216f/255f, 230f/255f);
-//	private static final Color3f bgColor = new Color3f(1f, 1f, 1f);
+//	private static final Color3f BGCOLOR = new Color3f(173f/255f, 216f/255f, 230f/255f);
+	private static final Color3f BGCOLOR = new Color3f();
 	public static IntersectionContext noHit() {
 		return notHit;
 	}

@@ -40,7 +40,7 @@ public abstract class PureDiffuse extends Material {
 			else if (visibility > 0) {
 				Color3f diffuseColor = brdf.apply(light.getDirectionFromTo(p), n, v);
 				if (diffuseColor.x < 0) {
-//					System.out.println("Diffuse color out of range. Value: " + diffuseColor.x+ "\n" + ic);
+					System.out.println("Diffuse color out of range. Value: " + diffuseColor.x+ "\n" + ic);
 					diffuseColor.absolute();
 				}
 				diffuseColor.scale((float)(visibility * light.getIntensity(p)));

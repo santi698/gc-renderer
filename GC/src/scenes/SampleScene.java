@@ -83,7 +83,7 @@ public class SampleScene implements Scene {
 
 	List<Body> bodies = Arrays.asList(new Body[] {
 //											new SimpleBody(s2, new PolishedMarble(new CheckerBoardTexture(0.1))),
-											new SimpleBody(s2, new Matte2(new ImageTexture(Main.class.getResource("/textures/seamlesspaper2.jpg")), 0.31, 0.65)),
+											new SimpleBody(s2, new Mirror(0.85f)),
 //											new SimpleBody(s, new Metal(new Color3f(0.99f,0.99f,0.05f), 200)),
 //											new SimpleBody(s, new Metal(new ImageTexture("textures/2400/earth_night.jpg"), 0.4)),
 //											new SimpleBody(s, new Matte2(new CheckerBoardTexture(0.1), 0.1, 0.85)),
@@ -95,7 +95,7 @@ public class SampleScene implements Scene {
 //											new SimpleBody(p, new Metal(new CheckerBoardTexture(0.5), 0.5)),
 											new SimpleBody(p, new Matte2(new ImageTexture(Main.class.getResource("/textures/1024/Wood 2.png"), 0.2), 0, 0.75)),
 //											new SimpleBody(p, new Mirror(new Color3f(0.25f, 0.40f, 0.25f), 0.15)),
-											new SimpleBody(t, new PolishedMarble(new PlainTexture(new Color3f(0.85f,0.01f,0.01f)))),
+											new SimpleBody(t, new Mirror(new PlainTexture(new Color3f(0.85f,0.01f,0.01f)), 0.85f)),
 //											new SimpleBody(t, new Metal2(new PlainTexture(new Color3f(173f/255f, 178f/255f, 189f/255f)),1e-100)),
 //											new SimpleBody(t2, new Mirror(new PlainTexture(new Color3f(0.85f,0.85f,0.85f)))),
 //											new SimpleBody(scn, new PolishedMarble(new PlainTexture(new Color3f(0.9f, 0.1f, 0.1f)))),

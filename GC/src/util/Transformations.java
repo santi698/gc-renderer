@@ -9,6 +9,9 @@ public class Transformations {
 		identityMatrix = new Matrix4d();
 		identityMatrix.setIdentity();
 	}
+	public static Matrix4d getIdentity() {
+		return new Matrix4d(identityMatrix);
+	}
 	public static Matrix4d translateMatrix(Vector3d translation) {
 		Matrix4d tMatrix = new Matrix4d();
 		tMatrix.setIdentity();

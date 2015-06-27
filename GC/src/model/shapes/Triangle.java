@@ -28,9 +28,9 @@ public class Triangle extends Shape {
 	
 	public Triangle(Point3d p1, Point3d p2, Point3d p3) {
 		super(new Vector3d(), new Vector3d(), 1);
-		this.p1 = new Point3d(p1);
-		this.p2 = new Point3d(p2);
-		this.p3 = new Point3d(p3);
+		this.p1 = p1;
+		this.p2 = p2;
+		this.p3 = p3;
 		
 		this.d1 = Vectors.sub(p2, p1);
 		this.d2 = Vectors.sub(p3, p1);	

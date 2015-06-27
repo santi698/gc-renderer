@@ -3,6 +3,7 @@ package model.light;
 import java.util.List;
 
 import javax.vecmath.Color3f;
+import javax.vecmath.Matrix4d;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
@@ -19,7 +20,11 @@ public class PointLight extends Light {
 	public PointLight(Point3d position, Color3f color, double intensity) {
 		super(color, intensity);
 		this.position = position;
-	}	
+	}
+	public PointLight(Point3d position, Color3f color, double intensity, Matrix4d transform) {
+		super(color, intensity, transform);
+		this.position = position;
+	}
 	@Override
 	public double isVisible(Point3d globalPoint, List<Body> bodies) {
 		Point3d localPoint = toLocal(globalPoint);

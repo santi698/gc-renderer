@@ -21,7 +21,7 @@ public class Mesh extends Shape {
 	BoundingBox bbox = new BoundingBox(0,0,0,0,0,0);
 	
 	public Mesh(Matrix4d transform, List<Integer> triindices, List<Double> P, List<Double> N , List<Float> UVs) {
-		super(transform);		
+		super(transform);
 		
 		Traceable[] triangles = new Traceable[triindices.size()/3];
 		BoundingBox[] boxes = new BoundingBox[triindices.size()/3];
@@ -52,9 +52,6 @@ public class Mesh extends Shape {
 		
 				
 		kdnode = new DummyTree(new ArrayList<>(Arrays.asList(triangles)));
-		
-		//this.kdnode = new DummyTree();
-		//kdnode.addAll(triangles);
 	}
 
 	@Override
