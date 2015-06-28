@@ -33,7 +33,7 @@ public class Triangle extends Shape {
 		this.p3 = p3;
 		
 		this.d1 = Vectors.sub(p2, p1);
-		this.d2 = Vectors.sub(p3, p1);	
+		this.d2 = Vectors.sub(p3, p1);
 		this.normal = Vectors.normalize(Vectors.cross(d1, d2));
 		
 		double minX = Math.min(Math.min(p1.x, p2.x),p3.x);
@@ -129,48 +129,5 @@ public class Triangle extends Shape {
 	@Override
 	public boolean intersectsBox(BoundingBox bb) {
 		return bb.intersectsBox(getBoundingBox());
-//		// Si algún vértice está contenido en la caja, intersecta
-//		if (bb.contains(p1) || bb.contains(p2) || bb.contains(p3))
-//			return true;
-//
-//		// Si algún eje intersecta la caja, intersecta
-//		if (edgeIntersectsBox(p1, p2, bb) || edgeIntersectsBox(p2, p3, bb)
-//				|| edgeIntersectsBox(p3, p1, bb))
-//			return true;
-//
-//		// Todavía puede ser que el triángulo seccione la caja sin que sus
-//		// ejes la intesecten (una esquina, todo un plano de la caja, etc.)
-//		// Para eso, chequear si alguna de las 4 diagonales de la caja
-//		// intersectan el triángulo.
-//		Ray r = new Ray(new Vector3d(), new Point3d());
-//		Point3d orig = new Point3d();
-//		Vector3d dir = new Vector3d();
-//		double len;
-//
-//		orig.set(bb.x0, bb.y0, bb.z0);
-//		dir.set(bb.x1 - bb.x0, bb.y1 - bb.y0, bb.z1 - bb.z0);
-//		len = dir.length();
-//		dir.scale(1.0 / len);
-//		if (checkIntersection(r, len))
-//			return true;
-//		orig.set(bb.x1, bb.y0, bb.z0);
-//		dir.set(bb.x0 - bb.x1, bb.y1 - bb.y0, bb.z1 - bb.z0);
-//		len = dir.length();
-//		dir.scale(1.0 / len);
-//		if (checkIntersection(r, len))
-//			return true;
-//		orig.set(bb.x0, bb.y1, bb.z0);
-//		dir.set(bb.x1 - bb.x0, bb.y0 - bb.y1, bb.z1 - bb.z0);
-//		len = dir.length();
-//		dir.scale(1.0 / len);
-//		if (checkIntersection(r, len))
-//			return true;
-//		orig.set(bb.x0, bb.y0, bb.z1);
-//		dir.set(bb.x1 - bb.x0, bb.y1 - bb.y0, bb.z0 - bb.z1);
-//		len = dir.length();
-//		dir.scale(1.0 / len);
-//		if (checkIntersection(r, len))
-//			return true;
-//		return false;
 	}
 }
