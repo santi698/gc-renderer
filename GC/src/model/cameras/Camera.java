@@ -54,7 +54,10 @@ public abstract class Camera extends WorldObject{
 	public Point3d getPosition(){
 		return position;
 	};
-	public abstract Point2d[] sampleLens();
+	public abstract Point2d[] sampleLensSet();
+	public Point2d sampleLens() {
+		return new Point2d();
+	}
 	public Vector3d getUp(){
 		return up;
 	};

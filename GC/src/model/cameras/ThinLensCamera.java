@@ -23,7 +23,7 @@ public class ThinLensCamera extends Camera {
 
 	}
 	@Override
-	public Point2d[] sampleLens() {
+	public Point2d[] sampleLensSet() {
 		Point2d[] set = new Point2d[numSamples];
 		for (int i = 0; i < numSamples; i++) {
 			Point2d lp = sampler.sampleUnitDisk();
@@ -31,6 +31,9 @@ public class ThinLensCamera extends Camera {
 			set[i] = lp;
 		}
 		return set;
+	}
+	public Point2d sampleLens() {
+		return sampler.sampleUnitDisk();
 	}
 	public void setSampleNumber(int numSamples) {
 		this.numSamples = numSamples;

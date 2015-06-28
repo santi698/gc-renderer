@@ -26,7 +26,7 @@ public class RayTracer {
 	private static final boolean THREADINGDISABLED = false;
 	private int packetSize = 4;
 	private Scene scene;
-	private boolean AAEnabled = false;
+	private boolean AAEnabled = true;
 	private boolean showTime;
 	private Sampler sampler;
 	private long startTime;
@@ -121,7 +121,7 @@ public class RayTracer {
 			for (int x = 0; x < packetSizeX; x++) {
 				for (int y = 0; y < packetSizeY; y++) {
 					Color3f resultColor = new Color3f();
-					Point2d[] lensSamples = scene.getCamera().sampleLens();
+					Point2d[] lensSamples = scene.getCamera().sampleLensSet();
 					if (AAEnabled) {
 						for (int k = 0; k < Main.AASamples; k++) {
 							Point2d sample = sampler.sampleUnitSquare();

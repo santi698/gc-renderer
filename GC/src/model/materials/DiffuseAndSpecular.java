@@ -78,10 +78,4 @@ public abstract class DiffuseAndSpecular extends Material {
 		
 		return color;
 	}
-	@Override
-	public Color3f indirectShade(IntersectionContext ic, List<Light> lights,
-			List<Body> bodies, int refractionDepth, int reflectionDepth) {
-		// TODO Auto-generated method stub
-		return new Color3f();
-	}
 }

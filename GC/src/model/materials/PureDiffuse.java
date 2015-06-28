@@ -40,7 +40,7 @@ public abstract class PureDiffuse extends Material {
 			else if (visibility > 0) {
 				Color3f diffuseColor = brdf.apply(light.getDirectionFromTo(p), n, v);
 				if (diffuseColor.x < 0) {
-					System.out.println("Diffuse color out of range. Value: " + diffuseColor.x+ "\n" + ic);
+//					System.out.println("Diffuse color out of range. Value: " + diffuseColor.x+ "\n" + ic);
 					diffuseColor.absolute();
 				}
 				diffuseColor.scale((float)(visibility * light.getIntensity(p)));
@@ -55,11 +55,5 @@ public abstract class PureDiffuse extends Material {
 		color.y = (float)(color.y * totalDiffuseColor.y + color.y * totalAmbientColor.y);
 		color.z = (float)(color.z * totalDiffuseColor.z + color.z * totalAmbientColor.z);
 		return color;
-	}
-	@Override
-	public Color3f indirectShade(IntersectionContext ic, List<Light> lights,
-			List<Body> bodies, int refractionDepth, int reflectionDepth) {
-		// TODO Auto-generated method stub
-		return new Color3f();
 	}
 }

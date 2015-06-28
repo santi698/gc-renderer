@@ -36,10 +36,13 @@ public class CookTorrance implements DistributionFunction {
 		return color;
 	}
 	public double D(double cosa) {
-		double x = cosa+mm1;
-		double x2 = x*x;
-		double aux = mm1m2*x2+m2;
-		return m3*x /(cosa*(aux*aux));
+//		double x = cosa+mm1;
+//		double x2 = x*x;
+//		double aux = mm1m2*x2+m2;
+//		return m3*x /(cosa*(aux*aux));
+        double r1 = 1.0 / ( 4.0 * m2 * Math.pow(cosa, 4.0));
+        double r2 = (cosa * cosa - 1.0) / (m2 * cosa * cosa);
+        return r1 * Math.exp(r2);
 	}
 	public double F(double cosb) {
 		return R0 + (1-R0)*Math.pow(1-cosb,5);

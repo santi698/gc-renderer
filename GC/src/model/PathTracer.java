@@ -113,21 +113,19 @@ public class PathTracer {
 				packetSizeX += scene.getCamera().getXRes()%packetSize;
 			if (j > scene.getCamera().getYRes()-2*packetSize) //Si estoy en la ultima fila
 				packetSizeY += scene.getCamera().getYRes()%packetSize;
+			
 			for (int x = 0; x < packetSizeX; x++) {
 				for (int y = 0; y < packetSizeY; y++) {
 					Color3f resultColor = new Color3f();
-					Point2d[] lensSamples = scene.getCamera().sampleLens();
+					Point2d lensSample = scene.getCamera().sampleLens();
 					for (int k = 0; k < samplesPerPixel; k++) {
 						Point2d sample = sampler.sampleUnitSquare();
-						Ray ray;
-						if (lensSamples.length == 1)
-							ray = scene.getCamera().rayThroughPixel(i + x + sample.x, j + y + sample.y, lensSamples[0]);
-						else {
-							ray = scene.getCamera().rayThroughPixel(i + x + sample.x, j + y + sample.y, lensSamples[k]);
-						}
+						Ray ray = scene.getCamera().rayThroughPixel(i + x + sample.x, j + y + sample.y, lensSample);
 						Color3f directColor = sceneTree.trace(ray).directShade(scene.getLights(), scene.getObjects(), 0, 0);
-						Color3f indirectColor = sceneTree.trace(ray).indirectShade(scene.getLights(), scene.getObjects(), 0, 0);
 						resultColor.add(directColor);
+						
+//						Color3f indirectColor = sceneTree.trace(ray).indirectShade(scene.getLights(), scene.getObjects(), 0, 0);
+//						resultColor.add(indirectColor);
 					}
 					resultColor.scale(1f/samplesPerPixel);
 					colorSetter(i+x, j+y, bi).accept(resultColor);

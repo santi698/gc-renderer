@@ -9,7 +9,7 @@ public class PinholeCamera extends Camera {
 		super(position, lookAt, up, focalLength, xres, yres);
 	}
 	@Override
-	public Point2d[] sampleLens() {
+	public Point2d[] sampleLensSet() {
 		return new Point2d[]{new Point2d(0,0)};
 	}
 }

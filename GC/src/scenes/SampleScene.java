@@ -56,42 +56,29 @@ public class SampleScene implements Scene {
 	final static Point3d spherePos = new Point3d(0, 0.05, 0.5);
 	//Lights
 	List<Light> lights = Arrays.asList(new Light[] {
-						new PointLight(new Point3d(0, 0.5, 1), new Color3f(0.8f,0.8f,1f), 0.001),
-						new PointLight(new Point3d(3, 7, 8), new Color3f(0.8f,0.8f,1f), 1),
+						new PointLight(new Point3d(-1, 0.5, 1), new Color3f(0.8f,0.8f,1f), 0.001),
+						new PointLight(new Point3d(3, 1, 8), new Color3f(0.8f,0.8f,1f), 1),
 						new SpotLight(new Point3d(0,2,0.3), new Color3f(1,1f,1f), 0.05, spherePos, Math.toRadians(45)),
-						new SpotLight(new Point3d(1,2,-1), new Color3f(0.9f,0.9f,1), 0.04, spherePos, Math.toRadians(30)),
+						new SpotLight(new Point3d(0.5,2,-1), new Color3f(0.9f,0.9f,1), 0.04, spherePos, Math.toRadians(30)),
 						new DirectionalLight(new Vector3d(0,-0.1,1), sunsetColor, 0.5	)
 						});
 	
 	//Bodies
-	final static SolidSphere s2 = new SolidSphere(new Point3d(0.075, 0.02, 0.5), 0.02);
+	final static SolidSphere s2 = new SolidSphere(new Point3d(0.175, 0.04, 0.5), 0.04);
 	final static SolidSphere s = new SolidSphere(spherePos, 0.05);
 	final static SolidSphere s3 = new SolidSphere(new Point3d(), 10);
-	final static double fraction = 0.1;	
-	final static ConvexSphere scn = new ConvexSphere(new Point3d(Vectors.sub(spherePos,new Point3d(-0.03, 0, -0.03))), 0.04, -Math.PI*fraction, Math.PI*fraction, -Math.PI*2*fraction, Math.PI*2*fraction);
-	final static ConvexSphere scv = new ConvexSphere(new Point3d(Vectors.sub(spherePos,new Point3d(0.03, 0, 0.03))), 0.05, -Math.PI*fraction, Math.PI*fraction, -Math.PI*2*fraction, Math.PI*2*fraction);
 	final static Plane p = new Plane(new Vector3d(0,1,0), new Point3d(0, 0, 0.5)); //Plano horizontal (piso)
 	final static Triangle t = new Triangle(new Point3d(0.05,0.15,0.75), new Point3d(-0.15,0,0.5), new Point3d(0.15,0,0.8)); //Triángulo en el piso
-	final static Triangle t2 = new Triangle(new Point3d(0,0.05,0.4), new Point3d(0.1,0,0.4), new Point3d(-0.1,0,0.4)); //Triángulo en el piso
 	final static BoundingBox box = new BoundingBox(0,0,0,0.1,0.1,0.1);
-//	final static Cylinder c = new Cylinder(new Point3d(-0.05,0,0.55), new Vector3d(0, 1, 0), 0.01, 2*Math.PI*0.01);
-//	final static Disc d1 = new Disc(new Vector3d(0, 1, 0), new Point3d(-0.05, 2*Math.PI*0.01, 0.55), 0.01);
-//	final static Disc d2 = new Disc(new Vector3d(0, -1, 0), new Point3d(-0.05, 0, 0.55), 0.01);
-//	final static Square sq = new Square(new Vector3d(0,1,0), new Point3d(-0.05, Math.PI*0.01, 0.55), 0.04);
-	
-	static {
-		double yRotation = Math.PI/4;
-		scv.rotate(new Vector3d(0, yRotation, 0));
-	}
 
 	List<Body> bodies = Arrays.asList(new Body[] {
 //											new SimpleBody(s2, new PolishedMarble(new CheckerBoardTexture(0.1))),
-											new SimpleBody(s2, new CookTorrance(new PlainTexture(0.99f,0.5f,0.2f), 0, 0, 0.1, 1.2)),
+											new SimpleBody(s2, new CookTorrance(new PlainTexture(0.99f,0.5f,0.2f), 0, 0, 0.01, 1.5)),
 //											new SimpleBody(s, new Metal(new Color3f(0.99f,0.99f,0.05f), 200)),
 //											new SimpleBody(s, new Metal(new ImageTexture("textures/2400/earth_night.jpg"), 0.4)),
 //											new SimpleBody(s, new Matte2(new CheckerBoardTexture(0.1), 0.1, 0.85)),
-											new SimpleBody(s, new Glass(new PlainTexture(0.9f, 0.1f, 0.1f))),
-//											new SimpleBody(s, new PolishedMarble2(new PlainTexture(new Color3f(0.5f,0.5f,0.5f)))),
+//											new SimpleBody(s, new Glass(new PlainTexture(0.9f, 0.1f, 0.1f))),
+											new SimpleBody(s, new CookTorrance(new PlainTexture(0.99f,0f,0.1f), 0.5, 0, 0.01, 1.5)),
 //											new SimpleBody(s, new Mirror(new PlainTexture (new Color3f(0.65f, 0.65f, 0.65f)))),
 //											new SimpleBody(s, new Phong(new PlainTexture (new Color3f(0.95f, 0.95f, 0.95f)), 1e3, 0.5, 0.5)),
 //											new SimpleBody(p, new Metal(new PlainTexture(new Color3f(0.25f, 0.40f, 0.25f)), 0.5)),
@@ -105,7 +92,7 @@ public class SampleScene implements Scene {
 	});
 
 	//Camera
-//	Camera camera = new ThinLensCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,1,0), 0.018, 640, 480, 5.6, spherePos, AASamples);
+//	Camera camera = new ThinLensCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,1,0), 0.018, 640, 480, 5.6, spherePos, 1);
 //	Camera camera = new ThinLensCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,1,0), 0.018, 1376, 768, 5.6, spherePos, AASamples);
 	Camera camera = new PinholeCamera(new Point3d(-0.2, 0.1, 0.3), spherePos, new Vector3d(0,1,0), 0.018, 640, 480);
 	public SampleScene() {}

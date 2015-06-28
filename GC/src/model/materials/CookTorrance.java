@@ -57,8 +57,13 @@ public class CookTorrance extends Material {
 		} else {
 			//refract
 			if (refractionDepth < REFRACTIONDEPTH) {
-				Ray ray = refract(ic, refractionIndex);
-				computeDerivedColor(ray, ic, bodies, lights, refractionDepth, reflectionDepth);
+				if (!tir(ic, refractionIndex)) {
+					Ray ray = refract(ic, refractionIndex);
+					return computeDerivedColor(ray, ic, bodies, lights, refractionDepth, reflectionDepth);
+				} else {
+					Ray ray = reflect(ic);
+					return computeDerivedColor(ray, ic, bodies, lights, refractionDepth, reflectionDepth);
+				}
 			}
 		}
 		return new Color3f();
@@ -103,7 +108,7 @@ public class CookTorrance extends Material {
 				Color3f lightColor = new Color3f(light.getColor());
 				//Diffuse
 				if (diffuseColor.x < 0) {
-					System.out.println("Diffuse color out of range. Value: " + diffuseColor.x+ "\n" + ic);
+//					System.out.println("Diffuse color out of range. Value: " + diffuseColor.x+ "\n" + ic);
 					diffuseColor.absolute();
 				}
 				diffuseColor.scale((float)(light.getIntensity(p)));
@@ -113,7 +118,6 @@ public class CookTorrance extends Material {
 				totalDiffuseColor.add(diffuseColor);
 				// Specular
 				Color3f brdfC = specularBrdf.apply(light.getDirectionFromTo(p), n, v);
-				System.out.println(brdfC.x);
 				brdfC.x *= lightColor.x * localColor.x;
 				brdfC.y *= lightColor.y * localColor.y;
 				brdfC.z *= lightColor.z * localColor.z;
@@ -134,12 +138,14 @@ public class CookTorrance extends Material {
 
 	private Color3f absorbedIndirectColor(IntersectionContext ic,
 			List<Light> lights, List<Body> bodies, int refractionDepth, int reflectionDepth) {
-		
+		Ray reflected = reflect(ic);
 		Color3f bodyColor = getColor(ic.getU(), ic.getV());
-		Vector3d direction = ic.getRay().getDirection();
-		Vector3d l = Vectors.negate(ic.getRay().getDirection());
-		
-		Vector3d fixedNormal = new Vector3d(ic.getNormal());
+		Vector3d direction = reflected.getDirection();
+		Vector3d l = reflected.getDirection();
+		Vector3d n = ic.getNormal();
+		Vector3d v = ic.getRay().getDirection();
+
+		Vector3d fixedNormal = new Vector3d(n);
 		if (direction.dot(fixedNormal) < 0) //la normal siempre se toma en la direccion del rayo
 			fixedNormal.negate();
 		Vector3d sample = sampler.sampleHemisphere(roughness);
@@ -155,30 +161,33 @@ public class CookTorrance extends Material {
 		}
 		sampledDirection.normalize();
 		Color3f sampleColor;
-		sampleColor = new Ray(sampledDirection, ic.getRay().getOrigin()).trace(bodies).directShade(lights, bodies, refractionDepth+1, reflectionDepth+1);
+		sampleColor = new Ray(sampledDirection, reflected.getOrigin()).trace(bodies).directShade(lights, bodies, refractionDepth+1, reflectionDepth+1);
 		float pdf = (float) Math.pow(sampledDirection.dot(direction), roughness);
 		if (Double.isInfinite(pdf))
 			return sampleColor;
 		sampleColor.scale(pdf);
-		Vector3d n = ic.getNormal();
-		Vector3d v = ic.getRay().getDirection();
-		Color3f diffuseColor = diffuseBrdf.apply(l, n, v);
+		Color3f diffuseColor = diffuseBrdf.apply(sampledDirection, n, v);
 		Color3f lightColor = new Color3f(sampleColor);
 		//Diffuse
 		if (diffuseColor.x < 0) {
-			System.out.println("Diffuse color out of range. Value: " + diffuseColor.x+ "\n" + ic);
+//			System.out.println("Diffuse color out of range. Value: " + diffuseColor.x+ "\n" + ic);
 			diffuseColor.absolute();
 		}
 		diffuseColor.x *= lightColor.x * bodyColor.x;
 		diffuseColor.y *= lightColor.y * bodyColor.y;
 		diffuseColor.z *= lightColor.z * bodyColor.z;
+		diffuseColor.scale((float) (1-reflectionCoefficient-refractionCoefficient));
 		// Specular
-		Color3f brdfC = specularBrdf.apply(l, n, v);
-		System.out.println(brdfC.x);
+		Color3f brdfC = specularBrdf.apply(sampledDirection, n, v);
 		brdfC.x *= lightColor.x * bodyColor.x;
 		brdfC.y *= lightColor.y * bodyColor.y;
 		brdfC.z *= lightColor.z * bodyColor.z;
+		brdfC.scale((float)reflectionCoefficient);
 		
-		return sampleColor;
+		Color3f color = new Color3f();
+		color.add(brdfC);
+		color.add(diffuseColor);
+		color.absolute();
+		return color;
 	}
 }

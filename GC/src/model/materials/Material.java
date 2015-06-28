@@ -9,24 +9,95 @@ import javax.vecmath.Vector3d;
 import model.Body;
 import model.IntersectionContext;
 import model.Ray;
+import model.brdfs.OrenNayar;
 import model.light.Light;
+import model.samplers.Multijittered;
+import model.samplers.Sampler;
 import model.texture.Texture;
 import util.Vectors;
 
 public abstract class Material {
 	public static int REFRACTIONDEPTH = 10;
 	public static int REFLECTIONDEPTH = 4;
+	private double reflectionCoefficient;
+	private double refractionCoefficient;
 	private Texture texture;
+	private Sampler sampler;
+	OrenNayar orenNayar;
 	
 	public Material(Texture texture) {
 		super();
 		this.texture = texture;
+		this.sampler = new Multijittered(1);
+		this.sampler.generateSamples();
+		this.sampler.genShuffledIndices();
+		this.reflectionCoefficient = 0;
+		this.refractionCoefficient = 0;
+		this.orenNayar = new OrenNayar(getRoughness());
 	}
 	public abstract Color3f directShade(IntersectionContext ic, List<Light> lights, 
 			List<Body> bodies, int refractionDepth, int reflectionDepth);
-	public abstract Color3f indirectShade(IntersectionContext ic, List<Light> lights, 
-			List<Body> bodies, int refractionDepth, int reflectionDepth);
+	public Color3f indirectShade(IntersectionContext ic, List<Light> lights, 
+			List<Body> bodies, int refractionDepth, int reflectionDepth) {
+	Ray reflected = reflect(ic);
+	Color3f bodyColor = getColor(ic.getU(), ic.getV());
+	Vector3d direction = reflected.getDirection();
+	Vector3d l = reflected.getDirection();
+	Vector3d n = ic.getNormal();
+	Vector3d v = ic.getRay().getDirection();
+
+	Vector3d fixedNormal = new Vector3d(n);
+	if (direction.dot(fixedNormal) < 0) //la normal siempre se toma en la direccion del rayo
+		fixedNormal.negate();
+	Vector3d sample = sampler.sampleHemisphere(getRoughness());
+	Vector3d x = Vectors.cross(new Vector3d(0.00123, 1, 0.00321), direction);
+	x.normalize();
+	Vector3d sampledDirection = new Vector3d();
+	sampledDirection.add(Vectors.scale(direction, sample.z));
+	sampledDirection.add(Vectors.scale(x, sample.x));
+	sampledDirection.add(Vectors.scale(Vectors.cross(x, direction), sample.y));
+	if (sampledDirection.dot(fixedNormal) < 0) { //Reflejar cuando esta debajo del plano normal
+		sampledDirection.add(Vectors.scale(x, -2*sample.x));
+		sampledDirection.add(Vectors.scale(Vectors.cross(x, direction), -2*sample.y));
+	}
+	sampledDirection.normalize();
+	Color3f sampleColor;
+	sampleColor = new Ray(sampledDirection, reflected.getOrigin()).trace(bodies).directShade(lights, bodies, refractionDepth+1, reflectionDepth+1);
+	float pdf = (float) Math.pow(sampledDirection.dot(direction), getRoughness());
+	if (Double.isInfinite(pdf))
+		return sampleColor;
+	sampleColor.scale(pdf);
+	Color3f diffuseColor = orenNayar.apply(sampledDirection, n, v);
+	Color3f lightColor = new Color3f(sampleColor);
+	//Diffuse
+	if (diffuseColor.x < 0) {
+//		System.out.println("Diffuse color out of range. Value: " + diffuseColor.x+ "\n" + ic);
+		diffuseColor.absolute();
+	}
+	diffuseColor.x *= lightColor.x * bodyColor.x;
+	diffuseColor.y *= lightColor.y * bodyColor.y;
+	diffuseColor.z *= lightColor.z * bodyColor.z;
+	diffuseColor.scale((float) (1-reflectionCoefficient-refractionCoefficient));
+	// Specular
+	Color3f brdfC = orenNayar.apply(sampledDirection, n, v);
+	brdfC.x *= lightColor.x * bodyColor.x;
+	brdfC.y *= lightColor.y * bodyColor.y;
+	brdfC.z *= lightColor.z * bodyColor.z;
+	brdfC.scale((float)reflectionCoefficient);
 	
+	Color3f color = new Color3f();
+	color.add(brdfC);
+	color.add(diffuseColor);
+	color.absolute();
+	return color;
+	}
+//	public abstract Color3f indirectShade(IntersectionContext ic, List<Light> lights, 
+//	List<Body> bodies, int refractionDepth, int reflectionDepth);
+
+	
+	private double getRoughness() {
+		return 1;
+	}
 	public Color3f getColor(double u, double v) {
 		return texture.get(u, v);
 	}

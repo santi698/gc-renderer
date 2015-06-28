@@ -15,7 +15,8 @@ import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
 
-import model.RayTracer;
+import model.PathTracer;
+//import model.RayTracer;
 
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
@@ -50,7 +51,7 @@ public class Main extends Application {
 		} else {
 			scene = new SampleScene();
 		}
-		RayTracer rayTracer = new RayTracer(scene, aaSamples, rayDepth, cl.hasOption("time"));
+		PathTracer rayTracer = new PathTracer(scene, aaSamples, rayDepth, cl.hasOption("time"));
 		String filename = cl.getOptionValue("o");
 		if (!cl.hasOption("gui")) {
 			if (!cl.hasOption("b")) {
