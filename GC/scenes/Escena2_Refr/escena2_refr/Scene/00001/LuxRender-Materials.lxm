@@ -1,0 +1,33 @@
+# Materials File
+
+Texture "Texture.001_color" "color" "imagemap"
+	"string filename" ["refr_test.png"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "Material.002"
+	"texture Kd" ["Texture.001_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+MakeNamedMaterial "Material.003"
+	"bool architectural" ["false"]
+	"float cauchyb" [0.000000000000000]
+	"float film" [0.000000000000000]
+	"float filmindex" [1.333299994468689]
+	"float index" [1.519999980926514]
+	"color Kr" [0.69999999 0.69999999 0.69999999]
+	"color Kt" [1.00000000 1.00000000 1.00000000]
+	"string type" ["glass"]
+
+MakeNamedMaterial "Material.001"
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]

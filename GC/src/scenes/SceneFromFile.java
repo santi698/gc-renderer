@@ -46,11 +46,16 @@ public class SceneFromFile implements Scene {
 	Camera camera;
 	int AASamples = 32;
 	
+	String mainFileDirectory;
+	
 	public SceneFromFile(String fileDir) throws FileNotFoundException{
 		
 		bodies = new ArrayList<Body>();
 		lights = new ArrayList<Light>();
 		materials = new HashMap<String,Material>();
+		
+		int lastSeparator= fileDir.lastIndexOf(File.separatorChar);
+		this.mainFileDirectory = fileDir.substring(0,lastSeparator) + File.separatorChar;
 		
 		mainParser(fileDir);
 		
@@ -383,7 +388,9 @@ public class SceneFromFile implements Scene {
 	public Texture getTextureFromArguments(Map<String,Object> arguments){
 		if(arguments != null){
 			if(arguments.containsKey("string filename")){
-				String filename = (String) arguments.get("string filename");
+				String filename = mainFileDirectory + (String) arguments.get("string filename");
+				
+				
 				return new ImageTexture(filename);
 			}			
 		}
