@@ -17,6 +17,9 @@ public class OrenNayar implements DistributionFunction {
 		this.A = 1-0.5*sigmaSq/(sigmaSq+0.57);
 		this.B = 0.45*sigmaSq/(sigmaSq+0.09);
 	}
+	public OrenNayar(double sigma) {
+		this(sigma, 1);
+	}
 	@Override
 	public Color3f apply(Vector3d l, Vector3d n, Vector3d v) {
 		if (v.dot(n)<0)

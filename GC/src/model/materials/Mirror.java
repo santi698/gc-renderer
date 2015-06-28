@@ -27,17 +27,17 @@ public class Mirror extends Phong {
 		this.kR = kR;
 	}
 	@Override
-	public Color3f shade(IntersectionContext ic, List<Light> lights, List<Body> bodies, int refractionDepth, int reflectionDepth) {
+	public Color3f directShade(IntersectionContext ic, List<Light> lights, List<Body> bodies, int refractionDepth, int reflectionDepth) {
 		Color3f rfColor;
 		if (reflectionDepth < REFLECTIONDEPTH)
-			rfColor = reflect(ic).trace(bodies).shade(lights, bodies, refractionDepth, reflectionDepth+1);
+			rfColor = reflect(ic).trace(bodies).directShade(lights, bodies, refractionDepth, reflectionDepth+1);
 		else
 			rfColor = new Color3f();
 		Color3f mirrorColor = getColor(ic.getU(), ic.getV());
 		rfColor.x = rfColor.x*mirrorColor.x;
 		rfColor.y = rfColor.y*mirrorColor.y;
 		rfColor.z = rfColor.z*mirrorColor.z;
-		Color3f lightReflectColor = super.shade(ic, lights, bodies, refractionDepth, reflectionDepth);
+		Color3f lightReflectColor = super.directShade(ic, lights, bodies, refractionDepth, reflectionDepth);
 		rfColor.add(lightReflectColor);
 		rfColor.scale(kR);
 		return rfColor;

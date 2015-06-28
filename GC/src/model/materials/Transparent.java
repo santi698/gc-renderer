@@ -54,10 +54,10 @@ public class Transparent extends Phong {
 		return targetColor;
 	}
 	@Override
-	public Color3f shade(IntersectionContext ic, List<Light> lights, List<Body> bodies, int refractionDepth, int reflectionDepth) {
+	public Color3f directShade(IntersectionContext ic, List<Light> lights, List<Body> bodies, int refractionDepth, int reflectionDepth) {
 		Color3f rrColor;
 		Color3f rfColor;
-		Color3f phongColor = super.shade(ic, lights, bodies, refractionDepth, reflectionDepth);
+		Color3f phongColor = super.directShade(ic, lights, bodies, refractionDepth, reflectionDepth);
 		Ray refracted = refract(ic, refractionIndex);
 		Ray reflected = reflect(ic);
 		double costi = -ic.getRay().getDirection().dot(ic.getNormal());
@@ -65,7 +65,7 @@ public class Transparent extends Phong {
 		if (tir(ic, refractionIndex)) {
 			if (reflectionDepth < REFLECTIONDEPTH) {
 				IntersectionContext reflectedIc = reflected.trace(bodies);
-				Color3f reflectedColor = reflectedIc.shade(lights, bodies, refractionDepth, reflectionDepth+1);
+				Color3f reflectedColor = reflectedIc.directShade(lights, bodies, refractionDepth, reflectionDepth+1);
 				Color3f result = filterColor(reflectedColor, reflectedIc, in);
 				result.add(phongColor);
 				return result;
@@ -75,14 +75,14 @@ public class Transparent extends Phong {
 		}
 		if (refractionDepth < REFRACTIONDEPTH) {
 			IntersectionContext refractedIc = refracted.trace(bodies);
-			rrColor = refractedIc.shade(lights, bodies, refractionDepth+1, reflectionDepth);
+			rrColor = refractedIc.directShade(lights, bodies, refractionDepth+1, reflectionDepth);
 			rrColor = filterColor(rrColor, refractedIc, !in);
 		}
 		else
 			rrColor = new Color3f(1,0,1);
 		if (reflectionDepth < REFLECTIONDEPTH) {
 			IntersectionContext reflectedIc = reflected.trace(bodies);
-			rfColor = reflectedIc.shade(lights, bodies, refractionDepth, reflectionDepth+1);
+			rfColor = reflectedIc.directShade(lights, bodies, refractionDepth, reflectionDepth+1);
 			rfColor = filterColor(rfColor, reflectedIc, in);
 		}
 		else

@@ -17,7 +17,7 @@ public class CookTorrance implements DistributionFunction {
 	public CookTorrance(double roughness, double refractionIndex) {
 		this.roughness = roughness;
 		this.refractionIndex = refractionIndex;
-		this.R0 = (1+refractionIndex/1-refractionIndex);
+		this.R0 = (1-refractionIndex/1+refractionIndex);
 		this.R0 *= R0;
 		double m = roughness;
 		this.k = Math.sqrt(2*m*m/Math.PI);
@@ -38,7 +38,7 @@ public class CookTorrance implements DistributionFunction {
 	public double D(double cosa) {
 		double x = cosa+mm1;
 		double x2 = x*x;
-		double aux = mm1m2*x2;
+		double aux = mm1m2*x2+m2;
 		return m3*x /(cosa*(aux*aux));
 	}
 	public double F(double cosb) {

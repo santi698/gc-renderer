@@ -22,7 +22,10 @@ public abstract class Material {
 		super();
 		this.texture = texture;
 	}
-	public abstract Color3f shade(IntersectionContext ic, List<Light> lights, List<Body> bodies, int refractionDepth, int reflectionDepth);
+	public abstract Color3f directShade(IntersectionContext ic, List<Light> lights, 
+			List<Body> bodies, int refractionDepth, int reflectionDepth);
+	public abstract Color3f indirectShade(IntersectionContext ic, List<Light> lights, 
+			List<Body> bodies, int refractionDepth, int reflectionDepth);
 	
 	public Color3f getColor(double u, double v) {
 		return texture.get(u, v);

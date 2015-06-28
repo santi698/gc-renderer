@@ -14,14 +14,14 @@ public class PolishedMarble extends Phong {
 		super(bodyTexture, 300, 0.5, 0.75/Math.PI);
 	}
 	@Override
-	public Color3f shade(IntersectionContext ic, List<Light> lights, List<Body> bodies,
+	public Color3f directShade(IntersectionContext ic, List<Light> lights, List<Body> bodies,
 			int refractionDepth, int reflectionDepth) {
-		Color3f phongColor = super.shade(ic, lights, bodies, refractionDepth, reflectionDepth);
+		Color3f phongColor = super.directShade(ic, lights, bodies, refractionDepth, reflectionDepth);
 		Color3f rlColor;
 		if (reflectionDepth > REFLECTIONDEPTH)
 			rlColor = new Color3f();
 		else
-			rlColor = reflect(ic).trace(bodies).shade(lights, bodies, refractionDepth, reflectionDepth + 1);
+			rlColor = reflect(ic).trace(bodies).directShade(lights, bodies, refractionDepth, reflectionDepth + 1);
 		phongColor.scale(0.75f);
 		rlColor.scale(0.25f);
 		phongColor.add(rlColor);

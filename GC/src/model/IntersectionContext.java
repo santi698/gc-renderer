@@ -61,11 +61,18 @@ public class IntersectionContext {
 	public void setMaterial(Material material) {
 		this.material = material;
 	}
-	public Color3f shade(List<Light> lights, List<Body> bodies, int refractionDepth, int reflectionDepth) {
+	public Color3f directShade(List<Light> lights, List<Body> bodies, int refractionDepth, int reflectionDepth) {
 		if (material == null || !this.hit) {
 			return new Color3f(BGCOLOR);
 		}
-		return material.shade(this, lights, bodies, refractionDepth, reflectionDepth);
+		return material.directShade(this, lights, bodies, refractionDepth, reflectionDepth);
+	}
+	public Color3f indirectShade(List<Light> lights, List<Body> bodies, int refractionDepth,
+			int reflectionDepth) {
+		if (material == null || !this.hit) {
+			return new Color3f(BGCOLOR);
+		}
+		return material.indirectShade(this, lights, bodies, refractionDepth, reflectionDepth);
 	}
 	@Override
 	public String toString() {

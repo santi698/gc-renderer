@@ -19,25 +19,25 @@ import model.trees.DummyTree;
 import scenes.Scene;
 import application.Main;
 
-public class RayTracer {
+public class PathTracer {
 	private DummyTree sceneTree;
 	public static final float invGamma = 1f/2.2f;
 	private static final boolean DEBUG = false;
 	private static final boolean THREADINGDISABLED = false;
+	private int samplesPerPixel = Main.AASamples;
 	private int packetSize = 4;
 	private Scene scene;
-	private boolean AAEnabled = false;
 	private boolean showTime;
 	private Sampler sampler;
 	private long startTime;
 	private DoubleProperty progress = new SimpleDoubleProperty();
-	private int pixelsSet = 0;	
+	private int samplesSet = 0;
 	
 	public DoubleProperty getProgressProperty() {
 		return progress;
 	}
 	
-	public RayTracer(Scene scene, int AASamples, int rayDepth, boolean showTime) {
+	public PathTracer(Scene scene, int AASamples, int rayDepth, boolean showTime) {
 		if (DEBUG)
 			System.out.println("Debug mode");
 		if (rayDepth >= 0) {
@@ -52,15 +52,10 @@ public class RayTracer {
 		sceneTree.addAll(scene.getObjects());		
 
 	}
-	public void setAA(boolean b) {
-		AAEnabled = b;
-	}
 	public void setUp() {
-		if (AAEnabled) {
-			this.sampler = new Multijittered(Main.AASamples);
-			sampler.generateSamples();
-			sampler.genShuffledIndices();
-		}
+		this.sampler = new Multijittered(samplesPerPixel);
+		sampler.generateSamples();
+		sampler.genShuffledIndices();
 	}
 	
 	public BufferedImage render() {
@@ -106,8 +101,8 @@ public class RayTracer {
 			color.y = (float)Math.pow(color.y, invGamma);
 			color.z = (float)Math.pow(color.z, invGamma);
 			bi.setRGB(i, j, color.get().getRGB());
-			pixelsSet++;
-			progress.set(((double)pixelsSet/(bi.getWidth()*bi.getHeight())));
+			samplesSet++;
+			progress.set(((double)samplesSet/(bi.getWidth()*bi.getHeight()*samplesPerPixel)));
 		};
 	}
 	private Runnable packetTracer(int i, int j, BufferedImage bi) {
@@ -122,29 +117,19 @@ public class RayTracer {
 				for (int y = 0; y < packetSizeY; y++) {
 					Color3f resultColor = new Color3f();
 					Point2d[] lensSamples = scene.getCamera().sampleLens();
-					if (AAEnabled) {
-						for (int k = 0; k < Main.AASamples; k++) {
-							Point2d sample = sampler.sampleUnitSquare();
-							Ray ray;
-							if (lensSamples.length == 1)
-								ray = scene.getCamera().rayThroughPixel(i + x + sample.x, j + y + sample.y, lensSamples[0]);
-							else {
-								ray = scene.getCamera().rayThroughPixel(i + x + sample.x, j + y + sample.y, lensSamples[k]);
-							}
-							Color3f color = sceneTree.trace(ray).directShade(scene.getLights(), scene.getObjects(), 0, 0);
-							resultColor.add(color);
+					for (int k = 0; k < samplesPerPixel; k++) {
+						Point2d sample = sampler.sampleUnitSquare();
+						Ray ray;
+						if (lensSamples.length == 1)
+							ray = scene.getCamera().rayThroughPixel(i + x + sample.x, j + y + sample.y, lensSamples[0]);
+						else {
+							ray = scene.getCamera().rayThroughPixel(i + x + sample.x, j + y + sample.y, lensSamples[k]);
 						}
-					} else {
-						for (Point2d lensSample : lensSamples) {
-							Ray ray = scene.getCamera().rayThroughPixel(i + x, j + y, lensSample);
-							Color3f color = sceneTree.trace(ray).directShade(scene.getLights(), scene.getObjects(), 0, 0);
-							resultColor.add(color);
-						}
+						Color3f directColor = sceneTree.trace(ray).directShade(scene.getLights(), scene.getObjects(), 0, 0);
+						Color3f indirectColor = sceneTree.trace(ray).indirectShade(scene.getLights(), scene.getObjects(), 0, 0);
+						resultColor.add(directColor);
 					}
-					if (AAEnabled)
-						resultColor.scale(1f/Main.AASamples);
-					else
-						resultColor.scale(1f/lensSamples.length);
+					resultColor.scale(1f/samplesPerPixel);
 					colorSetter(i+x, j+y, bi).accept(resultColor);
 				}
 			}

@@ -17,6 +17,7 @@ import model.UniformCompoundBody;
 import model.cameras.Camera;
 import model.cameras.PinholeCamera;
 import model.cameras.ThinLensCamera;
+import model.light.AmbientLight;
 import model.light.DirectionalLight;
 import model.light.Light;
 import model.light.PointLight;
@@ -24,13 +25,12 @@ import model.light.SpotLight;
 import model.materials.CookTorrance;
 import model.materials.Glass;
 import model.materials.Matte2;
-import model.materials.Metal2;
 import model.materials.PureDiffuse;
 import model.materials.Material;
 import model.materials.Matte;
 import model.materials.Metal;
 import model.materials.Mirror;
-//import model.light.SpotLight;
+import model.light.SpotLight;
 import model.materials.DiffuseAndSpecular;
 import model.materials.PolishedMarble;
 import model.shapes.BoundingBox;
@@ -57,14 +57,16 @@ public class SampleScene implements Scene {
 	//Lights
 	List<Light> lights = Arrays.asList(new Light[] {
 						new PointLight(new Point3d(0, 0.5, 1), new Color3f(0.8f,0.8f,1f), 0.001),
+						new PointLight(new Point3d(3, 7, 8), new Color3f(0.8f,0.8f,1f), 1),
 						new SpotLight(new Point3d(0,2,0.3), new Color3f(1,1f,1f), 0.05, spherePos, Math.toRadians(45)),
-						new SpotLight(new Point3d(-1,2,-1), new Color3f(0.9f,0.9f,1), 0.04, spherePos, Math.toRadians(30)),
+						new SpotLight(new Point3d(1,2,-1), new Color3f(0.9f,0.9f,1), 0.04, spherePos, Math.toRadians(30)),
 						new DirectionalLight(new Vector3d(0,-0.1,1), sunsetColor, 0.5	)
 						});
 	
 	//Bodies
-	final static SolidSphere s2 = new SolidSphere(new Point3d(-0.075, 0.02, 0.5), 0.02);
+	final static SolidSphere s2 = new SolidSphere(new Point3d(0.075, 0.02, 0.5), 0.02);
 	final static SolidSphere s = new SolidSphere(spherePos, 0.05);
+	final static SolidSphere s3 = new SolidSphere(new Point3d(), 10);
 	final static double fraction = 0.1;	
 	final static ConvexSphere scn = new ConvexSphere(new Point3d(Vectors.sub(spherePos,new Point3d(-0.03, 0, -0.03))), 0.04, -Math.PI*fraction, Math.PI*fraction, -Math.PI*2*fraction, Math.PI*2*fraction);
 	final static ConvexSphere scv = new ConvexSphere(new Point3d(Vectors.sub(spherePos,new Point3d(0.03, 0, 0.03))), 0.05, -Math.PI*fraction, Math.PI*fraction, -Math.PI*2*fraction, Math.PI*2*fraction);
@@ -84,7 +86,7 @@ public class SampleScene implements Scene {
 
 	List<Body> bodies = Arrays.asList(new Body[] {
 //											new SimpleBody(s2, new PolishedMarble(new CheckerBoardTexture(0.1))),
-											new SimpleBody(s2, new CookTorrance(new PlainTexture(0.5f,0.7f,0.5f), 0, 0, 0.5, 1.2)),
+											new SimpleBody(s2, new CookTorrance(new PlainTexture(0.99f,0.5f,0.2f), 0, 0, 0.1, 1.2)),
 //											new SimpleBody(s, new Metal(new Color3f(0.99f,0.99f,0.05f), 200)),
 //											new SimpleBody(s, new Metal(new ImageTexture("textures/2400/earth_night.jpg"), 0.4)),
 //											new SimpleBody(s, new Matte2(new CheckerBoardTexture(0.1), 0.1, 0.85)),
@@ -100,9 +102,6 @@ public class SampleScene implements Scene {
 //											new SimpleBody(t, new Metal2(new PlainTexture(new Color3f(173f/255f, 178f/255f, 189f/255f)),1e-100)),
 //											new SimpleBody(t2, new Mirror(new PlainTexture(new Color3f(0.85f,0.85f,0.85f)))),
 //											new SimpleBody(scn, new PolishedMarble(new PlainTexture(new Color3f(0.9f, 0.1f, 0.1f)))),
-//											new UniformCompoundBody(new Shape[]{scn, scv}, new Glass(new PlainTexture(new Color3f(0.95f, 0.05f, 0.05f))))
-											new SimpleBody(box, new Mirror(new PlainTexture(0.2f,0.2f,0.2f), 0.9f))
-
 	});
 
 	//Camera
@@ -112,12 +111,10 @@ public class SampleScene implements Scene {
 	public SampleScene() {}
 	@Override
 	public Camera getCamera() {
-		// TODO Auto-generated method stub
 		return camera;
 	}
 	@Override
 	public List<Light> getLights() {
-		// TODO Auto-generated method stub
 		return lights;
 	}
 	@Override

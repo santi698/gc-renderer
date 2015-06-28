@@ -14,7 +14,7 @@ import model.light.AmbientLight;
 import model.light.Light;
 import model.texture.Texture;
 
-public class DiffuseAndSpecular extends Material {
+public abstract class DiffuseAndSpecular extends Material {
 	private double is, id;
 	private DistributionFunction diffuse;
 	private DistributionFunction specular;
@@ -25,7 +25,7 @@ public class DiffuseAndSpecular extends Material {
 	}
 	
 	@Override
-	public Color3f shade(IntersectionContext ic, List<Light> lights, List<Body> bodies, int refractionDepth, int reflectionDepth) {
+	public Color3f directShade(IntersectionContext ic, List<Light> lights, List<Body> bodies, int refractionDepth, int reflectionDepth) {
 		Point3d p = ic.getIntersectionPoint();
 		Vector3d v = Vectors.scale(ic.getRay().getDirection(), -1);
 		Vector3d n = ic.getNormal();
@@ -77,5 +77,11 @@ public class DiffuseAndSpecular extends Material {
 		color.z = (float)(color.z * totalDiffuseColor.z + totalSpecularColor.z + color.z * totalAmbientColor.z);
 		
 		return color;
+	}
+	@Override
+	public Color3f indirectShade(IntersectionContext ic, List<Light> lights,
+			List<Body> bodies, int refractionDepth, int reflectionDepth) {
+		// TODO Auto-generated method stub
+		return new Color3f();
 	}
 }

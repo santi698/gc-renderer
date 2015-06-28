@@ -21,7 +21,7 @@ public abstract class PureDiffuse extends Material {
 		this.brdf = brdf;
 	}
 	@Override
-	public Color3f shade(IntersectionContext ic, List<Light> lights, List<Body> bodies, int refractionDepth, int reflectionDepth) {
+	public Color3f directShade(IntersectionContext ic, List<Light> lights, List<Body> bodies, int refractionDepth, int reflectionDepth) {
 		Point3d p = ic.getIntersectionPoint();
 		Vector3d v = Vectors.scale(ic.getRay().getDirection(), -1);
 		Vector3d n = ic.getNormal();
@@ -55,5 +55,11 @@ public abstract class PureDiffuse extends Material {
 		color.y = (float)(color.y * totalDiffuseColor.y + color.y * totalAmbientColor.y);
 		color.z = (float)(color.z * totalDiffuseColor.z + color.z * totalAmbientColor.z);
 		return color;
+	}
+	@Override
+	public Color3f indirectShade(IntersectionContext ic, List<Light> lights,
+			List<Body> bodies, int refractionDepth, int reflectionDepth) {
+		// TODO Auto-generated method stub
+		return new Color3f();
 	}
 }

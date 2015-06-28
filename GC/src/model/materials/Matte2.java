@@ -8,5 +8,8 @@ public class Matte2 extends PureDiffuse {
 	public Matte2(Texture texture, double roughness, double albedo) {
 		super(texture, new OrenNayar(roughness, albedo));
 	}
+	public Matte2(Texture texture, double roughness) {
+		super(texture, new OrenNayar(roughness, 1));
+	}
 	
 }
